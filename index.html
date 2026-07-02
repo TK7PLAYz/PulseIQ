@@ -6,7 +6,7 @@
 <title>PulseIQ</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
+ 
 :root {
   --green:#16a34a; --green-bg:#f0fdf4; --green-mid:#bbf7d0;
   --yellow:#d97706; --yellow-bg:#fffbeb; --yellow-mid:#fde68a;
@@ -20,10 +20,10 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
-
+ 
 /* ── SCREENS ── */
 .screen{display:none;} .screen.on{display:block;}
-
+ 
 /* ══ HOME ══ */
 #home{min-height:100vh;padding:32px 24px;}
 .home-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;}
@@ -55,7 +55,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   font-family:'Inter',sans-serif;
 }
 .add-btn:hover{border-color:var(--blue);color:var(--blue);}
-
+ 
 /* ══ ATHLETE HOME ══ */
 #ath-home{min-height:100vh;}
 .ath-hero{padding:20px 20px 0;}
@@ -72,7 +72,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .ath-hstat{text-align:center;}
 .ath-hstat-val{font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;}
 .ath-hstat-lab{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.5px;}
-
+ 
 .ath-actions{padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
 .action-card{
   background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);
@@ -83,10 +83,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .action-icon{font-size:28px;margin-bottom:8px;}
 .action-label{font-size:14px;font-weight:700;margin-bottom:2px;}
 .action-sub{font-size:11px;color:var(--ink3);}
-
+ 
 .section-pad{padding:0 20px;}
 .sec-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);margin-bottom:12px;}
-
+ 
 /* triggers */
 .trigger-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
 .trigger-item{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;box-shadow:var(--sh);}
@@ -99,7 +99,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .badge-yellow{background:var(--yellow-bg);color:var(--yellow);}
 .badge-green{background:var(--green-bg);color:var(--green);}
 .badge-blue{background:var(--blue-bg);color:var(--blue);}
-
+ 
 /* match history */
 .match-list{display:flex;flex-direction:column;gap:8px;padding-bottom:32px;}
 .match-item{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;cursor:pointer;transition:all .15s;box-shadow:var(--sh);}
@@ -108,7 +108,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .match-title{font-size:14px;font-weight:700;}
 .match-date{font-size:11px;color:var(--ink4);font-family:'JetBrains Mono',monospace;}
 .match-meta{font-size:12px;color:var(--ink3);}
-
+ 
 /* ══ LIVE MATCH ══ */
 #live{min-height:100vh;background:var(--bg);}
 .live-top{background:var(--white);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
@@ -121,7 +121,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .sensor-pill.connected{background:var(--green-bg);color:var(--green);}
 .sensor-dot2{width:6px;height:6px;border-radius:50%;background:currentColor;}
 .sensor-dot2.blink{animation:pdot 1.5s ease infinite;}
-
+ 
 /* STRESS HERO */
 .stress-hero{
   margin:16px;border-radius:var(--r);padding:20px;
@@ -151,7 +151,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .snum-lab{font-size:10px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;}
 .snum-delta{font-size:10px;font-weight:600;margin-top:1px;}
 .delta-down{color:var(--red);} .delta-up{color:var(--green);} .delta-n{color:var(--ink4);}
-
+ 
 /* SCORE BOARD */
 .scoreboard{margin:0 16px 16px;background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--sh);}
 .sb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
@@ -186,7 +186,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .geb-btn{padding:6px 14px;border-radius:var(--r-xs);font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
 .geb-save{background:var(--blue);color:var(--white);}
 .geb-keep{background:var(--white);color:var(--ink3);border:1px solid var(--line);}
-
+ 
 /* POINT TIMELINE */
 .pt-section{margin:0 16px 16px;}
 .pt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
@@ -208,7 +208,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .pt-dot:hover{transform:scale(1.15);}
 .pt-point-num{font-size:9px;color:var(--ink4);font-family:'JetBrains Mono',monospace;}
 .pt-empty{font-size:13px;color:var(--ink4);padding:12px 0;text-align:center;}
-
+ 
 /* LOG SECTION */
 .log-section{margin:0 16px 16px;}
 .log-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
@@ -237,12 +237,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .le-badge{padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;white-space:nowrap;}
 .le-text{color:var(--ink2);flex:1;line-height:1.4;}
 .log-empty-msg{text-align:center;padding:16px;color:var(--ink4);font-size:13px;}
-
+ 
 /* END SESSION BTN */
 .end-session-wrap{padding:0 16px 32px;}
 .end-session-btn{width:100%;padding:14px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:1.5px solid var(--line);background:var(--white);color:var(--ink2);font-family:'Inter',sans-serif;transition:all .15s;}
 .end-session-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-bg);}
-
+ 
 /* ══ GAME SUMMARY ══ */
 #game-summary{min-height:100vh;padding:24px 20px;}
 .gs-title{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
@@ -260,7 +260,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .btn-primary:hover{background:var(--ink2);}
 .btn-outline{background:var(--white);color:var(--ink2);border:1.5px solid var(--line);}
 .btn-outline:hover{background:var(--line2);}
-
+ 
 /* ══ INTERVIEW ══ */
 #interview{min-height:100vh;padding:24px 20px;}
 .iv-title{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
@@ -271,11 +271,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .iv-ta{width:100%;border:1.5px solid var(--line);border-radius:var(--r-xs);padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;resize:vertical;min-height:72px;color:var(--ink);outline:none;transition:border-color .15s;}
 .iv-ta:focus{border-color:var(--blue);}
 .iv-actions{display:flex;gap:10px;margin-top:24px;}
-
+ 
 /* ══ TOAST ══ */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--white);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;box-shadow:var(--sh2);}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-
+ 
 /* ══ ADD MODAL ══ */
 .overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;align-items:flex-end;justify-content:center;}
 .overlay.open{display:flex;}
@@ -293,10 +293,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .mbtn{padding:9px 18px;border-radius:var(--r-xs);font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
 .mbtn-primary{background:var(--ink);color:var(--white);}
 .mbtn-outline{background:var(--white);color:var(--ink2);border:1.5px solid var(--line);}
+ 
+/* ══ DATA STATUS BADGE ══ */
+.data-status{position:fixed;top:8px;right:8px;font-size:10px;padding:3px 8px;border-radius:10px;background:var(--green-bg);color:var(--green);font-weight:600;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;}
+.data-status.show{opacity:1;}
 </style>
 </head>
 <body>
-
+ 
 <!-- ══════════ HOME ══════════ -->
 <div id="home" class="screen on">
   <div class="home-nav">
@@ -307,7 +311,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div class="home-sub">Select an athlete to begin or view their profile</div>
   <div class="athletes-list" id="athletes-list"></div>
 </div>
-
+ 
 <!-- ══════════ ATHLETE HOME ══════════ -->
 <div id="ath-home" class="screen">
   <div class="ath-hero">
@@ -344,7 +348,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="match-list" id="match-list"></div>
   </div>
 </div>
-
+ 
 <!-- ══════════ LIVE MATCH ══════════ -->
 <div id="live" class="screen">
   <!-- Top bar -->
@@ -359,12 +363,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="sensor-pill" id="sensor-pill" onclick="connectBT()">
         <div class="sensor-dot2 blink"></div>
-        <span id="sensor-txt">Simulated</span>
+        <span id="sensor-txt">Connect Sensor</span>
       </button>
       <div class="live-timer" id="live-timer">00:00</div>
     </div>
   </div>
-
+ 
   <!-- Stress hero -->
   <div class="stress-hero green" id="stress-hero">
     <div class="stress-lights">
@@ -373,8 +377,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="sl sl-r" id="sl-r"></div>
     </div>
     <div class="stress-main">
-      <div class="stress-word green" id="stress-word">CALM</div>
-      <div class="stress-desc" id="stress-desc">Focused and ready</div>
+      <div class="stress-word green" id="stress-word">--</div>
+      <div class="stress-desc" id="stress-desc">Connect the Polar H10 to begin</div>
       <div class="stress-nums">
         <div class="snum"><div class="snum-val" id="sn-rmssd">--</div><div class="snum-lab">RMSSD ms</div><div class="snum-delta delta-n" id="sn-delta">vs baseline</div></div>
         <div class="snum"><div class="snum-val" id="sn-hr">--</div><div class="snum-lab">BPM</div></div>
@@ -382,7 +386,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       </div>
     </div>
   </div>
-
+ 
   <!-- Scoreboard -->
   <div class="scoreboard">
     <div class="sb-top">
@@ -419,7 +423,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       </div>
     </div>
   </div>
-
+ 
   <!-- Point timeline -->
   <div class="pt-section">
     <div class="pt-header">
@@ -430,7 +434,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>
     </div>
   </div>
-
+ 
   <!-- Log section -->
   <div class="log-section">
     <div class="sec-title" style="margin-bottom:8px;">Log a Moment</div>
@@ -450,13 +454,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="log-empty-msg" id="log-empty-msg">No moments logged yet</div>
     </div>
   </div>
-
+ 
   <!-- End session -->
   <div class="end-session-wrap">
     <button class="end-session-btn" onclick="endMatch()">End Match & Save →</button>
   </div>
 </div>
-
+ 
 <!-- ══════════ GAME SUMMARY ══════════ -->
 <div id="game-summary" class="screen">
   <button class="back-btn" onclick="go('live')" style="margin-bottom:16px;">← Back to match</button>
@@ -476,7 +480,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <button class="btn btn-outline" onclick="go('live')">Back to Match</button>
   </div>
 </div>
-
+ 
 <!-- ══════════ INTERVIEW ══════════ -->
 <div id="interview" class="screen">
   <button class="back-btn" onclick="go('ath-home')" style="margin-bottom:4px;">← Back to profile</button>
@@ -488,7 +492,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <button class="btn btn-outline" onclick="go('ath-home')">Cancel</button>
   </div>
 </div>
-
+ 
 <!-- ══════════ ADD ATHLETE MODAL ══════════ -->
 <div class="overlay" id="overlay-add">
   <div class="modal">
@@ -496,6 +500,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="modal-sub">Create a profile to start tracking their performance</div>
     <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="e.g. Jay Surapong"/></div>
     <div class="form-group"><label class="form-label">Sport & Level</label><input class="form-input" id="f-sport" placeholder="e.g. Squash — Elite"/></div>
+    <div class="form-group"><label class="form-label">Resting Baseline HRV (ms) — optional</label><input class="form-input" id="f-baseline" type="number" placeholder="e.g. 65 (leave blank if unknown)"/></div>
     <div class="form-group">
       <label class="form-label">Profile Colour</label>
       <div class="color-row" id="color-row">
@@ -513,12 +518,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     </div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+<div class="data-status" id="data-status">✓ Saved locally</div>
+ 
 <script>
-// ══ DATA ══
-let athletes = [
+// ══════════════════════════════════════════════════════════════
+// DEFAULT SEED DATA (only used the very first time the site loads
+// on a device, before anything is saved to local storage)
+// ══════════════════════════════════════════════════════════════
+const DEFAULT_ATHLETES = [
   {
     id:1, name:"Jay Surapong", sport:"Squash — Elite", color:"#2563eb", baseline:68,
     matches:[
@@ -548,27 +557,71 @@ let athletes = [
     ]
   }
 ];
-
+ 
+let athletes = [];
+ 
 let selectedAthlete = null;
 let matchLog = [];
 let currentGame = 1;
 let jayScore = 0, oppScore = 0;
 let gamePoints = [];
 let sessionSeconds = 0, sessionTimer = null;
-let simInterval = null;
 let currentRMSSD = 0, currentHR = 0;
 let selectedTag = null;
 let pickedColor = '#2563eb';
 let gameSuggested = false;
 let savedGames = [];
-
+ 
+// ══════════════════════════════════════════════════════════════
+// PERSISTENCE — saves to this browser's local storage so data
+// survives refresh / closing the tab / reopening the site later.
+// This is per-device storage (not shared across different
+// computers yet — that upgrade comes later with a real database).
+// ══════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'pulseiq_athletes_v1';
+ 
+function loadData(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      if(Array.isArray(parsed)){
+        athletes = parsed;
+        return;
+      }
+    }
+  }catch(e){
+    console.error('PulseIQ: failed to load saved data', e);
+  }
+  // First run on this device, or corrupted data — fall back to seed data
+  athletes = JSON.parse(JSON.stringify(DEFAULT_ATHLETES));
+  saveData();
+}
+ 
+function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(athletes));
+    flashSavedIndicator();
+  }catch(e){
+    console.error('PulseIQ: failed to save data', e);
+    toast('⚠️ Could not save — storage may be full');
+  }
+}
+ 
+function flashSavedIndicator(){
+  const el = document.getElementById('data-status');
+  el.classList.add('show');
+  clearTimeout(flashSavedIndicator._t);
+  flashSavedIndicator._t = setTimeout(()=>el.classList.remove('show'), 1200);
+}
+ 
 // ══ NAVIGATION ══
 function go(screen) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
   document.getElementById(screen).classList.add('on');
   window.scrollTo(0,0);
 }
-
+ 
 // ══ HOME ══
 function renderHome() {
   const list = document.getElementById('athletes-list');
@@ -580,7 +633,7 @@ function renderHome() {
         <div class="ath-sport">${a.sport}</div>
         <div class="ath-stats">
           <span class="ath-stat"><strong>${a.matches.length}</strong> matches</span>
-          <span class="ath-stat">Baseline <strong>${a.baseline}ms</strong></span>
+          <span class="ath-stat">Baseline <strong>${a.baseline ? a.baseline+'ms' : '—'}</strong></span>
           <span class="ath-stat"><strong>${a.triggers.length}</strong> triggers</span>
         </div>
       </div>
@@ -588,21 +641,21 @@ function renderHome() {
     </div>
   `).join('') + `<button class="add-btn" onclick="openAddAthlete()"><span style="font-size:20px">+</span> Add athlete</button>`;
 }
-
+ 
 // ══ ATHLETE HOME ══
 function openAthlete(id) {
   selectedAthlete = athletes.find(a => a.id === id);
   const a = selectedAthlete;
-
+ 
   // Hero card
   document.getElementById('ath-hero-card').style.background = `linear-gradient(135deg, ${a.color}, ${a.color}cc)`;
   document.getElementById('ath-hero-av').textContent = a.name.charAt(0);
   document.getElementById('ath-hero-name').textContent = a.name;
   document.getElementById('ath-hero-sub').textContent = a.sport;
   document.getElementById('ath-h-matches').textContent = a.matches.length;
-  document.getElementById('ath-h-baseline').textContent = a.baseline + 'ms';
+  document.getElementById('ath-h-baseline').textContent = a.baseline ? a.baseline + 'ms' : '—';
   document.getElementById('ath-h-triggers').textContent = a.triggers.length;
-
+ 
   // Triggers
   const tl = document.getElementById('trigger-list');
   tl.innerHTML = a.triggers.length ? a.triggers.map(t => `
@@ -615,7 +668,7 @@ function openAthlete(id) {
       <div class="trigger-quote">"${t.quote}"</div>
     </div>
   `).join('') : '<div style="font-size:13px;color:var(--ink4);padding:8px 0;">Complete more sessions to identify patterns.</div>';
-
+ 
   // Match history
   const ml = document.getElementById('match-list');
   ml.innerHTML = a.matches.length ? a.matches.map((m,i) => {
@@ -629,10 +682,10 @@ function openAthlete(id) {
       <div class="match-meta">${m.games.length} game${m.games.length>1?'s':''} · ${totalSpikes} stress spikes · ${totalErrors} errors</div>
     </div>`;
   }).join('') : '<div style="font-size:13px;color:var(--ink4);padding:8px 0;">No matches recorded yet.</div>';
-
+ 
   go('ath-home');
 }
-
+ 
 // ══ START MATCH ══
 function startMatch() {
   if (!selectedAthlete) return;
@@ -640,20 +693,29 @@ function startMatch() {
   gamePoints = []; matchLog = []; savedGames = [];
   sessionSeconds = 0; selectedTag = null;
   gameSuggested = false;
-
+  currentRMSSD = 0; currentHR = 0;
+  rrBuffer = [];
+ 
   document.getElementById('live-av').textContent = selectedAthlete.name.charAt(0);
   document.getElementById('live-av').style.background = selectedAthlete.color;
   document.getElementById('live-name').textContent = selectedAthlete.name.split(' ')[0];
   document.getElementById('live-game-badge').textContent = 'Game 1';
   document.getElementById('sb-jay-name').textContent = selectedAthlete.name.split(' ')[0];
-  document.getElementById('sn-base').textContent = selectedAthlete.baseline;
+  document.getElementById('sn-base').textContent = selectedAthlete.baseline || '--';
   document.getElementById('sb-game-label').textContent = 'Game 1 · Best of 5';
   document.getElementById('game-end-banner').classList.remove('show');
   document.getElementById('log-feed').innerHTML = '<div class="log-empty-msg" id="log-empty-msg">No moments logged yet</div>';
   document.getElementById('pt-scroll').innerHTML = '<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
   document.getElementById('pt-count').textContent = '0 points';
+ 
+  // Reset stress display until real sensor data starts arriving
+  document.getElementById('sn-rmssd').textContent = '--';
+  document.getElementById('sn-hr').textContent = '--';
+  document.getElementById('stress-word').textContent = isConnected ? 'READING' : '--';
+  document.getElementById('stress-desc').textContent = isConnected ? 'Waiting for stable HRV reading…' : 'Connect the Polar H10 to begin';
+ 
   updateScoreDisplay();
-
+ 
   clearInterval(sessionTimer);
   sessionTimer = setInterval(()=>{
     sessionSeconds++;
@@ -661,38 +723,149 @@ function startMatch() {
     const s=(sessionSeconds%60).toString().padStart(2,'0');
     document.getElementById('live-timer').textContent=`${m}:${s}`;
   },1000);
-
-  startSim();
+ 
   go('live');
 }
-
-// ══ SIMULATION ══
-let simTick = 0;
-function startSim() {
-  clearInterval(simInterval);
-  simTick = 0;
-  simInterval = setInterval(()=>{
-    simTick++;
-    const base = selectedAthlete.baseline;
-    const phase = Math.floor(simTick/25)%4;
-    let rmssd, hr;
-    if(phase===0){rmssd=base+(Math.random()*10-5);hr=128+Math.floor(Math.random()*15);}
-    else if(phase===1){rmssd=base*.72+(Math.random()*8-4);hr=155+Math.floor(Math.random()*15);}
-    else if(phase===2){rmssd=base*.42+(Math.random()*6-3);hr=178+Math.floor(Math.random()*12);}
-    else{rmssd=base*.82+(Math.random()*8-4);hr=145+Math.floor(Math.random()*10);}
-    rmssd=Math.max(14,Math.round(rmssd));
-    currentRMSSD=rmssd; currentHR=hr;
-    updateStress(rmssd,hr,base);
-  },1000);
+ 
+// ══════════════════════════════════════════════════════════════
+// REAL-TIME HRV via POLAR H10 (Web Bluetooth)
+//
+// The Polar H10 broadcasts over the STANDARD Bluetooth "Heart Rate"
+// GATT service (UUID 0x180D), characteristic "Heart Rate Measurement"
+// (UUID 0x2A37). That characteristic includes RR-intervals (the time
+// between individual heartbeats, in units of 1/1024 second) whenever
+// the "RR-Interval present" flag bit is set — which the H10 does by
+// default. We don't need Polar's proprietary SDK for this.
+//
+// RMSSD = Root Mean Square of Successive Differences between
+// consecutive RR intervals. It's the standard HRV metric used to
+// estimate parasympathetic (rest/recovery) activity — lower RMSSD
+// generally indicates higher physiological stress.
+// ══════════════════════════════════════════════════════════════
+ 
+let bleDevice = null;
+let bleServer = null;
+let hrChar = null;
+let isConnected = false;
+let rrBuffer = [];              // rolling window of recent RR intervals, in ms
+const RR_WINDOW_SIZE = 30;      // ~20-40s of beats depending on heart rate — enough for a stable short-window RMSSD without lagging too far behind real stress changes
+ 
+async function connectBT(){
+  if(!navigator.bluetooth){
+    toast('Web Bluetooth needs Chrome or Edge (not Safari)');
+    return;
+  }
+  try{
+    toast('Scanning for Polar H10…');
+    bleDevice = await navigator.bluetooth.requestDevice({
+      filters: [{ services: ['heart_rate'] }],
+      optionalServices: ['battery_service']
+    });
+ 
+    bleDevice.addEventListener('gattserverdisconnected', onBTDisconnected);
+ 
+    bleServer = await bleDevice.gatt.connect();
+    const service = await bleServer.getPrimaryService('heart_rate');
+    hrChar = await service.getCharacteristic('heart_rate_measurement');
+    await hrChar.startNotifications();
+    hrChar.addEventListener('characteristicvaluechanged', handleHRData);
+ 
+    isConnected = true;
+    rrBuffer = [];
+ 
+    const pill = document.getElementById('sensor-pill');
+    pill.className = 'sensor-pill connected';
+    document.getElementById('sensor-txt').textContent = bleDevice.name || 'Polar H10';
+    document.getElementById('stress-word').textContent = 'READING';
+    document.getElementById('stress-desc').textContent = 'Waiting for stable HRV reading…';
+ 
+    toast(`Connected to ${bleDevice.name || 'sensor'} ✓`);
+  }catch(e){
+    console.error(e);
+    if(e.name === 'NotFoundError'){
+      toast('No device selected');
+    }else{
+      toast('Bluetooth connection failed — is the strap worn & damp?');
+    }
+  }
 }
-
+ 
+function onBTDisconnected(){
+  isConnected = false;
+  const pill = document.getElementById('sensor-pill');
+  pill.className = 'sensor-pill';
+  document.getElementById('sensor-txt').textContent = 'Reconnect Sensor';
+  toast('Sensor disconnected');
+}
+ 
+// Parses the Bluetooth "Heart Rate Measurement" characteristic per
+// the official GATT spec, and extracts RR-intervals if present.
+function handleHRData(event){
+  const value = event.target.value; // DataView
+  const flags = value.getUint8(0);
+  let index = 1;
+ 
+  // Bit 0: 0 = HR is UINT8, 1 = HR is UINT16
+  let heartRate;
+  if(flags & 0x1){
+    heartRate = value.getUint16(index, true);
+    index += 2;
+  }else{
+    heartRate = value.getUint8(index);
+    index += 1;
+  }
+ 
+  // Bit 3: Energy Expended present (skip if so, we don't need it)
+  if(flags & 0x08){
+    index += 2;
+  }
+ 
+  // Bit 4: RR-Interval present
+  const rrPresent = flags & 0x10;
+  if(rrPresent){
+    while(index + 1 < value.byteLength){
+      const rrRaw = value.getUint16(index, true);     // units of 1/1024 second
+      const rrMs = Math.round((rrRaw / 1024) * 1000);  // convert to milliseconds
+      rrBuffer.push(rrMs);
+      index += 2;
+    }
+    if(rrBuffer.length > RR_WINDOW_SIZE){
+      rrBuffer = rrBuffer.slice(-RR_WINDOW_SIZE);
+    }
+  }
+ 
+  currentHR = heartRate;
+ 
+  const rmssd = calcRMSSD(rrBuffer);
+  if(rmssd !== null){
+    currentRMSSD = Math.round(rmssd);
+    if(selectedAthlete){
+      updateStress(currentRMSSD, currentHR, selectedAthlete.baseline || currentRMSSD);
+    }
+  }else{
+    // Not enough RR data yet to compute RMSSD — still show live BPM
+    document.getElementById('sn-hr').textContent = currentHR;
+  }
+}
+ 
+// RMSSD = sqrt( mean( (RR[i+1] - RR[i])^2 ) )
+function calcRMSSD(intervals){
+  if(intervals.length < 2) return null;
+  let sumSq = 0;
+  for(let i = 1; i < intervals.length; i++){
+    const diff = intervals[i] - intervals[i-1];
+    sumSq += diff * diff;
+  }
+  return Math.sqrt(sumSq / (intervals.length - 1));
+}
+ 
 function stressLevel(rmssd,base){
   const r=rmssd/base;
   if(r>=.75)return'green';
   if(r>=.5)return'yellow';
   return'red';
 }
-
+ 
 function updateStress(rmssd,hr,base){
   const lvl=stressLevel(rmssd,base);
   const labels={green:['CALM','Focused and ready'],yellow:['RISING','Stress building — watch closely'],red:['STRESS','High stress — consider intervention']};
@@ -711,14 +884,14 @@ function updateStress(rmssd,hr,base){
   del.textContent=(delta>=0?'+':'')+delta+'ms';
   del.className='snum-delta '+(delta>=0?'delta-up':'delta-down');
 }
-
+ 
 // ══ SCORING ══
 function addPoint(who){
   if(who==='jay') jayScore++;
   else oppScore++;
   updateScoreDisplay();
   // Log point to timeline
-  const lvl=stressLevel(currentRMSSD,selectedAthlete.baseline);
+  const lvl = selectedAthlete && currentRMSSD ? stressLevel(currentRMSSD, selectedAthlete.baseline || currentRMSSD) : 'green';
   gamePoints.push({jay:jayScore,opp:oppScore,stress:lvl,rmssd:currentRMSSD,hr:currentHR,tag:selectedTag});
   addPointDot(gamePoints.length,jayScore,oppScore,lvl,gamePoints.length-1);
   // Check game point
@@ -730,7 +903,7 @@ function addPoint(who){
     document.getElementById('game-end-banner').classList.add('show');
   }
 }
-
+ 
 function undoPoint(who){
   if(who==='jay'&&jayScore>0) jayScore--;
   else if(who==='opp'&&oppScore>0) oppScore--;
@@ -744,12 +917,12 @@ function undoPoint(who){
     document.getElementById('game-end-banner').classList.remove('show');
   }
 }
-
+ 
 function updateScoreDisplay(){
   document.getElementById('sb-jay').textContent=jayScore;
   document.getElementById('sb-opp').textContent=oppScore;
 }
-
+ 
 function addPointDot(num,j,o,stress,idx){
   const scroll=document.getElementById('pt-scroll');
   const empty=document.getElementById('pt-empty');
@@ -770,30 +943,30 @@ function addPointDot(num,j,o,stress,idx){
   scroll.appendChild(wrap);
   scroll.scrollLeft=scroll.scrollWidth;
 }
-
+ 
 function renderTimeline(){
   const scroll=document.getElementById('pt-scroll');
   scroll.innerHTML=gamePoints.length?'':'<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
   gamePoints.forEach((p,i)=>addPointDot(i+1,p.jay,p.opp,p.stress,i));
   document.getElementById('pt-count').textContent=gamePoints.length+' point'+(gamePoints.length!==1?'s':'');
 }
-
+ 
 function showPointDetail(idx){
   const p=gamePoints[idx];
-  toast(`Point ${idx+1}: ${p.jay}-${p.opp} · HRV ${p.rmssd}ms · ${p.stress.toUpperCase()}`);
+  toast(`Point ${idx+1}: ${p.jay}-${p.opp} · HRV ${p.rmssd || '--'}ms · ${p.stress.toUpperCase()}`);
 }
-
+ 
 function dismissGameEnd(){
   document.getElementById('game-end-banner').classList.remove('show');
 }
-
+ 
 // ══ END GAME ══
 function endGame(goSummary){
   const spikes=matchLog.filter(l=>l.type==='spike').length;
   const errors=matchLog.filter(l=>l.type==='error').length;
   savedGames.push({num:currentGame,jay:jayScore,opp:oppScore,spikes,errors,points:[...gamePoints]});
   document.getElementById('game-end-banner').classList.remove('show');
-
+ 
   if(goSummary){
     // Show summary
     document.getElementById('gs-title').textContent=`Game ${currentGame} Complete`;
@@ -803,7 +976,7 @@ function endGame(goSummary){
     document.getElementById('gs-errors').textContent=errors;
     document.getElementById('gs-next-num').textContent=currentGame+1;
     document.getElementById('gs-tl-name').textContent=`Game ${currentGame}`;
-
+ 
     // Timeline
     const tl=document.getElementById('gs-tl-scroll');
     tl.innerHTML='';
@@ -813,11 +986,11 @@ function endGame(goSummary){
       const lbl=document.createElement('div');lbl.className='pt-point-num';lbl.textContent=`${p.jay}-${p.opp}`;
       wrap.appendChild(dot);wrap.appendChild(lbl);tl.appendChild(wrap);
     });
-
+ 
     go('game-summary');
   }
 }
-
+ 
 function nextGame(){
   currentGame++;
   jayScore=0;oppScore=0;
@@ -832,23 +1005,24 @@ function nextGame(){
   go('live');
   toast(`Game ${currentGame} started`);
 }
-
+ 
 // ══ END MATCH ══
 function endMatch(){
   if(gamePoints.length>0) endGame(false);
-  clearInterval(sessionTimer);clearInterval(simInterval);
+  clearInterval(sessionTimer);
   const totalSpikes=savedGames.reduce((s,g)=>s+g.spikes,0)+(matchLog.filter(l=>l.type==='spike').length);
   const totalErrors=savedGames.reduce((s,g)=>s+g.errors,0)+(matchLog.filter(l=>l.type==='error').length);
   selectedAthlete.matches.unshift({
-    date:'Today',
+    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
     title:`Match — Game ${currentGame}`,
     games:savedGames
   });
+  saveData();
   toast('Match saved to profile ✓');
   go('ath-home');
   openAthlete(selectedAthlete.id);
 }
-
+ 
 // ══ LOG MOMENTS ══
 function selTag(btn,tag){
   document.querySelectorAll('.ltag').forEach(b=>b.classList.remove('on'));
@@ -859,17 +1033,17 @@ function selTag(btn,tag){
     if(c){selectedTag=c;btn.textContent=c;}
   }
 }
-
+ 
 function logMoment(type){
   const tag=selectedTag||'Untagged';
   const pointIdx=gamePoints.length-1;
   const entry={type,tag,rmssd:currentRMSSD,hr:currentHR,jay:jayScore,opp:oppScore,pointIdx};
   matchLog.push(entry);
-
+ 
   const feed=document.getElementById('log-feed');
   const empty=document.getElementById('log-empty-msg');
   if(empty)empty.remove();
-
+ 
   const colors={spike:'badge-red',warning:'badge-yellow',error:'badge-blue'};
   const icons={spike:'🔴 Spike',warning:'🟡 Warning',error:'⚠️ Error'};
   const el=document.createElement('div');
@@ -877,26 +1051,26 @@ function logMoment(type){
   el.innerHTML=`
     <div class="le-pt">${jayScore}-${oppScore}</div>
     <div class="le-badge ${colors[type]}">${icons[type]}</div>
-    <div class="le-text">${tag} · HRV ${currentRMSSD}ms</div>
+    <div class="le-text">${tag} · HRV ${currentRMSSD||'--'}ms</div>
   `;
   feed.insertBefore(el,feed.firstChild);
-
+ 
   // Update dot if exists
   if(pointIdx>=0){
     const dots=document.querySelectorAll('.pt-dot-wrap');
     if(dots[pointIdx])dots[pointIdx].querySelector('.pt-dot').classList.add('has-event');
   }
-
+ 
   toast(`Logged: ${tag}`);
 }
-
+ 
 // ══ INTERVIEW ══
 function goInterview(){
   if(!selectedAthlete)return;
   const moments=matchLog.filter(l=>l.type==='spike'||l.type==='warning');
   const container=document.getElementById('iv-moments');
   document.getElementById('iv-sub').textContent=`${moments.length} flagged moment${moments.length!==1?'s':''} from the last session`;
-
+ 
   if(moments.length===0){
     container.innerHTML='<div style="font-size:13px;color:var(--ink3);padding:12px 0;">No stress moments were logged. Add general notes below.</div>';
   } else {
@@ -904,46 +1078,43 @@ function goInterview(){
       <div class="iv-moment">
         <div class="iv-moment-hdr">
           <span class="badge ${m.type==='spike'?'badge-red':'badge-yellow'}">${m.type==='spike'?'🔴 Spike':'🟡 Warning'}</span>
-          <span style="font-size:12px;color:var(--ink4);">Score ${m.jay}-${m.opp} · ${m.tag} · HRV ${m.rmssd}ms</span>
+          <span style="font-size:12px;color:var(--ink4);">Score ${m.jay}-${m.opp} · ${m.tag} · HRV ${m.rmssd||'--'}ms</span>
         </div>
         <div class="iv-q">What was ${selectedAthlete.name.split(' ')[0]} thinking at this moment?</div>
         <textarea class="iv-ta" id="iv-${i}" placeholder="Type what the athlete said…"></textarea>
       </div>
     `).join('');
   }
-
+ 
   container.innerHTML+=`
     <div class="iv-moment">
       <div class="iv-q">General session notes</div>
       <textarea class="iv-ta" id="iv-general" placeholder="Overall observations, patterns, coaching actions…"></textarea>
     </div>
   `;
-
+ 
   go('interview');
 }
-
+ 
 function saveInterview(){
+  const moments = matchLog.filter(l=>l.type==='spike'||l.type==='warning');
+  const notes = moments.map((m,i)=>({
+    ...m,
+    athleteResponse: (document.getElementById('iv-'+i) || {}).value || ''
+  }));
+  const generalNotes = (document.getElementById('iv-general') || {}).value || '';
+ 
+  if(selectedAthlete && selectedAthlete.matches.length>0){
+    selectedAthlete.matches[0].interviewNotes = notes;
+    selectedAthlete.matches[0].generalNotes = generalNotes;
+  }
+ 
+  saveData();
   toast('Interview saved to profile ✓');
   go('ath-home');
+  openAthlete(selectedAthlete.id);
 }
-
-// ══ BLUETOOTH ══
-async function connectBT(){
-  if(!navigator.bluetooth){toast('Use Chrome browser for Bluetooth');return;}
-  try{
-    toast('Scanning for Polar H10…');
-    const device=await navigator.bluetooth.requestDevice({
-      filters:[{namePrefix:'Polar'}],
-      optionalServices:['heart_rate']
-    });
-    clearInterval(simInterval);
-    const pill=document.getElementById('sensor-pill');
-    pill.className='sensor-pill connected';
-    document.getElementById('sensor-txt').textContent=device.name;
-    toast(`Connected to ${device.name} ✓`);
-  }catch(e){toast('Connection cancelled');}
-}
-
+ 
 // ══ ADD ATHLETE ══
 function openAddAthlete(){document.getElementById('overlay-add').classList.add('open');}
 function closeAdd(){document.getElementById('overlay-add').classList.remove('open');}
@@ -954,20 +1125,35 @@ function pickColor(el){
 function addAthlete(){
   const name=document.getElementById('f-name').value.trim();
   const sport=document.getElementById('f-sport').value.trim();
+  const baselineInput=document.getElementById('f-baseline').value.trim();
   if(!name){toast('Please enter a name');return;}
-  athletes.unshift({id:Date.now(),name,sport:sport||'Sport not specified',color:pickedColor,baseline:Math.floor(Math.random()*20)+60,matches:[],triggers:[]});
+  athletes.unshift({
+    id:Date.now(),
+    name,
+    sport:sport||'Sport not specified',
+    color:pickedColor,
+    baseline: baselineInput ? parseInt(baselineInput,10) : null,
+    matches:[],
+    triggers:[]
+  });
+  saveData();
   closeAdd();renderHome();toast(`${name} added ✓`);
+  document.getElementById('f-name').value='';
+  document.getElementById('f-sport').value='';
+  document.getElementById('f-baseline').value='';
 }
-
+ 
 // ══ TOAST ══
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
-
+ 
 // ══ INIT ══
+loadData();
 renderHome();
 </script>
 </body>
 </html>
+ 

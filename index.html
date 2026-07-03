@@ -531,7 +531,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 <div id="calibrate" class="screen">
   <button class="back-btn" onclick="go('ath-home')" style="margin-bottom:4px;">← Back to profile</button>
   <div class="iv-title">Calibrate Baseline</div>
-  <div class="iv-sub">Have <span id="cal-athlete-name">this athlete</span> do their normal warm-up — hitting or moving at realistic match intensity, no rest, no game pressure — while wearing the Polar H10 for 60 seconds</div>
+  <div class="iv-sub">Have <span id="cal-athlete-name">this athlete</span> do their normal warm-up — hitting or moving at realistic match intensity, no rest, no game pressure — while wearing the Polar H10 for 2 minutes 30 seconds</div>
  
   <div style="background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 24px;margin-top:20px;box-shadow:var(--sh);text-align:center;">
     <button class="sensor-pill" id="cal-sensor-pill" onclick="connectBT()" style="margin:0 auto 24px;">
@@ -539,8 +539,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <span id="cal-sensor-txt">Connect Sensor</span>
     </button>
  
-    <div style="font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);line-height:1;" id="cal-timer">60</div>
-    <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 20px;">Seconds remaining</div>
+    <div style="font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);line-height:1;" id="cal-timer">2:30</div>
+    <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 20px;">Time remaining</div>
  
     <div style="display:flex;justify-content:center;gap:40px;margin-bottom:24px;">
       <div><div style="font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="cal-bpm">--</div><div style="font-size:10px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;">BPM</div></div>
@@ -549,7 +549,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
  
     <div style="font-size:13px;color:var(--ink3);margin-bottom:18px;" id="cal-status">Connect the Polar H10 to begin</div>
  
-    <button class="btn btn-primary" id="cal-start-btn" onclick="startCalibration()" disabled>Start 60s Calibration</button>
+    <button class="btn btn-primary" id="cal-start-btn" onclick="startCalibration()" disabled>Start 2:30 Calibration</button>
  
     <div id="cal-result" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--line);">
       <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Warm-up RMSSD (this athlete's baseline)</div>
@@ -615,7 +615,7 @@ let currentGamePushed = false;  // guards against double-saving the same game
 let isCalibrating = false;      // true while a baseline calibration session is running
 let calRRBuffer = [];           // all RR intervals collected during the current calibration
 let calTimer = null;
-let calSecondsLeft = 60;
+let calSecondsLeft = 150; // gets set from CAL_DURATION_SECONDS when calibration actually starts
 let pendingBaseline = null;     // holds the just-measured baseline until the coach confirms saving it
  
 // ══════════════════════════════════════════════════════════════
@@ -768,16 +768,25 @@ function openAthlete(id) {
 // file), so a resting number would be an unfair reference point for
 // comparing against actual rally-adjacent readings. This still isn't
 // a perfect match to full match intensity, but it's much closer than
-// a resting baseline. Computes RMSSD across the whole 60-second
-// window (not a rolling sample) for maximum stability.
+// a resting baseline. Computes RMSSD across the whole calibration
+// window (not a rolling sample) for maximum stability — 2:30 gives a
+// meaningfully larger, steadier sample than a quick 60-second read.
 // ══════════════════════════════════════════════════════════════
+const CAL_DURATION_SECONDS = 150; // 2 minutes 30 seconds
+ 
+function formatCalTime(totalSeconds){
+  const m = Math.floor(totalSeconds/60);
+  const s = totalSeconds%60;
+  return `${m}:${s.toString().padStart(2,'0')}`;
+}
+ 
 function openCalibrate(){
   if(!selectedAthlete) return;
   document.getElementById('cal-athlete-name').textContent = selectedAthlete.name.split(' ')[0];
   document.getElementById('cal-status').textContent = isConnected ? 'Sensor connected — ready to calibrate' : 'Connect the Polar H10 to begin';
   document.getElementById('cal-result').style.display = 'none';
   document.getElementById('cal-start-btn').disabled = !isConnected;
-  document.getElementById('cal-timer').textContent = '60';
+  document.getElementById('cal-timer').textContent = formatCalTime(CAL_DURATION_SECONDS);
   document.getElementById('cal-bpm').textContent = '--';
   document.getElementById('cal-beats').textContent = '0';
   setSensorPillState(isConnected, bleDevice ? (bleDevice.name || 'Polar H10') : '');
@@ -788,16 +797,16 @@ function startCalibration(){
   if(!isConnected){ toast('Connect the sensor first'); return; }
   calRRBuffer = [];
   isCalibrating = true;
-  calSecondsLeft = 60;
+  calSecondsLeft = CAL_DURATION_SECONDS;
   document.getElementById('cal-start-btn').disabled = true;
   document.getElementById('cal-status').textContent = 'Keep warming up at normal match intensity…';
-  document.getElementById('cal-timer').textContent = calSecondsLeft;
+  document.getElementById('cal-timer').textContent = formatCalTime(calSecondsLeft);
   document.getElementById('cal-result').style.display = 'none';
  
   clearInterval(calTimer);
   calTimer = setInterval(()=>{
     calSecondsLeft--;
-    document.getElementById('cal-timer').textContent = calSecondsLeft;
+    document.getElementById('cal-timer').textContent = formatCalTime(Math.max(0,calSecondsLeft));
     if(calSecondsLeft<=0){
       clearInterval(calTimer);
       finishCalibration();
@@ -901,6 +910,29 @@ let isConnected = false;
 let rrBuffer = [];              // rolling window of recent RR intervals, in ms
 const RR_WINDOW_SIZE = 30;      // ~20-40s of beats depending on heart rate — enough for a stable short-window RMSSD without lagging too far behind real stress changes
  
+// ══════════════════════════════════════════════════════════════
+// ARTIFACT REJECTION
+// Chest straps occasionally lose skin contact for an instant,
+// especially during movement — the sensor then reports one huge
+// gap instead of the real beat, and that single bad number can
+// wreck RMSSD (differences get squared, so one glitch outweighs
+// dozens of real beats). This rejects beats that are physiologically
+// impossible, or that jump too far from the last accepted beat.
+// ══════════════════════════════════════════════════════════════
+let lastAcceptedRR = null;
+const RR_MIN_MS = 300;   // ~200 bpm — faster than any real beat gap
+const RR_MAX_MS = 2000;  // ~30 bpm — slower than any real beat gap
+const RR_MAX_JUMP = 0.35; // reject if more than 35% different from the last accepted beat (catches missed/doubled beats)
+ 
+function isPlausibleRR(rr){
+  if(rr < RR_MIN_MS || rr > RR_MAX_MS) return false;
+  if(lastAcceptedRR !== null){
+    const change = Math.abs(rr - lastAcceptedRR) / lastAcceptedRR;
+    if(change > RR_MAX_JUMP) return false;
+  }
+  return true;
+}
+ 
 async function connectBT(){
   if(!navigator.bluetooth){
     toast('Web Bluetooth needs Chrome or Edge (not Safari)');
@@ -923,6 +955,7 @@ async function connectBT(){
  
     isConnected = true;
     rrBuffer = [];
+    lastAcceptedRR = null; // fresh session — don't compare the first beat against a stale prior connection
  
     // Update whichever sensor pill is on screen — the live match one, the
     // calibration one, or both if their elements exist in the DOM.
@@ -993,9 +1026,18 @@ function handleHRData(event){
     while(index + 1 < value.byteLength){
       const rrRaw = value.getUint16(index, true);     // units of 1/1024 second
       const rrMs = Math.round((rrRaw / 1024) * 1000);  // convert to milliseconds
-      rrBuffer.push(rrMs);
-      if(isCalibrating){
-        calRRBuffer.push(rrMs); // uncapped — calibration wants every beat in the window, not a rolling sample
+ 
+      // Reject artifact beats before they ever reach the RMSSD math.
+      // A single bad reading (usually from the strap briefly losing
+      // skin contact during movement, which reads as one huge missed
+      // beat) can massively distort RMSSD since differences get
+      // squared — one glitch can dwarf 100 real beats.
+      if(isPlausibleRR(rrMs)){
+        rrBuffer.push(rrMs);
+        if(isCalibrating){
+          calRRBuffer.push(rrMs); // uncapped — calibration wants every real beat in the window, not a rolling sample
+        }
+        lastAcceptedRR = rrMs;
       }
       index += 2;
     }

@@ -112,7 +112,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
  
 /* ══ LIVE MATCH ══ */
 #live{min-height:100vh;background:var(--bg);}
-.live-top{background:var(--white);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.live-top{background:var(--white);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:8px;}
 .live-top-left{display:flex;align-items:center;gap:10px;}
 .live-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--white);}
 .live-name{font-size:15px;font-weight:700;}
@@ -123,15 +123,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .sensor-dot2{width:6px;height:6px;border-radius:50%;background:currentColor;}
 .sensor-dot2.blink{animation:pdot 1.5s ease infinite;}
  
+/* Data source segmented toggle — professional, minimal, no decoration */
+.seg-toggle{display:flex;border:1.5px solid var(--line);border-radius:20px;overflow:hidden;flex-shrink:0;}
+.seg-btn{padding:5px 11px;cursor:pointer;background:var(--white);color:var(--ink3);font-weight:600;font-size:11px;border:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.seg-btn:first-child{border-right:1px solid var(--line);}
+.seg-btn.on{background:var(--ink);color:var(--white);}
+ 
 /* STRESS HERO */
 .stress-hero{
   margin:16px;border-radius:var(--r);padding:20px;
-  transition:background .5s;
+  transition:background .3s;
   display:flex;align-items:center;gap:16px;
 }
 .stress-hero.neutral{background:var(--line2);}
 .stress-hero.spike{background:var(--red-bg);}
-.stress-hero.recovery{background:var(--blue-bg);}
 .stress-hero.rally{background:var(--line2);}
 .rally-toggle{
   width:100%;padding:11px;border-radius:var(--r-sm);border:1.5px solid var(--line);
@@ -142,19 +147,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .rally-toggle.active{background:var(--line2);border-color:var(--ink4);}
 .rally-toggle-dot{width:9px;height:9px;border-radius:50%;background:var(--blue);flex-shrink:0;}
 .rally-toggle.active .rally-toggle-dot{background:var(--ink4);}
-.stress-indicator{width:22px;height:22px;border-radius:50%;background:var(--ink4);transition:all .4s;flex-shrink:0;}
+.stress-indicator{width:22px;height:22px;border-radius:50%;background:var(--ink4);transition:all .3s;flex-shrink:0;}
 .stress-indicator.spike{background:var(--red);animation:rpulse 1.2s ease infinite;}
-.stress-indicator.recovery{background:var(--blue);}
 .stress-indicator.rally{background:var(--ink4);opacity:.5;}
 @keyframes rpulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4);}50%{box-shadow:0 0 0 8px rgba(220,38,38,0);}}
 .stress-main{flex:1;}
-.stress-word{font-size:32px;font-weight:900;letter-spacing:-1px;transition:color .4s;}
+.stress-word{font-size:32px;font-weight:900;letter-spacing:-1px;transition:color .3s;display:inline-flex;align-items:center;}
 .stress-word.neutral{color:var(--ink2);}
 .stress-word.spike{color:var(--red);}
-.stress-word.recovery{color:var(--blue);}
 .stress-word.rally{color:var(--ink4);}
+.spike-arrow{width:22px;height:22px;margin-left:8px;display:none;transition:transform .2s;}
+.spike-arrow.show{display:inline-block;}
+.spike-arrow.down{transform:rotate(180deg);}
 .stress-desc{font-size:13px;color:var(--ink3);margin-top:2px;}
-.stress-nums{display:flex;gap:16px;margin-top:12px;}
+.stress-nums{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
 .snum{text-align:center;}
 .snum-val{font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--ink);}
 .snum-lab{font-size:10px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;}
@@ -211,14 +217,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .pt-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;cursor:pointer;}
 .pt-dot{
   width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:9px;font-weight:700;color:var(--white);
+  justify-content:center;font-size:11px;font-weight:700;
   border:2px solid transparent;transition:all .2s;
 }
-.pt-dot.neutral{background:var(--ink4);}
-.pt-dot.spike{background:var(--red);}
-.pt-dot.recovery{background:var(--blue);}
-.pt-dot.rally{background:var(--white);border-color:var(--ink4);color:var(--ink4);}
-.pt-dot.has-event{border-color:var(--ink);}
+.pt-dot.neutral{background:var(--white);border-color:var(--line);color:var(--ink3);}
+.pt-dot.auto-event{background:var(--red);border-color:var(--red);color:var(--white);font-size:13px;}
 .pt-dot:hover{transform:scale(1.15);}
 .pt-point-num{font-size:9px;color:var(--ink4);font-family:'JetBrains Mono',monospace;}
 .pt-empty{font-size:13px;color:var(--ink4);padding:12px 0;text-align:center;}
@@ -235,8 +238,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .log-btns{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
 .lbtn{padding:8px 14px;border-radius:var(--r-xs);font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;}
 .lbtn:active{transform:scale(.96);}
-.lbtn-red{background:var(--red-bg);color:var(--red);}
-.lbtn-red:hover{background:var(--red-mid);}
 .lbtn-yellow{background:var(--yellow-bg);color:var(--yellow);}
 .lbtn-yellow:hover{background:var(--yellow-mid);}
 .lbtn-err{background:var(--line2);color:var(--ink2);}
@@ -324,6 +325,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div class="home-title">Coach Dashboard</div>
   <div class="home-sub">Select an athlete to begin or view their profile</div>
   <div class="athletes-list" id="athletes-list"></div>
+  <div style="margin-top:16px;text-align:center;">
+    <button style="background:none;border:none;color:var(--ink4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:underline;" onclick="loadDemoAthlete()">Load demo athlete profile (presentation)</button>
+  </div>
 </div>
  
 <!-- ══════════ ATHLETE HOME ══════════ -->
@@ -341,7 +345,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
         <div class="ath-hero-sub" id="ath-hero-sub"></div>
         <div class="ath-hero-stats">
           <div class="ath-hstat"><div class="ath-hstat-val" id="ath-h-matches">0</div><div class="ath-hstat-lab">Matches</div></div>
-          <div class="ath-hstat"><div class="ath-hstat-val" id="ath-h-baseline">--</div><div class="ath-hstat-lab">Baseline HRV</div></div>
+          <div class="ath-hstat"><div class="ath-hstat-val" id="ath-h-baseline">--</div><div class="ath-hstat-lab">Warm-up Avg</div></div>
           <div class="ath-hstat"><div class="ath-hstat-val" id="ath-h-triggers">0</div><div class="ath-hstat-lab">Triggers</div></div>
         </div>
       </div>
@@ -349,7 +353,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   </div>
   <div class="section-pad" id="cal-needed-banner" style="display:none;margin-bottom:16px;">
     <div style="background:var(--blue-bg);border:1.5px solid var(--blue);border-radius:var(--r-sm);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-      <div style="font-size:13px;font-weight:600;color:var(--blue);">No baseline set yet — spike detection won't be meaningful until you calibrate.</div>
+      <div style="font-size:13px;font-weight:600;color:var(--blue);">No calibration yet — spike detection needs a warm-up first.</div>
       <button class="mbtn mbtn-primary" style="white-space:nowrap;" onclick="openCalibrate()">Calibrate now</button>
     </div>
   </div>
@@ -357,7 +361,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="action-card" onclick="openCalibrate()">
       <div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
       <div class="action-label">Calibrate</div>
-      <div class="action-sub">Set baseline</div>
+      <div class="action-sub">Measure sensitivity</div>
     </div>
     <div class="action-card" onclick="startMatch()">
       <div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg></div>
@@ -389,7 +393,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
         <div class="live-game-badge" id="live-game-badge">Game 1</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <div class="seg-toggle" id="ds-toggle">
+        <button class="seg-btn on" id="ds-real" onclick="setDataSource('real')">Real</button>
+        <button class="seg-btn" id="ds-sim" onclick="setDataSource('simulated')">Simulated</button>
+      </div>
       <button class="sensor-pill" id="sensor-pill" onclick="connectBT()">
         <div class="sensor-dot2 blink"></div>
         <span id="sensor-txt">Connect Sensor</span>
@@ -398,7 +406,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     </div>
   </div>
  
-  <!-- Rally toggle — tells the app whether readings right now are exercise-confounded -->
+  <!-- Monitor toggle — tells the app whether readings right now are exercise-confounded -->
   <div style="padding:12px 16px 0;">
     <button class="rally-toggle" id="rally-toggle" onclick="toggleRally()">
       <span class="rally-toggle-dot" id="rally-toggle-dot"></span>
@@ -410,12 +418,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div class="stress-hero neutral" id="stress-hero">
     <div class="stress-indicator neutral" id="stress-indicator"></div>
     <div class="stress-main">
-      <div class="stress-word neutral" id="stress-word">--</div>
+      <div class="stress-word neutral" id="stress-word">--
+        <svg id="spike-arrow" class="spike-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </div>
       <div class="stress-desc" id="stress-desc">Connect the Polar H10 to begin</div>
       <div class="stress-nums">
-        <div class="snum"><div class="snum-val" id="sn-rmssd">--</div><div class="snum-lab">RMSSD ms</div><div class="snum-delta delta-n" id="sn-delta">vs baseline</div></div>
+        <div class="snum"><div class="snum-val" id="sn-rmssd">--</div><div class="snum-lab">RMSSD ms</div><div class="snum-delta delta-n" id="sn-delta">Δ prev</div></div>
         <div class="snum"><div class="snum-val" id="sn-hr">--</div><div class="snum-lab">BPM</div></div>
-        <div class="snum"><div class="snum-val" id="sn-base">--</div><div class="snum-lab">Baseline</div></div>
+        <div class="snum"><div class="snum-val" id="sn-base">--</div><div class="snum-lab">Warm-up Avg</div></div>
+        <div class="snum"><div class="snum-val" id="sn-sens">--</div><div class="snum-lab">Sensitivity</div></div>
       </div>
     </div>
   </div>
@@ -471,7 +482,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
  
   <!-- Log section -->
   <div class="log-section">
-    <div class="sec-title" style="margin-bottom:8px;">Log a Moment</div>
+    <div class="sec-title" style="margin-bottom:8px;">Coach Notes</div>
     <div class="log-tags" id="log-tags">
       <button class="ltag" onclick="selTag(this,'Score gap widened')">Score gap</button>
       <button class="ltag" onclick="selTag(this,'Tiebreak')">Tiebreak</button>
@@ -480,11 +491,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <button class="ltag" onclick="selTag(this,'Custom...')">Custom…</button>
     </div>
     <div class="log-btns">
-      <button class="lbtn lbtn-red" onclick="logMoment('spike')"><svg width="9" height="9" viewBox="0 0 8 8" style="margin-right:5px;vertical-align:-1px;"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>Spike</button>
       <button class="lbtn lbtn-err" onclick="logMoment('error')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/></svg>Unforced error</button>
     </div>
     <div class="log-feed" id="log-feed">
-      <div class="log-empty-msg" id="log-empty-msg">No moments logged yet</div>
+      <div class="log-empty-msg" id="log-empty-msg">Spikes are auto-logged here — no button needed</div>
     </div>
   </div>
  
@@ -527,17 +537,23 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   </div>
 </div>
  
-<!-- ══════════ CALIBRATE BASELINE ══════════ -->
+<!-- ══════════ CALIBRATE ══════════ -->
 <div id="calibrate" class="screen">
   <button class="back-btn" onclick="go('ath-home')" style="margin-bottom:4px;">← Back to profile</button>
-  <div class="iv-title">Calibrate Baseline</div>
-  <div class="iv-sub">Have <span id="cal-athlete-name">this athlete</span> do their normal warm-up — hitting or moving at realistic match intensity, no rest, no game pressure — while wearing the Polar H10 for 2 minutes 30 seconds</div>
+  <div class="iv-title">Calibrate</div>
+  <div class="iv-sub">Have <span id="cal-athlete-name">this athlete</span> do their normal warm-up — hitting or moving at realistic match intensity, no rest, no game pressure — while wearing the Polar H10 for 2 minutes 30 seconds. This measures both their typical RMSSD level and how much it naturally jitters with zero stress, which is what spike detection is calibrated against.</div>
  
   <div style="background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 24px;margin-top:20px;box-shadow:var(--sh);text-align:center;">
-    <button class="sensor-pill" id="cal-sensor-pill" onclick="connectBT()" style="margin:0 auto 24px;">
-      <div class="sensor-dot2 blink"></div>
-      <span id="cal-sensor-txt">Connect Sensor</span>
-    </button>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+      <div class="seg-toggle" id="ds-cal-toggle">
+        <button class="seg-btn on" id="ds-cal-real" onclick="setDataSource('real')">Real</button>
+        <button class="seg-btn" id="ds-cal-sim" onclick="setDataSource('simulated')">Simulated</button>
+      </div>
+      <button class="sensor-pill" id="cal-sensor-pill" onclick="connectBT()">
+        <div class="sensor-dot2 blink"></div>
+        <span id="cal-sensor-txt">Connect Sensor</span>
+      </button>
+    </div>
  
     <div style="font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);line-height:1;" id="cal-timer">2:30</div>
     <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 20px;">Time remaining</div>
@@ -552,9 +568,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <button class="btn btn-primary" id="cal-start-btn" onclick="startCalibration()" disabled>Start 2:30 Calibration</button>
  
     <div id="cal-result" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--line);">
-      <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Warm-up RMSSD (this athlete's baseline)</div>
-      <div style="font-size:38px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);margin-bottom:18px;" id="cal-result-val">--</div>
-      <button class="btn btn-primary" onclick="saveCalibratedBaseline()">Save as Baseline →</button>
+      <div style="display:flex;justify-content:center;gap:40px;">
+        <div>
+          <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Warm-up RMSSD avg</div>
+          <div style="font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);" id="cal-result-val">--</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Sensitivity threshold</div>
+          <div style="font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);" id="cal-result-thresh">--</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--ink4);margin-top:12px;">A live jump bigger than this counts as a real spike, not natural jitter</div>
+      <button class="btn btn-primary" style="margin-top:20px;" onclick="saveCalibratedBaseline()">Save Calibration →</button>
     </div>
   </div>
 </div>
@@ -566,7 +591,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="modal-sub">Create a profile to start tracking their performance</div>
     <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="e.g. Jay Surapong"/></div>
     <div class="form-group"><label class="form-label">Sport & Level</label><input class="form-input" id="f-sport" placeholder="e.g. Squash — Elite"/></div>
-    <div class="form-group"><label class="form-label">Resting Baseline HRV (ms) — optional</label><input class="form-input" id="f-baseline" type="number" placeholder="Leave blank — you'll calibrate this with the H10 after"/></div>
     <div class="form-group">
       <label class="form-label">Profile Colour</label>
       <div class="color-row" id="color-row">
@@ -592,7 +616,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 // ══════════════════════════════════════════════════════════════
 // DEFAULT SEED DATA — intentionally empty. No fake/example athletes,
 // matches, or trigger quotes. Every athlete, match, and trigger you
-// see in the app was created from real usage, not simulated data.
+// see in the app was created from real usage, not simulated data
+// (unless you deliberately switch the Data Source toggle to Simulated).
 // ══════════════════════════════════════════════════════════════
 const DEFAULT_ATHLETES = [];
  
@@ -607,22 +632,19 @@ let sessionSeconds = 0, sessionTimer = null;
 let currentRMSSD = 0, currentHR = 0;
 let selectedTag = null;
 let pickedColor = '#2563eb';
-let gameSuggested = false;
 let savedGames = [];
 let gameLocked = false;         // true once a game is won — blocks +1 Point buttons
-let rallyActive = false;        // manually toggled by the coach — true while a rally is in play
+let rallyActive = false;        // manual toggle — true while Monitor is set to Inactive (paused)
 let currentGamePushed = false;  // guards against double-saving the same game
 let isCalibrating = false;      // true while a baseline calibration session is running
 let calRRBuffer = [];           // all RR intervals collected during the current calibration
 let calTimer = null;
-let calSecondsLeft = 150; // gets set from CAL_DURATION_SECONDS when calibration actually starts
-let pendingBaseline = null;     // holds the just-measured baseline until the coach confirms saving it
+let calSecondsLeft = 150;
+let pendingBaseline = null;     // holds the just-measured calibration result until the coach confirms saving it
  
 // ══════════════════════════════════════════════════════════════
 // PERSISTENCE — saves to this browser's local storage so data
 // survives refresh / closing the tab / reopening the site later.
-// This is per-device storage (not shared across different
-// computers yet — that upgrade comes later with a real database).
 // ══════════════════════════════════════════════════════════════
 const STORAGE_KEY = 'pulseiq_athletes_v1';
  
@@ -639,7 +661,6 @@ function loadData(){
   }catch(e){
     console.error('PulseIQ: failed to load saved data', e);
   }
-  // First run on this device, or corrupted data — fall back to seed data
   athletes = JSON.parse(JSON.stringify(DEFAULT_ATHLETES));
   saveData();
 }
@@ -662,8 +683,6 @@ function flashSavedIndicator(){
 }
  
 // ══ DELETE ATHLETE ══
-// Called either with an id (from the home screen row) or with no
-// argument (from inside a profile page, where selectedAthlete is set)
 function deleteAthlete(id){
   const targetId = id !== undefined ? id : (selectedAthlete ? selectedAthlete.id : null);
   if(targetId === null) return;
@@ -700,7 +719,7 @@ function renderHome() {
           <div class="ath-sport">${a.sport}</div>
           <div class="ath-stats">
             <span class="ath-stat"><strong>${a.matches.length}</strong> matches</span>
-            <span class="ath-stat">Baseline <strong>${a.baseline ? a.baseline+'ms' : '—'}</strong></span>
+            <span class="ath-stat">Warm-up avg <strong>${a.baseline ? a.baseline+'ms' : '—'}</strong></span>
             <span class="ath-stat"><strong>${a.triggers.length}</strong> triggers</span>
           </div>
         </div>
@@ -716,7 +735,6 @@ function openAthlete(id) {
   selectedAthlete = athletes.find(a => a.id === id);
   const a = selectedAthlete;
  
-  // Hero card
   document.getElementById('ath-hero-card').style.background = `linear-gradient(135deg, ${a.color}, ${a.color}cc)`;
   document.getElementById('ath-hero-av').textContent = a.name.charAt(0);
   document.getElementById('ath-hero-name').textContent = a.name;
@@ -724,9 +742,8 @@ function openAthlete(id) {
   document.getElementById('ath-h-matches').textContent = a.matches.length;
   document.getElementById('ath-h-baseline').textContent = a.baseline ? a.baseline + 'ms' : '—';
   document.getElementById('ath-h-triggers').textContent = a.triggers.length;
-  document.getElementById('cal-needed-banner').style.display = a.baseline ? 'none' : 'block';
+  document.getElementById('cal-needed-banner').style.display = a.spikeThreshold ? 'none' : 'block';
  
-  // Triggers
   const tl = document.getElementById('trigger-list');
   tl.innerHTML = a.triggers.length ? a.triggers.map(t => `
     <div class="trigger-item">
@@ -739,7 +756,6 @@ function openAthlete(id) {
     </div>
   `).join('') : '<div style="font-size:13px;color:var(--ink4);padding:8px 0;">Complete more sessions to identify patterns.</div>';
  
-  // Match history
   const ml = document.getElementById('match-list');
   ml.innerHTML = a.matches.length ? a.matches.map((m,i) => {
     const totalSpikes = m.games.reduce((s,g)=>s+g.spikes,0);
@@ -757,27 +773,57 @@ function openAthlete(id) {
 }
  
 // ══════════════════════════════════════════════════════════════
-// BASELINE CALIBRATION
-// A real baseline matters more than anything else in this app —
-// every spike/recovery reading is only as meaningful as the number
-// it's compared against. This deliberately captures baseline during
-// a normal WARM-UP (light hitting/movement at realistic match
-// intensity), not while sitting still — resting RMSSD and in-play
-// RMSSD are physiologically different even with zero stress (see
-// the exercise/parasympathetic-withdrawal notes elsewhere in this
-// file), so a resting number would be an unfair reference point for
-// comparing against actual rally-adjacent readings. This still isn't
-// a perfect match to full match intensity, but it's much closer than
-// a resting baseline. Computes RMSSD across the whole calibration
-// window (not a rolling sample) for maximum stability — 2:30 gives a
-// meaningfully larger, steadier sample than a quick 60-second read.
+// CALIBRATION
+//
+// Two numbers come out of the 2:30 warm-up capture now, not one:
+//
+//  1. baseline  — the athlete's average RMSSD during warm-up. Kept
+//     mainly for reference/display. It is NOT used as a live
+//     comparison point anymore (comparing live rally readings to a
+//     fixed warm-up number caused every rally to read as "below
+//     baseline" during first live testing, since exercise itself
+//     suppresses RMSSD the whole match — see project notes).
+//
+//  2. spikeThreshold — how much this specific athlete's RMSSD
+//     naturally jumps from one reading to the next with zero stress,
+//     times a safety margin. This becomes the live sensitivity: a
+//     spike is only flagged when a reading-to-reading jump is bigger
+//     than this athlete's own measured noise, not some borrowed
+//     universal percentage (no such universal number exists in the
+//     literature — checked).
 // ══════════════════════════════════════════════════════════════
 const CAL_DURATION_SECONDS = 150; // 2 minutes 30 seconds
+const NOISE_SAFETY_MULTIPLIER = 2; // spike must exceed 2x this athlete's natural RMSSD jitter to count as real
+const MIN_SPIKE_THRESHOLD_MS = 2;  // floor so an unusually stable athlete never gets a near-zero (hair-trigger) threshold
  
 function formatCalTime(totalSeconds){
   const m = Math.floor(totalSeconds/60);
   const s = totalSeconds%60;
   return `${m}:${s.toString().padStart(2,'0')}`;
+}
+ 
+// Reconstructs the same rolling-window RMSSD stream the live app would
+// have produced beat-by-beat during this exact recording, so the noise
+// measurement is apples-to-apples with what live detection will see.
+function calcRollingRMSSDSeries(intervals, windowSize){
+  const series = [];
+  for(let i=windowSize;i<=intervals.length;i++){
+    const r = calcRMSSD(intervals.slice(i-windowSize,i));
+    if(r!==null) series.push(r);
+  }
+  return series;
+}
+ 
+// Standard deviation of how much that rolling RMSSD stream jumps
+// reading-to-reading with zero stress — this athlete's natural jitter.
+function calcNoiseStdDev(intervals){
+  const series = calcRollingRMSSDSeries(intervals, RR_WINDOW_SIZE);
+  if(series.length < 5) return null; // not enough data to estimate reliably
+  const diffs = [];
+  for(let i=1;i<series.length;i++) diffs.push(series[i]-series[i-1]);
+  const mean = diffs.reduce((a,b)=>a+b,0)/diffs.length;
+  const variance = diffs.reduce((a,b)=>a+(b-mean)*(b-mean),0)/diffs.length;
+  return Math.sqrt(variance);
 }
  
 function openCalibrate(){
@@ -789,7 +835,8 @@ function openCalibrate(){
   document.getElementById('cal-timer').textContent = formatCalTime(CAL_DURATION_SECONDS);
   document.getElementById('cal-bpm').textContent = '--';
   document.getElementById('cal-beats').textContent = '0';
-  setSensorPillState(isConnected, bleDevice ? (bleDevice.name || 'Polar H10') : '');
+  setSensorPillState(isConnected, isConnected ? (dataSource==='simulated' ? 'Simulated data' : (bleDevice ? (bleDevice.name || 'Polar H10') : '')) : '');
+  updateDataSourceUI();
   go('calibrate');
 }
  
@@ -817,25 +864,30 @@ function startCalibration(){
 function finishCalibration(){
   isCalibrating = false;
   const rmssd = calcRMSSD(calRRBuffer);
+  const noiseStdDev = calcNoiseStdDev(calRRBuffer);
   document.getElementById('cal-start-btn').disabled = false;
  
-  if(rmssd===null || calRRBuffer.length<15){
+  if(rmssd===null || calRRBuffer.length<15 || noiseStdDev===null){
     document.getElementById('cal-status').textContent = 'Not enough clean data — check strap contact and try again';
     return;
   }
  
-  const rounded = Math.round(rmssd);
-  pendingBaseline = rounded;
+  const roundedBaseline = Math.round(rmssd);
+  const threshold = Math.max(MIN_SPIKE_THRESHOLD_MS, Math.round(noiseStdDev * NOISE_SAFETY_MULTIPLIER));
+  pendingBaseline = { baseline: roundedBaseline, spikeThreshold: threshold };
+ 
   document.getElementById('cal-status').textContent = 'Calibration complete';
   document.getElementById('cal-result').style.display = 'block';
-  document.getElementById('cal-result-val').textContent = rounded;
+  document.getElementById('cal-result-val').textContent = roundedBaseline;
+  document.getElementById('cal-result-thresh').textContent = threshold + 'ms';
 }
  
 function saveCalibratedBaseline(){
   if(!selectedAthlete || pendingBaseline===null) return;
-  selectedAthlete.baseline = pendingBaseline;
+  selectedAthlete.baseline = pendingBaseline.baseline;
+  selectedAthlete.spikeThreshold = pendingBaseline.spikeThreshold;
   saveData();
-  toast(`Baseline saved: ${pendingBaseline}ms`);
+  toast(`Saved — sensitivity threshold ${pendingBaseline.spikeThreshold}ms`);
   pendingBaseline = null;
   go('ath-home');
   openAthlete(selectedAthlete.id);
@@ -847,7 +899,6 @@ function startMatch() {
   jayScore = 0; oppScore = 0; currentGame = 1;
   gamePoints = []; matchLog = []; savedGames = [];
   sessionSeconds = 0; selectedTag = null;
-  gameSuggested = false;
   currentRMSSD = 0; currentHR = 0;
   rrBuffer = [];
   resetClassificationState();
@@ -858,20 +909,20 @@ function startMatch() {
   document.getElementById('live-game-badge').textContent = 'Game 1';
   document.getElementById('sb-jay-name').textContent = selectedAthlete.name.split(' ')[0];
   document.getElementById('sn-base').textContent = selectedAthlete.baseline || '--';
+  document.getElementById('sn-sens').textContent = selectedAthlete.spikeThreshold ? selectedAthlete.spikeThreshold+'ms' : '--';
   document.getElementById('sb-game-label').textContent = 'Game 1 · Best of 5';
   document.getElementById('game-end-banner').classList.remove('show');
   document.getElementById('deuce-banner').classList.remove('show');
   gameLocked = false;
   currentGamePushed = false;
   lockScoreButtons(false);
-  document.getElementById('log-feed').innerHTML = '<div class="log-empty-msg" id="log-empty-msg">No moments logged yet</div>';
+  document.getElementById('log-feed').innerHTML = '<div class="log-empty-msg" id="log-empty-msg">Spikes are auto-logged here — no button needed</div>';
   document.getElementById('pt-scroll').innerHTML = '<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
   document.getElementById('pt-count').textContent = '0 points';
  
-  // Reset stress display until real sensor data starts arriving
   document.getElementById('sn-rmssd').textContent = '--';
   document.getElementById('sn-hr').textContent = '--';
-  document.getElementById('stress-word').textContent = isConnected ? 'READING' : '--';
+  document.getElementById('stress-word').childNodes[0].textContent = isConnected ? 'READING ' : '-- ';
   document.getElementById('stress-desc').textContent = isConnected ? 'Waiting for stable HRV reading…' : 'Connect the Polar H10 to begin';
  
   updateScoreDisplay();
@@ -892,37 +943,28 @@ function startMatch() {
 //
 // The Polar H10 broadcasts over the STANDARD Bluetooth "Heart Rate"
 // GATT service (UUID 0x180D), characteristic "Heart Rate Measurement"
-// (UUID 0x2A37). That characteristic includes RR-intervals (the time
-// between individual heartbeats, in units of 1/1024 second) whenever
-// the "RR-Interval present" flag bit is set — which the H10 does by
-// default. We don't need Polar's proprietary SDK for this.
-//
-// RMSSD = Root Mean Square of Successive Differences between
-// consecutive RR intervals. It's the standard HRV metric used to
-// estimate parasympathetic (rest/recovery) activity — lower RMSSD
-// generally indicates higher physiological stress.
+// (UUID 0x2A37), which includes RR-intervals whenever the
+// "RR-Interval present" flag bit is set.
 // ══════════════════════════════════════════════════════════════
  
 let bleDevice = null;
 let bleServer = null;
 let hrChar = null;
 let isConnected = false;
+let dataSource = 'real'; // 'real' or 'simulated' — which feed is driving ingestBeats()
 let rrBuffer = [];              // rolling window of recent RR intervals, in ms
-const RR_WINDOW_SIZE = 30;      // ~20-40s of beats depending on heart rate — enough for a stable short-window RMSSD without lagging too far behind real stress changes
+const RR_WINDOW_SIZE = 30;      // enough beats for a stable short-window RMSSD without lagging behind real changes
  
 // ══════════════════════════════════════════════════════════════
-// ARTIFACT REJECTION
-// Chest straps occasionally lose skin contact for an instant,
-// especially during movement — the sensor then reports one huge
-// gap instead of the real beat, and that single bad number can
-// wreck RMSSD (differences get squared, so one glitch outweighs
-// dozens of real beats). This rejects beats that are physiologically
-// impossible, or that jump too far from the last accepted beat.
+// ARTIFACT REJECTION — rejects physiologically impossible beats or
+// ones that jump too far from the last accepted beat (missed/doubled
+// beats from momentary loss of skin contact), before they can wreck
+// RMSSD (differences get squared, so one glitch can dwarf real beats).
 // ══════════════════════════════════════════════════════════════
 let lastAcceptedRR = null;
-const RR_MIN_MS = 300;   // ~200 bpm — faster than any real beat gap
-const RR_MAX_MS = 2000;  // ~30 bpm — slower than any real beat gap
-const RR_MAX_JUMP = 0.35; // reject if more than 35% different from the last accepted beat (catches missed/doubled beats)
+const RR_MIN_MS = 300;
+const RR_MAX_MS = 2000;
+const RR_MAX_JUMP = 0.35;
  
 function isPlausibleRR(rr){
   if(rr < RR_MIN_MS || rr > RR_MAX_MS) return false;
@@ -953,19 +995,22 @@ async function connectBT(){
     await hrChar.startNotifications();
     hrChar.addEventListener('characteristicvaluechanged', handleHRData);
  
+    // Real device just connected — real data always takes priority over simulation
+    stopSimulation();
+    dataSource = 'real';
+    updateDataSourceUI();
+ 
     isConnected = true;
     rrBuffer = [];
-    lastAcceptedRR = null; // fresh session — don't compare the first beat against a stale prior connection
+    lastAcceptedRR = null;
  
-    // Update whichever sensor pill is on screen — the live match one, the
-    // calibration one, or both if their elements exist in the DOM.
     setSensorPillState(true, bleDevice.name || 'Polar H10');
     const startBtn = document.getElementById('cal-start-btn');
     if(startBtn) startBtn.disabled = false;
     const calStatus = document.getElementById('cal-status');
     if(calStatus) calStatus.textContent = 'Sensor connected — ready to calibrate';
     const stressWordEl = document.getElementById('stress-word');
-    if(stressWordEl) stressWordEl.textContent = 'READING';
+    if(stressWordEl) stressWordEl.childNodes[0].textContent = 'READING ';
     const stressDescEl = document.getElementById('stress-desc');
     if(stressDescEl) stressDescEl.textContent = 'Waiting for stable HRV reading…';
  
@@ -991,21 +1036,18 @@ function setSensorPillState(connected, label){
 }
  
 function onBTDisconnected(){
-  isConnected = false;
+  if(dataSource==='real') isConnected = false;
   setSensorPillState(false, '');
   const startBtn = document.getElementById('cal-start-btn');
   if(startBtn) startBtn.disabled = true;
   toast('Sensor disconnected');
 }
  
-// Parses the Bluetooth "Heart Rate Measurement" characteristic per
-// the official GATT spec, and extracts RR-intervals if present.
 function handleHRData(event){
-  const value = event.target.value; // DataView
+  const value = event.target.value;
   const flags = value.getUint8(0);
   let index = 1;
  
-  // Bit 0: 0 = HR is UINT8, 1 = HR is UINT16
   let heartRate;
   if(flags & 0x1){
     heartRate = value.getUint16(index, true);
@@ -1015,61 +1057,64 @@ function handleHRData(event){
     index += 1;
   }
  
-  // Bit 3: Energy Expended present (skip if so, we don't need it)
   if(flags & 0x08){
     index += 2;
   }
  
-  // Bit 4: RR-Interval present
   const rrPresent = flags & 0x10;
+  const rrList = [];
   if(rrPresent){
     while(index + 1 < value.byteLength){
-      const rrRaw = value.getUint16(index, true);     // units of 1/1024 second
-      const rrMs = Math.round((rrRaw / 1024) * 1000);  // convert to milliseconds
- 
-      // Reject artifact beats before they ever reach the RMSSD math.
-      // A single bad reading (usually from the strap briefly losing
-      // skin contact during movement, which reads as one huge missed
-      // beat) can massively distort RMSSD since differences get
-      // squared — one glitch can dwarf 100 real beats.
-      if(isPlausibleRR(rrMs)){
-        rrBuffer.push(rrMs);
-        if(isCalibrating){
-          calRRBuffer.push(rrMs); // uncapped — calibration wants every real beat in the window, not a rolling sample
-        }
-        lastAcceptedRR = rrMs;
-      }
+      const rrRaw = value.getUint16(index, true);
+      const rrMs = Math.round((rrRaw / 1024) * 1000);
+      rrList.push(rrMs);
       index += 2;
-    }
-    if(rrBuffer.length > RR_WINDOW_SIZE){
-      rrBuffer = rrBuffer.slice(-RR_WINDOW_SIZE);
     }
   }
  
-  currentHR = heartRate;
+  ingestBeats(rrList, heartRate);
+}
+ 
+// ══════════════════════════════════════════════════════════════
+// SHARED BEAT PIPELINE — both real Bluetooth data and simulated data
+// flow through this single function, so detection logic behaves
+// identically regardless of source.
+// ══════════════════════════════════════════════════════════════
+function ingestBeats(rrList, hr){
+  currentHR = hr;
+  rrList.forEach(rrMs=>{
+    if(isPlausibleRR(rrMs)){
+      rrBuffer.push(rrMs);
+      if(isCalibrating) calRRBuffer.push(rrMs);
+      lastAcceptedRR = rrMs;
+    }
+  });
+  if(rrBuffer.length > RR_WINDOW_SIZE){
+    rrBuffer = rrBuffer.slice(-RR_WINDOW_SIZE);
+  }
  
   const rmssd = calcRMSSD(rrBuffer);
   if(rmssd !== null){
     currentRMSSD = Math.round(rmssd);
     if(selectedAthlete){
-      // While a rally is in progress, exertion confounds the reading —
-      // don't classify it as spike/recovery, just show it's paused.
-      currentDisplayState = rallyActive ? 'rally' : classify(currentRMSSD, selectedAthlete.baseline);
-      updateStress(currentRMSSD, currentHR, currentDisplayState, selectedAthlete.baseline);
+      if(rallyActive){
+        currentDisplayState = 'rally'; // Monitor Inactive — exertion-confounded, not evaluated
+      } else {
+        evaluateSpike(currentRMSSD);
+        currentDisplayState = 'neutral';
+      }
+      renderHeroState();
     }
   }else{
-    // Not enough RR data yet to compute RMSSD — still show live BPM
     document.getElementById('sn-hr').textContent = currentHR;
   }
  
-  // If a baseline calibration session is running, update its live readout
   if(isCalibrating){
     document.getElementById('cal-bpm').textContent = currentHR;
     document.getElementById('cal-beats').textContent = calRRBuffer.length;
   }
 }
  
-// RMSSD = sqrt( mean( (RR[i+1] - RR[i])^2 ) )
 function calcRMSSD(intervals){
   if(intervals.length < 2) return null;
   let sumSq = 0;
@@ -1081,105 +1126,223 @@ function calcRMSSD(intervals){
 }
  
 // ══════════════════════════════════════════════════════════════
-// STATE CLASSIFICATION
-//
-// HRV alone can't tell stress apart from excitement or a tense
-// game point — it only shows a physiological reaction happened.
-// So instead of a 3-tier "calm/rising/stressed" traffic light
-// making a claim it can't back up, this is just two flagged
-// events on top of a neutral default:
-//
-//   SPIKE (red)     RMSSD drops sharply below this athlete's real
-//                    baseline. Something notable happened — could
-//                    be stress, could be a big point. The
-//                    post-session interview is what fills in which.
-//
-//   RECOVERY (blue) RMSSD snaps back up near/above baseline right
-//                    after a spike, very fast. Flagged on purpose —
-//                    a too-quick bounce back to "calm" right after
-//                    a spike can itself be worth asking about
-//                    (e.g. overconfidence), not just relief.
-//
-// PERSISTENCE CHECK — even a resting, uninterrupted heartbeat
-// naturally drifts second to second; a single low reading can dip
-// under the threshold from pure noise, not a real event. So a spike
-// (or a recovery) only gets confirmed once the reading has held for
-// several consecutive live samples in a row — not on the first dip.
+// SIMULATED DATA — an openly-visible alternative to the real Polar
+// H10 feed, for demoing or testing without hardware. Generates a
+// randomized-but-realistic RR-interval stream (not a fixed script):
+// a smooth underlying heart-rate trend with natural jitter, plus
+// occasional randomized sudden jumps so spike detection has
+// something real to catch. Feeds into the exact same ingestBeats()
+// pipeline as a real strap — no separate code path for detection.
 // ══════════════════════════════════════════════════════════════
-let belowCount = 0;                 // consecutive readings at/below the spike threshold
-let aboveCount = 0;                 // consecutive readings back above it
-let confirmedLevel = 'neutral';     // the persisted, confirmed state — only flips after REQUIRED_CONSECUTIVE readings
-let currentDisplayState = 'neutral';
-const SPIKE_RATIO = 0.65;           // RMSSD at or below 65% of baseline counts as "low"
-const REQUIRED_CONSECUTIVE = 3;     // ~3 consecutive live readings (roughly 3 seconds) before confirming a real spike or real recovery
+let simTimer = null;
+let simRR = 820; // starting simulated RR interval, ms (~73 bpm)
  
-function classify(rmssd, base){
-  if(!base) return 'neutral'; // no real baseline set yet — nothing to compare against
+function nextSimulatedRR(){
+  let jitter = (Math.random()-0.5) * 40; // ordinary beat-to-beat wobble
+  if(Math.random() < 0.03){
+    // occasional randomized sudden jump — mimics a real autonomic event
+    jitter += (Math.random()<0.5 ? -1 : 1) * (60 + Math.random()*90);
+  }
+  const target = 780 + jitter;
+  simRR = simRR*0.85 + target*0.15; // smooth toward target rather than teleporting
+  simRR = Math.max(360, Math.min(950, simRR));
+  return Math.round(simRR);
+}
  
-  const isLow = (rmssd / base) <= SPIKE_RATIO;
-  if(isLow){
-    belowCount++;
-    aboveCount = 0;
+function simTick(){
+  const rr = nextSimulatedRR();
+  const hr = Math.round(60000 / rr);
+  ingestBeats([rr], hr);
+  simTimer = setTimeout(simTick, rr);
+}
+ 
+function startSimulation(){
+  clearTimeout(simTimer);
+  isConnected = true;
+  rrBuffer = [];
+  lastAcceptedRR = null;
+  setSensorPillState(true, 'Simulated data');
+  const startBtn = document.getElementById('cal-start-btn');
+  if(startBtn) startBtn.disabled = false;
+  const calStatus = document.getElementById('cal-status');
+  if(calStatus) calStatus.textContent = 'Sensor connected — ready to calibrate';
+  simTick();
+}
+ 
+function stopSimulation(){
+  clearTimeout(simTimer);
+  simTimer = null;
+}
+ 
+function setDataSource(mode){
+  if(mode === dataSource) return;
+  dataSource = mode;
+  stopSimulation();
+  if(mode === 'simulated'){
+    startSimulation();
   }else{
-    aboveCount++;
-    belowCount = 0;
+    isConnected = !!(bleDevice && bleDevice.gatt && bleDevice.gatt.connected);
+    setSensorPillState(isConnected, isConnected ? (bleDevice.name || 'Polar H10') : '');
+    const startBtn = document.getElementById('cal-start-btn');
+    if(startBtn) startBtn.disabled = !isConnected;
+    if(!isConnected) toast('Switched to real device — tap Connect Sensor');
   }
+  updateDataSourceUI();
+}
  
-  if(confirmedLevel !== 'spike' && belowCount >= REQUIRED_CONSECUTIVE){
-    confirmedLevel = 'spike';
-    return 'spike';
+function updateDataSourceUI(){
+  [['ds-real','ds-sim'], ['ds-cal-real','ds-cal-sim']].forEach(([realId,simId])=>{
+    const realBtn = document.getElementById(realId);
+    const simBtn = document.getElementById(simId);
+    if(!realBtn || !simBtn) return;
+    realBtn.classList.toggle('on', dataSource==='real');
+    simBtn.classList.toggle('on', dataSource==='simulated');
+  });
+}
+ 
+// ══════════════════════════════════════════════════════════════
+// SPIKE DETECTION — personal-noise based, not a fixed baseline
+//
+// A spike is flagged when the newest RMSSD reading differs from the
+// immediately preceding RMSSD reading by more than this athlete's
+// own measured natural jitter (spikeThreshold, set during
+// calibration). No smoothing, no averaging window — the threshold
+// itself already accounts for normal fluctuation, so smoothing on
+// top would be redundant.
+//
+// This replaces the old approach of comparing every live reading to
+// one fixed warm-up baseline number, which caused every rally to
+// read as a sustained spike during first live testing (normal play
+// keeps RMSSD suppressed vs. warm-up the whole match — exercise,
+// not stress).
+//
+// Direction matters, not just magnitude: a sudden DROP is flagged
+// the same way as a sudden RISE, since RMSSD alone can't tell
+// whether a rise is genuine recovery or complacency/checking out —
+// both get surfaced for the coach to interpret, not auto-labelled.
+// ══════════════════════════════════════════════════════════════
+let prevRMSSD = null;
+let lastDelta = null;
+let flashActive = false;
+let flashDirection = null; // 'down' or 'up'
+let flashTimeout = null;
+const FLASH_DURATION_MS = 3000;
+let pendingEventsForNextPoint = []; // auto-logged events since the last scored point
+ 
+function evaluateSpike(rmssd){
+  if(!selectedAthlete || !selectedAthlete.spikeThreshold){
+    prevRMSSD = rmssd;
+    lastDelta = null;
+    return;
   }
-  if(confirmedLevel === 'spike' && aboveCount >= REQUIRED_CONSECUTIVE){
-    confirmedLevel = 'neutral';
-    return 'recovery'; // one-shot flash exactly at the confirmed transition moment
+  if(prevRMSSD === null){
+    prevRMSSD = rmssd;
+    lastDelta = 0;
+    return;
   }
-  return confirmedLevel;
+  const delta = rmssd - prevRMSSD;
+  lastDelta = delta;
+  prevRMSSD = rmssd;
+ 
+  if(Math.abs(delta) >= selectedAthlete.spikeThreshold){
+    triggerSpikeEvent(rmssd, delta, delta < 0 ? 'down' : 'up');
+  }
+}
+ 
+function triggerSpikeEvent(rmssd, delta, direction){
+  flashActive = true;
+  flashDirection = direction;
+  clearTimeout(flashTimeout);
+  flashTimeout = setTimeout(()=>{
+    flashActive = false;
+    flashDirection = null;
+    renderHeroState();
+  }, FLASH_DURATION_MS);
+ 
+  const evt = { rmssd, delta, direction, hr: currentHR, jay: jayScore, opp: oppScore, t: Date.now() };
+  pendingEventsForNextPoint.push(evt);
+  addAutoLogEntry(evt);
+  renderHeroState();
 }
  
 function resetClassificationState(){
-  belowCount = 0;
-  aboveCount = 0;
-  confirmedLevel = 'neutral';
+  prevRMSSD = null;
+  lastDelta = null;
+  flashActive = false;
+  flashDirection = null;
+  clearTimeout(flashTimeout);
+  pendingEventsForNextPoint = [];
   currentDisplayState = 'neutral';
+  renderHeroState();
 }
  
+let currentDisplayState = 'neutral';
  
-function updateStress(rmssd, hr, state, base){
-  const labels = {
-    neutral:  ['STEADY', 'No notable change'],
-    spike:    ['SPIKE', 'Sudden drop from baseline — flag it, ask about it after'],
-    recovery: ['RAPID CALM', 'Snapped back to calm right after a spike'],
-    rally:    ['PAUSED', 'Monitoring paused — not being classified right now']
-  };
-  const hero=document.getElementById('stress-hero');
-  hero.className='stress-hero '+state;
-  const sw=document.getElementById('stress-word');
-  sw.className='stress-word '+state;
-  sw.textContent=labels[state][0];
-  document.getElementById('stress-desc').textContent=labels[state][1];
-  document.getElementById('stress-indicator').className='stress-indicator '+state;
-  document.getElementById('sn-rmssd').textContent=rmssd;
-  document.getElementById('sn-hr').textContent=hr;
-  if(base){
-    const delta=rmssd-base;
-    const del=document.getElementById('sn-delta');
-    del.textContent=(delta>=0?'+':'')+delta+'ms';
-    del.className='snum-delta '+(delta>=0?'delta-up':'delta-down');
+function renderHeroState(){
+  const hero = document.getElementById('stress-hero');
+  const sw = document.getElementById('stress-word');
+  const arrow = document.getElementById('spike-arrow');
+  const indicator = document.getElementById('stress-indicator');
+  const desc = document.getElementById('stress-desc');
+  if(!hero) return;
+ 
+  let visualState, label, description;
+  if(flashActive){
+    visualState = 'spike';
+    label = 'SPIKE ';
+    description = flashDirection === 'down'
+      ? 'Sudden drop detected — logged automatically'
+      : 'Sudden rise detected — logged automatically';
+  } else if(currentDisplayState === 'rally'){
+    visualState = 'rally';
+    label = 'PAUSED ';
+    description = 'Monitoring paused — not being evaluated right now';
+  } else {
+    visualState = 'neutral';
+    label = 'STEADY ';
+    description = 'No notable change';
+  }
+ 
+  hero.className = 'stress-hero ' + visualState;
+  sw.className = 'stress-word ' + visualState;
+  sw.childNodes[0].textContent = label;
+  desc.textContent = description;
+  indicator.className = 'stress-indicator ' + visualState;
+ 
+  if(flashActive){
+    arrow.classList.add('show');
+    arrow.classList.toggle('down', flashDirection==='down');
+  }else{
+    arrow.classList.remove('show','down');
+  }
+ 
+  document.getElementById('sn-rmssd').textContent = currentRMSSD || '--';
+  document.getElementById('sn-hr').textContent = currentHR || '--';
+  const del = document.getElementById('sn-delta');
+  if(lastDelta !== null){
+    del.textContent = (lastDelta>=0?'+':'') + lastDelta + 'ms';
+    del.className = 'snum-delta ' + (lastDelta>0?'delta-up':(lastDelta<0?'delta-down':'delta-n'));
   }
 }
  
+function addAutoLogEntry(evt){
+  const feed = document.getElementById('log-feed');
+  const empty = document.getElementById('log-empty-msg');
+  if(empty) empty.remove();
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `
+    <div class="le-pt">${evt.jay}-${evt.opp}</div>
+    <div class="le-badge badge-red">${evt.direction==='down' ? '↓ Spike' : '↑ Spike'}</div>
+    <div class="le-text">Auto-logged · RMSSD ${evt.rmssd}ms (Δ${evt.delta>=0?'+':''}${evt.delta}ms)</div>
+  `;
+  feed.insertBefore(el, feed.firstChild);
+}
+ 
 // ══════════════════════════════════════════════════════════════
-// RALLY TOGGLE
-// A manual switch, not automatic movement detection — the coach
-// taps it when a rally starts and it clears itself the moment a
-// ══════════════════════════════════════════════════════════════
-// MONITOR TOGGLE
-// A manual switch the coach fully controls — not automatic movement
-// detection, and not a strict "always pause during rallies" rule.
-// Sometimes a coach may want to keep monitoring through a long
-// rally on purpose. It defaults to active, clears itself the moment
-// a point is scored (a natural checkpoint), but the coach can pause
-// or resume it anytime based on their own judgment of the moment.
+// MONITOR TOGGLE — manual switch the coach controls. Inactive
+// suppresses spike evaluation during exertion-confounded moments
+// (serve toss, walking to position); Active evaluates during rallies.
 // ══════════════════════════════════════════════════════════════
 function setRallyState(active){
   rallyActive = active;
@@ -1192,9 +1355,10 @@ function setRallyState(active){
   } else {
     btn.classList.remove('active');
     txt.textContent = 'Monitor Active — tap to pause';
-    // Reset so we don't fire a false "recovery" the instant monitoring
-    // resumes — leftover exertion is still normal for a moment after.
-    resetClassificationState();
+    // Reset comparison point so leftover exertion from just before
+    // resuming doesn't fire a false event the instant monitoring resumes.
+    prevRMSSD = null;
+    lastDelta = null;
   }
 }
  
@@ -1204,21 +1368,21 @@ function toggleRally(){
  
 // ══ SCORING ══
 function addPoint(who){
-  if(gameLocked) return; // scoring locked once a game is already won
+  if(gameLocked) return;
   if(who==='jay') jayScore++;
   else oppScore++;
   updateScoreDisplay();
-  // Log point to timeline using the most recent live classification
-  const lvl = currentDisplayState || 'neutral';
-  gamePoints.push({jay:jayScore,opp:oppScore,stress:lvl,rmssd:currentRMSSD,hr:currentHR,tag:selectedTag});
-  addPointDot(gamePoints.length,jayScore,oppScore,lvl,gamePoints.length-1);
  
-  // Scoring a point means the rally just ended — resume dead-ball monitoring automatically
+  const lvl = currentDisplayState || 'neutral';
+  const events = pendingEventsForNextPoint.slice();
+  pendingEventsForNextPoint = [];
+  gamePoints.push({jay:jayScore,opp:oppScore,stress:lvl,rmssd:currentRMSSD,hr:currentHR,tag:selectedTag,events});
+  addPointDot(gamePoints.length,jayScore,oppScore,events,gamePoints.length-1);
+ 
   if(rallyActive){
     setRallyState(false);
   }
  
-  // ── Real squash win condition: first to 11+, but must lead by 2 clear points ──
   const deuceBanner = document.getElementById('deuce-banner');
   if(checkGameWon()){
     gameLocked = true;
@@ -1239,7 +1403,6 @@ function addPoint(who){
   }
 }
  
-// A game is won at 11+ points with a lead of at least 2 (standard squash deuce rule)
 function checkGameWon(){
   const lead = Math.max(jayScore,oppScore);
   const diff = Math.abs(jayScore-oppScore);
@@ -1260,7 +1423,6 @@ function undoPoint(who){
   }
   const deuceBanner = document.getElementById('deuce-banner');
   if(!checkGameWon()){
-    // Undo brought the score back below a real win — unlock scoring again
     gameLocked = false;
     lockScoreButtons(false);
     document.getElementById('game-end-banner').classList.remove('show');
@@ -1279,50 +1441,55 @@ function updateScoreDisplay(){
   document.getElementById('sb-opp').textContent=oppScore;
 }
  
-function addPointDot(num,j,o,stress,idx){
-  const scroll=document.getElementById('pt-scroll');
-  const empty=document.getElementById('pt-empty');
-  if(empty)empty.remove();
-  document.getElementById('pt-count').textContent=gamePoints.length+' point'+(gamePoints.length!==1?'s':'');
+function pointDotHTML(num,j,o,events,idx){
   const wrap=document.createElement('div');
   wrap.className='pt-dot-wrap';
   wrap.onclick=()=>showPointDetail(idx);
   const dot=document.createElement('div');
-  dot.className=`pt-dot ${stress}`;
-  const hasEvent=matchLog.some(l=>l.pointIdx===idx);
-  if(hasEvent)dot.classList.add('has-event');
-  dot.textContent=num;
+  const hasEvent = events && events.length>0;
+  dot.className = 'pt-dot ' + (hasEvent ? 'auto-event' : 'neutral');
+  if(hasEvent){
+    dot.textContent = events[events.length-1].direction==='down' ? '↓' : '↑';
+  }else{
+    dot.textContent = num;
+  }
   const label=document.createElement('div');
   label.className='pt-point-num';
   label.textContent=`${j}-${o}`;
   wrap.appendChild(dot);wrap.appendChild(label);
-  scroll.appendChild(wrap);
+  return wrap;
+}
+ 
+function addPointDot(num,j,o,events,idx){
+  const scroll=document.getElementById('pt-scroll');
+  const empty=document.getElementById('pt-empty');
+  if(empty)empty.remove();
+  document.getElementById('pt-count').textContent=gamePoints.length+' point'+(gamePoints.length!==1?'s':'');
+  scroll.appendChild(pointDotHTML(num,j,o,events,idx));
   scroll.scrollLeft=scroll.scrollWidth;
 }
  
 function renderTimeline(){
   const scroll=document.getElementById('pt-scroll');
   scroll.innerHTML=gamePoints.length?'':'<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
-  gamePoints.forEach((p,i)=>addPointDot(i+1,p.jay,p.opp,p.stress,i));
+  gamePoints.forEach((p,i)=>scroll.appendChild(pointDotHTML(i+1,p.jay,p.opp,p.events,i)));
   document.getElementById('pt-count').textContent=gamePoints.length+' point'+(gamePoints.length!==1?'s':'');
 }
  
 function showPointDetail(idx){
   const p=gamePoints[idx];
-  toast(`Point ${idx+1}: ${p.jay}-${p.opp} · HRV ${p.rmssd || '--'}ms · ${p.stress.toUpperCase()}`);
+  const evCount = p.events ? p.events.length : 0;
+  toast(`Point ${idx+1}: ${p.jay}-${p.opp} · HRV ${p.rmssd || '--'}ms${evCount?` · ${evCount} spike event${evCount>1?'s':''}`:''}`);
 }
  
-// Pushes the current game's data into savedGames exactly once,
-// no matter which exit path (Next Game / End Match / mid-game End Match) triggered it.
 function pushCurrentGame(){
   if(currentGamePushed) return;
-  const spikes=matchLog.filter(l=>l.type==='spike').length;
-  const errors=matchLog.filter(l=>l.type==='error').length;
+  const spikes = gamePoints.reduce((s,p)=> s + (p.events ? p.events.length : 0), 0);
+  const errors = matchLog.filter(l=>l.type==='error').length;
   savedGames.push({num:currentGame,jay:jayScore,opp:oppScore,spikes,errors,points:[...gamePoints]});
   currentGamePushed=true;
 }
  
-// ══ END GAME (used by the "Next Game →" button after a game is won) ══
 function endGame(goSummary){
   pushCurrentGame();
   document.getElementById('game-end-banner').classList.remove('show');
@@ -1341,13 +1508,9 @@ function endGame(goSummary){
     const tl=document.getElementById('gs-tl-scroll');
     tl.innerHTML='';
     g.points.forEach((p,i)=>{
-      const wrap=document.createElement('div');wrap.className='pt-dot-wrap';
-      const dot=document.createElement('div');dot.className=`pt-dot ${p.stress}`;dot.textContent=i+1;
-      const lbl=document.createElement('div');lbl.className='pt-point-num';lbl.textContent=`${p.jay}-${p.opp}`;
-      wrap.appendChild(dot);wrap.appendChild(lbl);tl.appendChild(wrap);
+      tl.appendChild(pointDotHTML(i+1,p.jay,p.opp,p.events,i));
     });
  
-    // Show "continue to next game" mode buttons
     document.getElementById('gs-next-btn').style.display='inline-block';
     document.getElementById('gs-back-btn').style.display='inline-block';
     document.getElementById('gs-finish-btn').style.display='none';
@@ -1359,7 +1522,7 @@ function endGame(goSummary){
 function nextGame(){
   currentGame++;
   jayScore=0;oppScore=0;
-  gamePoints=[];matchLog=[];gameSuggested=false;selectedTag=null;
+  gamePoints=[];matchLog=[];selectedTag=null;
   gameLocked=false; currentGamePushed=false;
   resetClassificationState();
   lockScoreButtons(false);
@@ -1367,7 +1530,7 @@ function nextGame(){
   document.getElementById('sb-game-label').textContent=`Game ${currentGame} · Best of 5`;
   document.getElementById('game-end-banner').classList.remove('show');
   document.getElementById('deuce-banner').classList.remove('show');
-  document.getElementById('log-feed').innerHTML='<div class="log-empty-msg">No moments logged yet</div>';
+  document.getElementById('log-feed').innerHTML='<div class="log-empty-msg">Spikes are auto-logged here — no button needed</div>';
   document.getElementById('pt-scroll').innerHTML='<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
   document.getElementById('pt-count').textContent='0 points';
   updateScoreDisplay();
@@ -1375,7 +1538,6 @@ function nextGame(){
   toast(`Game ${currentGame} started`);
 }
  
-// ══ END MATCH — from the locked "Game won" banner ("End Match →") ══
 function finishMatchFromLock(){
   pushCurrentGame();
   document.getElementById('game-end-banner').classList.remove('show');
@@ -1385,8 +1547,6 @@ function finishMatchFromLock(){
   go('game-summary');
 }
  
-// ══ END MATCH — from the "End Match →" button at the bottom of a live game ══
-// (covers ending mid-game too, e.g. injury or time constraints)
 function endMatch(){
   pushCurrentGame();
   clearInterval(sessionTimer);
@@ -1394,8 +1554,6 @@ function endMatch(){
   go('game-summary');
 }
  
-// Builds the whole-match summary screen: combined stats + a single
-// stress timeline strung across every game played in this session.
 function renderMatchSummary(){
   const totalSpikes = savedGames.reduce((s,g)=>s+g.spikes,0);
   const totalErrors = savedGames.reduce((s,g)=>s+g.errors,0);
@@ -1423,20 +1581,15 @@ function renderMatchSummary(){
     }
     g.points.forEach(p=>{
       runningNum++;
-      const wrap=document.createElement('div');wrap.className='pt-dot-wrap';
-      const dot=document.createElement('div');dot.className=`pt-dot ${p.stress}`;dot.textContent=runningNum;
-      const lbl=document.createElement('div');lbl.className='pt-point-num';lbl.textContent=`${p.jay}-${p.opp}`;
-      wrap.appendChild(dot);wrap.appendChild(lbl);tl.appendChild(wrap);
+      tl.appendChild(pointDotHTML(runningNum,p.jay,p.opp,p.events,runningNum-1));
     });
   });
  
-  // Switch buttons to "finish" mode — match is over, no more games to play
   document.getElementById('gs-next-btn').style.display='none';
   document.getElementById('gs-back-btn').style.display='none';
   document.getElementById('gs-finish-btn').style.display='inline-block';
 }
  
-// Actually commits the finished match into the athlete's saved profile.
 function saveMatchToProfile(){
   selectedAthlete.matches.unshift({
     date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
@@ -1449,12 +1602,12 @@ function saveMatchToProfile(){
   openAthlete(selectedAthlete.id);
 }
  
-// ══ LOG MOMENTS ══
+// ══ COACH NOTES (manual — errors only; spikes are automatic) ══
 function selTag(btn,tag){
   document.querySelectorAll('.ltag').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   selectedTag=tag;
-  if(tag==='Custom…'){
+  if(tag==='Custom…' || tag==='Custom...'){
     const c=prompt('Enter custom tag:');
     if(c){selectedTag=c;btn.textContent=c;}
   }
@@ -1470,30 +1623,34 @@ function logMoment(type){
   const empty=document.getElementById('log-empty-msg');
   if(empty)empty.remove();
  
-  const colors={spike:'badge-red',error:'badge-blue'};
-  const icons={spike:'Spike',error:'Error'};
   const el=document.createElement('div');
   el.className='log-entry';
   el.innerHTML=`
     <div class="le-pt">${jayScore}-${oppScore}</div>
-    <div class="le-badge ${colors[type]}">${icons[type]}</div>
+    <div class="le-badge badge-yellow">Error</div>
     <div class="le-text">${tag} · HRV ${currentRMSSD||'--'}ms</div>
   `;
   feed.insertBefore(el,feed.firstChild);
- 
-  // Update dot if exists
-  if(pointIdx>=0){
-    const dots=document.querySelectorAll('.pt-dot-wrap');
-    if(dots[pointIdx])dots[pointIdx].querySelector('.pt-dot').classList.add('has-event');
-  }
  
   toast(`Logged: ${tag}`);
 }
  
 // ══ INTERVIEW ══
+function collectAllEvents(){
+  const moments=[];
+  savedGames.forEach(g=>{
+    g.points.forEach(p=>{
+      (p.events||[]).forEach(e=>{
+        moments.push({jay:p.jay,opp:p.opp,direction:e.direction,rmssd:e.rmssd,delta:e.delta});
+      });
+    });
+  });
+  return moments;
+}
+ 
 function goInterview(){
   if(!selectedAthlete)return;
-  const moments=matchLog.filter(l=>l.type==='spike');
+  const moments = collectAllEvents();
   const container=document.getElementById('iv-moments');
   document.getElementById('iv-sub').textContent=`${moments.length} flagged moment${moments.length!==1?'s':''} from the last session`;
  
@@ -1503,8 +1660,8 @@ function goInterview(){
     container.innerHTML=moments.map((m,i)=>`
       <div class="iv-moment">
         <div class="iv-moment-hdr">
-          <span class="badge badge-red">Spike</span>
-          <span style="font-size:12px;color:var(--ink4);">Score ${m.jay}-${m.opp} · ${m.tag} · HRV ${m.rmssd||'--'}ms</span>
+          <span class="badge badge-red">${m.direction==='down' ? 'Spike ↓' : 'Spike ↑'}</span>
+          <span style="font-size:12px;color:var(--ink4);">Score ${m.jay}-${m.opp} · RMSSD ${m.rmssd||'--'}ms (Δ${m.delta>=0?'+':''}${m.delta}ms)</span>
         </div>
         <div class="iv-q">What was ${selectedAthlete.name.split(' ')[0]} thinking at this moment?</div>
         <textarea class="iv-ta" id="iv-${i}" placeholder="Type what the athlete said…"></textarea>
@@ -1523,7 +1680,7 @@ function goInterview(){
 }
  
 function saveInterview(){
-  const moments = matchLog.filter(l=>l.type==='spike');
+  const moments = collectAllEvents();
   const notes = moments.map((m,i)=>({
     ...m,
     athleteResponse: (document.getElementById('iv-'+i) || {}).value || ''
@@ -1551,7 +1708,6 @@ function pickColor(el){
 function addAthlete(){
   const name=document.getElementById('f-name').value.trim();
   const sport=document.getElementById('f-sport').value.trim();
-  const baselineInput=document.getElementById('f-baseline').value.trim();
   if(!name){toast('Please enter a name');return;}
   const newId = Date.now();
   athletes.unshift({
@@ -1559,19 +1715,17 @@ function addAthlete(){
     name,
     sport:sport||'Sport not specified',
     color:pickedColor,
-    baseline: baselineInput ? parseInt(baselineInput,10) : null,
+    baseline: null,
+    spikeThreshold: null,
     matches:[],
     triggers:[]
   });
   saveData();
   closeAdd();
-  renderHome(); // keep the home list in sync even though we're navigating away from it
+  renderHome();
   toast(`${name} added ✓`);
   document.getElementById('f-name').value='';
   document.getElementById('f-sport').value='';
-  document.getElementById('f-baseline').value='';
-  // Go straight to the new profile — if no baseline was entered, the
-  // calibration banner there is the natural next step.
   openAthlete(newId);
 }
  
@@ -1582,10 +1736,99 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
  
+// ══════════════════════════════════════════════════════════════
+// DEMO ATHLETE — an explicitly-labelled, openly-loaded example
+// profile ("Jay Suraphong") showing what a clean, idealized result
+// looks like once the system is fully deployed and tuned. This is
+// NOT default seed data — it only appears if you tap the link on
+// the home screen — and every match in it is fabricated for
+// presentation purposes, not real usage. Use it to show the vision,
+// not as evidence of real performance.
+// ══════════════════════════════════════════════════════════════
+function buildDemoPoints(finalJay, finalOpp, eventSpots){
+  // eventSpots: array of {at: pointIndexFromEnd, direction:'down'|'up'}
+  const total = finalJay + finalOpp;
+  const points = [];
+  let j=0, o=0;
+  // Build a plausible alternating-ish score sequence ending at the real final score
+  const seq = [];
+  for(let i=0;i<total;i++) seq.push(i < finalJay ? 'j' : 'o');
+  // interleave rather than block sequence for realism
+  for(let i=seq.length-1;i>0;i--){
+    const k = Math.floor(((i*7+13)%(i+1)));
+    const tmp=seq[i]; seq[i]=seq[k]; seq[k]=tmp;
+  }
+  let baseRmssd = 44;
+  seq.forEach((side,i)=>{
+    if(side==='j') j++; else o++;
+    const fromEnd = seq.length-1-i;
+    const evt = eventSpots.find(e=>e.at===fromEnd);
+    let rmssd, events=[];
+    if(evt){
+      rmssd = evt.direction==='down' ? Math.round(baseRmssd*0.4) : Math.round(baseRmssd*1.3);
+      events = [{rmssd, delta: evt.direction==='down' ? -(baseRmssd*0.5) : (baseRmssd*0.4), direction:evt.direction, hr: evt.direction==='down'?168:132, jay:j, opp:o, t:Date.now()}];
+    } else {
+      rmssd = Math.round(baseRmssd*(0.75+Math.random()*0.1));
+    }
+    points.push({jay:j,opp:o,stress:'neutral',rmssd,hr:evt?events[0].hr:150,tag:null,events});
+  });
+  return points;
+}
+ 
+function generateDemoAthlete(){
+  const matchTemplates = [
+    { label:'Match 1', games:[ [11,7,[{at:2,direction:'down'},{at:0,direction:'up'}]], [9,11,[{at:1,direction:'down'}]], [11,8,[{at:3,direction:'down'},{at:1,direction:'up'}]] ] },
+    { label:'Match 2', games:[ [11,9,[{at:1,direction:'down'}]], [11,6,[]] ] },
+    { label:'Match 3', games:[ [8,11,[{at:2,direction:'down'}]], [11,13,[{at:1,direction:'down'},{at:0,direction:'up'}]], [11,7,[]] ] },
+    { label:'Match 4', games:[ [11,4,[]], [11,9,[{at:2,direction:'down'},{at:0,direction:'up'}]] ] },
+    { label:'Match 5', games:[ [12,10,[{at:3,direction:'down'},{at:1,direction:'up'}]], [9,11,[{at:1,direction:'down'}]], [11,6,[]] ] },
+  ];
+ 
+  const matches = matchTemplates.map((mt,mi)=>{
+    const games = mt.games.map((g,gi)=>{
+      const points = buildDemoPoints(g[0], g[1], g[2]);
+      const spikes = points.reduce((s,p)=>s+(p.events?p.events.length:0),0);
+      return { num:gi+1, jay:g[0], opp:g[1], spikes, errors: Math.floor(Math.random()*2), points };
+    });
+    const daysAgo = (matchTemplates.length-mi)*4;
+    const d = new Date(); d.setDate(d.getDate()-daysAgo);
+    return { date: d.toLocaleDateString('en-US',{month:'short',day:'numeric'}), title:`Match — ${games.length} games`, games };
+  });
+ 
+  return {
+    id: -1, // fixed id so re-loading the demo updates the same profile instead of duplicating
+    name: 'Jay Suraphong',
+    sport: 'Squash — Elite (Demo Profile)',
+    color: '#2563eb',
+    baseline: 44,
+    spikeThreshold: 9,
+    matches,
+    triggers: [
+      { sev:'high', title:'Trailing by 3+ points late in a game', freq:'Flagged in 4 of 5 matches', quote:'I start rushing my shots when I see the gap — I know I\'m doing it but I can\'t slow down.' },
+      { sev:'medium', title:'Immediately after an unforced error', freq:'Flagged in 3 of 5 matches', quote:'I get annoyed at myself and carry it into the next point.' },
+      { sev:'medium', title:'Long rallies past 15+ shots', freq:'Flagged in 2 of 5 matches', quote:'My legs are heavy but I think it\'s more that I stop thinking clearly.' }
+    ]
+  };
+}
+ 
+function loadDemoAthlete(){
+  const existingIdx = athletes.findIndex(a=>a.id===-1);
+  const demo = generateDemoAthlete();
+  if(existingIdx>=0){
+    athletes[existingIdx] = demo;
+  } else {
+    athletes.unshift(demo);
+  }
+  saveData();
+  renderHome();
+  toast('Demo profile loaded — fabricated data for presentation only');
+  openAthlete(-1);
+}
+ 
 // ══ INIT ══
 loadData();
 renderHome();
+updateDataSourceUI();
 </script>
 </body>
 </html>
- 

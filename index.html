@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -222,6 +223,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 }
 .pt-dot.neutral{background:var(--white);border-color:var(--line);color:var(--ink3);}
 .pt-dot.auto-event{background:var(--red);border-color:var(--red);color:var(--white);font-size:13px;}
+.pt-dot.manual-event{background:var(--yellow);border-color:var(--yellow);color:var(--white);font-size:12px;}
 .pt-dot.has-note{box-shadow:0 0 0 2px var(--blue);}
 .timeline-wrap{display:flex;flex-wrap:wrap;gap:8px 6px;padding-bottom:24px;}
 .pt-dot:hover{transform:scale(1.15);}
@@ -244,6 +246,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .lbtn-yellow:hover{background:var(--yellow-mid);}
 .lbtn-err{background:var(--line2);color:var(--ink2);}
 .lbtn-err:hover{background:var(--line);}
+.lbtn-manual{background:var(--yellow-bg);color:var(--yellow);display:inline-flex;align-items:center;gap:6px;}
+.lbtn-manual:hover{background:var(--yellow-mid);}
 .log-feed{display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;}
 .log-entry{
   display:flex;align-items:flex-start;gap:8px;
@@ -430,10 +434,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <div class="seg-toggle" id="ds-toggle">
-        <button class="seg-btn on" id="ds-real" onclick="setDataSource('real')">Real</button>
-        <button class="seg-btn" id="ds-sim" onclick="setDataSource('simulated')">Simulated</button>
-      </div>
       <button class="sensor-pill" id="sensor-pill" onclick="connectBT()">
         <div class="sensor-dot2 blink"></div>
         <span id="sensor-txt">Connect Sensor</span>
@@ -518,7 +518,21 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
  
   <!-- Log section -->
   <div class="log-section">
-    <div class="sec-title" style="margin-bottom:8px;">Stress Spike Log</div>
+    <div class="sec-title" style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+      <span>Stress Spike Log</span>
+      <button class="lbtn lbtn-manual" onclick="openManualLogPanel()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V6a2 2 0 0 1 4 0v5"/><path d="M13 11V5a2 2 0 0 1 4 0v9"/><path d="M17 11V9a2 2 0 0 1 4 0v6a7 7 0 0 1-7 7h-2a7 7 0 0 1-6-3.4L3.3 14a2 2 0 0 1 3-2.6L9 14"/></svg>
+        Manual Log
+      </button>
+    </div>
+    <div id="manual-log-panel" style="display:none;background:var(--white);border:1.5px solid var(--yellow);border-radius:var(--r-sm);padding:12px;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:8px;">Log a moment you observed — "Potential spike from observation"</div>
+      <textarea class="iv-ta" id="manual-log-text" placeholder="What did you notice? (optional)" style="min-height:56px;"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-primary" onclick="submitManualLog()">Log Moment</button>
+        <button class="btn btn-outline" onclick="closeManualLogPanel()">Cancel</button>
+      </div>
+    </div>
     <div class="log-feed" id="log-feed">
       <div class="log-empty-msg" id="log-empty-msg">Spikes are auto-logged here — no button needed</div>
     </div>
@@ -604,14 +618,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="cal-phase-card">
         <div class="cal-phase-card-title">Phase 1</div>
         <div class="cal-phase-card-name">Warm-up</div>
-        <div class="cal-phase-card-desc">2:30 of normal warm-up at moderate effort. Measures natural RMSSD jitter at rest-ish intensity.</div>
+        <div class="cal-phase-card-desc">Normal warm-up at moderate effort. Measures natural RMSSD jitter at rest-ish intensity. Recommended 1:30 — editable below.</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <label class="form-label" style="margin-bottom:0;">Duration</label>
+          <input class="form-input" id="cal-p1-duration" value="1:30" style="width:70px;text-align:center;padding:6px 8px;" onchange="syncPhaseDurationDisplay(1)"/>
+        </div>
         <div class="cal-phase-card-status pending" id="cal-p1-status">Not done yet</div>
         <button class="btn btn-primary cal-phase-card-btn" id="cal-p1-btn" onclick="beginPhaseFlow(1)">Start Phase 1</button>
       </div>
       <div class="cal-phase-card">
         <div class="cal-phase-card-title">Phase 2</div>
         <div class="cal-phase-card-name">High-Intensity Drill</div>
-        <div class="cal-phase-card-desc">75s of maximal-effort drilling. Measures jitter at match intensity — combines with Phase 1 for adaptive sensitivity.</div>
+        <div class="cal-phase-card-desc">Maximal-effort drilling. Measures jitter at match intensity — combines with Phase 1 for adaptive sensitivity. Recommended 1:15 — editable below.</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <label class="form-label" style="margin-bottom:0;">Duration</label>
+          <input class="form-input" id="cal-p2-duration" value="1:15" style="width:70px;text-align:center;padding:6px 8px;" onchange="syncPhaseDurationDisplay(2)"/>
+        </div>
         <div class="cal-phase-card-status pending" id="cal-p2-status">Not done yet</div>
         <button class="btn btn-primary cal-phase-card-btn" id="cal-p2-btn" onclick="beginPhaseFlow(2)">Start Phase 2</button>
       </div>
@@ -625,17 +647,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:16px;" id="cal-phase-label">Phase 1 — Warm-up</div>
  
     <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
-      <div class="seg-toggle" id="ds-cal-toggle">
-        <button class="seg-btn on" id="ds-cal-real" onclick="setDataSource('real')">Real</button>
-        <button class="seg-btn" id="ds-cal-sim" onclick="setDataSource('simulated')">Simulated</button>
-      </div>
       <button class="sensor-pill" id="cal-sensor-pill" onclick="connectBT()">
         <div class="sensor-dot2 blink"></div>
         <span id="cal-sensor-txt">Connect Sensor</span>
       </button>
     </div>
  
-    <div style="font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);line-height:1;" id="cal-timer">2:30</div>
+    <div style="font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);line-height:1;" id="cal-timer">1:30</div>
     <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 20px;">Time remaining</div>
  
     <div style="display:flex;justify-content:center;gap:40px;margin-bottom:24px;">
@@ -645,7 +663,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
  
     <div style="font-size:13px;color:var(--ink3);margin-bottom:18px;" id="cal-status">Connect the Polar H10 to begin</div>
  
-    <button class="btn btn-primary" id="cal-start-btn" onclick="startCalibration()" disabled>Start 2:30 Calibration</button>
+    <button class="btn btn-primary" id="cal-start-btn" onclick="startCalibration()" disabled>Start Calibration</button>
  
     <!-- Shown after Phase 1 finishes — choice to add the high-intensity drill or save with warm-up only -->
     <div id="cal-phase1-result" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--line);">
@@ -722,8 +740,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 // ══════════════════════════════════════════════════════════════
 // DEFAULT SEED DATA — intentionally empty. No fake/example athletes,
 // matches, or trigger quotes. Every athlete, match, and trigger you
-// see in the app was created from real usage, not simulated data
-// (unless you deliberately switch the Data Source toggle to Simulated).
+// see in the app was created from real Polar H10 usage — there is no
+// simulated data source anymore (removed to keep every reading real).
 // ══════════════════════════════════════════════════════════════
 const DEFAULT_ATHLETES = [];
  
@@ -743,7 +761,7 @@ let currentGamePushed = false;  // guards against double-saving the same game
 let isCalibrating = false;      // true while a baseline calibration session is running
 let calRRBuffer = [];           // all RR intervals collected during the current calibration
 let calTimer = null;
-let calSecondsLeft = 150;
+let calSecondsLeft = 90;
 let pendingBaseline = null;     // holds the just-measured calibration result until the coach confirms saving it
  
 // ══════════════════════════════════════════════════════════════
@@ -871,7 +889,7 @@ function openAthlete(id) {
 // ══════════════════════════════════════════════════════════════
 // CALIBRATION
 //
-// Two numbers come out of the 2:30 warm-up capture now, not one:
+// Two numbers come out of the warm-up capture now, not one:
 //
 //  1. baseline  — the athlete's average RMSSD during warm-up. Kept
 //     mainly for reference/display. It is NOT used as a live
@@ -896,19 +914,52 @@ function openAthlete(id) {
 // coming back later to do the other phase picks up right where you
 // left off instead of forcing a redo.
 // ══════════════════════════════════════════════════════════════
-const CAL_DURATION_SECONDS = 150; // 2 minutes 30 seconds (Phase 1 — warm-up)
-const DRILL_DURATION_SECONDS = 75; // Phase 2 — high-intensity drill
+const CAL_PHASE1_DEFAULT_SECONDS = 90; // 1 minute 30 seconds (Phase 1 — warm-up), recommended but coach-editable
+const CAL_PHASE2_DEFAULT_SECONDS = 75; // 1 minute 15 seconds (Phase 2 — high-intensity drill), recommended but coach-editable
+const CAL_DURATION_MIN_SECONDS = 20;   // sanity floor so a mistyped duration can't produce a near-useless capture
+const CAL_DURATION_MAX_SECONDS = 600;  // sanity ceiling (10 min)
 const NOISE_SAFETY_MULTIPLIER = 2; // spike must exceed 2x this athlete's natural RMSSD jitter to count as real
 const MIN_SPIKE_THRESHOLD_MS = 2;  // floor so an unusually stable athlete never gets a near-zero (hair-trigger) threshold
 let calPhase = 1;        // 1 = warm-up, 2 = high-intensity drill — which phase is currently running/about to run
 let calPoint1 = null;    // {hr, rmssdAvg, threshold, phase:1} — from this athlete's saved data or a fresh Phase 1 run
 let calPoint2 = null;    // {hr, rmssdAvg, threshold, phase:2} — from this athlete's saved data or a fresh Phase 2 run
 let calHRBuffer = [];    // HR readings collected during the current calibration phase
+let calPhase1Seconds = CAL_PHASE1_DEFAULT_SECONDS; // resolved duration for the phase about to run/running
+let calPhase2Seconds = CAL_PHASE2_DEFAULT_SECONDS;
  
 function formatCalTime(totalSeconds){
   const m = Math.floor(totalSeconds/60);
   const s = totalSeconds%60;
   return `${m}:${s.toString().padStart(2,'0')}`;
+}
+ 
+// Parses a coach-entered duration from either "mm:ss" or plain-seconds
+// text input, clamped to a sane range. Falls back to the given default
+// if the field is empty, unparsable, or out of range.
+function parseDurationInput(value, fallbackSeconds){
+  if(!value) return fallbackSeconds;
+  const str = String(value).trim();
+  let seconds;
+  if(str.includes(':')){
+    const [m,s] = str.split(':').map(n=>parseInt(n,10));
+    if(isNaN(m) || isNaN(s)) return fallbackSeconds;
+    seconds = m*60 + s;
+  }else{
+    seconds = parseInt(str,10);
+  }
+  if(isNaN(seconds)) return fallbackSeconds;
+  return Math.min(CAL_DURATION_MAX_SECONDS, Math.max(CAL_DURATION_MIN_SECONDS, seconds));
+}
+ 
+// Re-normalizes the duration input's displayed text to mm:ss once the
+// coach finishes editing it, so "90" becomes "1:30" etc.
+function syncPhaseDurationDisplay(phase){
+  const id = phase===1 ? 'cal-p1-duration' : 'cal-p2-duration';
+  const fallback = phase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
+  const el = document.getElementById(id);
+  if(!el) return;
+  const seconds = parseDurationInput(el.value, fallback);
+  el.value = formatCalTime(seconds);
 }
  
 // Reconstructs the same rolling-window RMSSD stream the live app would
@@ -1019,19 +1070,22 @@ function enterPhaseUI(phase){
   document.getElementById('cal-phase1-result').style.display = 'none';
   document.getElementById('cal-bpm').textContent = '--';
   document.getElementById('cal-beats').textContent = '0';
-  setSensorPillState(isConnected, isConnected ? (dataSource==='simulated' ? 'Simulated data' : (bleDevice ? (bleDevice.name || 'Polar H10') : '')) : '');
-  updateDataSourceUI();
+  setSensorPillState(isConnected, isConnected ? (bleDevice ? (bleDevice.name || 'Polar H10') : '') : '');
  
   if(phase === 1){
+    calPhase1Seconds = parseDurationInput(document.getElementById('cal-p1-duration').value, CAL_PHASE1_DEFAULT_SECONDS);
+    const durLabel = formatCalTime(calPhase1Seconds);
     document.getElementById('cal-phase-label').textContent = 'Phase 1 — Warm-up';
-    document.getElementById('cal-phase-instructions').innerHTML = `Phase 1 of 2 — have <span>${selectedAthlete.name.split(' ')[0]}</span> do their normal warm-up (realistic match intensity, no rest, no pressure) for 2 minutes 30 seconds. This measures natural RMSSD jitter at moderate effort.`;
-    document.getElementById('cal-timer').textContent = formatCalTime(CAL_DURATION_SECONDS);
-    document.getElementById('cal-start-btn').textContent = 'Start 2:30 Calibration';
+    document.getElementById('cal-phase-instructions').innerHTML = `Phase 1 of 2 — have <span>${selectedAthlete.name.split(' ')[0]}</span> do their normal warm-up (realistic match intensity, no rest, no pressure) for ${durLabel}. This measures natural RMSSD jitter at moderate effort.`;
+    document.getElementById('cal-timer').textContent = durLabel;
+    document.getElementById('cal-start-btn').textContent = `Start ${durLabel} Calibration`;
   }else{
+    calPhase2Seconds = parseDurationInput(document.getElementById('cal-p2-duration').value, CAL_PHASE2_DEFAULT_SECONDS);
+    const durLabel = formatCalTime(calPhase2Seconds);
     document.getElementById('cal-phase-label').textContent = 'Phase 2 — High-Intensity Drill';
-    document.getElementById('cal-phase-instructions').textContent = `Phase 2 of 2 — ${DRILL_DURATION_SECONDS}s of maximal-effort drilling (multi-shot rally pace, sustained, no rest) to capture natural jitter at match intensity.`;
-    document.getElementById('cal-timer').textContent = formatCalTime(DRILL_DURATION_SECONDS);
-    document.getElementById('cal-start-btn').textContent = `Start ${DRILL_DURATION_SECONDS}s Drill Calibration`;
+    document.getElementById('cal-phase-instructions').textContent = `Phase 2 of 2 — ${durLabel} of maximal-effort drilling (multi-shot rally pace, sustained, no rest) to capture natural jitter at match intensity.`;
+    document.getElementById('cal-timer').textContent = durLabel;
+    document.getElementById('cal-start-btn').textContent = `Start ${durLabel} Drill Calibration`;
   }
   document.getElementById('cal-start-btn').style.display = 'inline-block';
   document.getElementById('cal-start-btn').disabled = !isConnected;
@@ -1049,7 +1103,7 @@ function startCalibration(){
   calRRBuffer = [];
   calHRBuffer = [];
   isCalibrating = true;
-  const duration = calPhase===1 ? CAL_DURATION_SECONDS : DRILL_DURATION_SECONDS;
+  const duration = calPhase===1 ? calPhase1Seconds : calPhase2Seconds;
   calSecondsLeft = duration;
   document.getElementById('cal-start-btn').disabled = true;
   document.getElementById('cal-status').textContent = calPhase===1
@@ -1208,7 +1262,6 @@ function backFromLive(){
     if(!ok) return;
   }
   clearInterval(sessionTimer);
-  stopSimulation();
   go('ath-home');
   if(selectedAthlete) openAthlete(selectedAthlete.id);
 }
@@ -1344,7 +1397,6 @@ let bleDevice = null;
 let bleServer = null;
 let hrChar = null;
 let isConnected = false;
-let dataSource = 'real'; // 'real' or 'simulated' — which feed is driving ingestBeats()
 let rrBuffer = [];              // rolling window of recent RR intervals, in ms
 const RR_WINDOW_SIZE = 30;      // enough beats for a stable short-window RMSSD without lagging behind real changes
  
@@ -1388,11 +1440,6 @@ async function connectBT(){
     await hrChar.startNotifications();
     hrChar.addEventListener('characteristicvaluechanged', handleHRData);
  
-    // Real device just connected — real data always takes priority over simulation
-    stopSimulation();
-    dataSource = 'real';
-    updateDataSourceUI();
- 
     isConnected = true;
     rrBuffer = [];
     lastAcceptedRR = null;
@@ -1429,7 +1476,7 @@ function setSensorPillState(connected, label){
 }
  
 function onBTDisconnected(){
-  if(dataSource==='real') isConnected = false;
+  isConnected = false;
   setSensorPillState(false, '');
   const startBtn = document.getElementById('cal-start-btn');
   if(startBtn) startBtn.disabled = true;
@@ -1520,81 +1567,6 @@ function calcRMSSD(intervals){
 }
  
 // ══════════════════════════════════════════════════════════════
-// SIMULATED DATA — an openly-visible alternative to the real Polar
-// H10 feed, for demoing or testing without hardware. Generates a
-// randomized-but-realistic RR-interval stream (not a fixed script):
-// a smooth underlying heart-rate trend with natural jitter, plus
-// occasional randomized sudden jumps so spike detection has
-// something real to catch. Feeds into the exact same ingestBeats()
-// pipeline as a real strap — no separate code path for detection.
-// ══════════════════════════════════════════════════════════════
-let simTimer = null;
-let simRR = 820; // starting simulated RR interval, ms (~73 bpm)
- 
-function nextSimulatedRR(){
-  let jitter = (Math.random()-0.5) * 40; // ordinary beat-to-beat wobble
-  if(Math.random() < 0.03){
-    // occasional randomized sudden jump — mimics a real autonomic event
-    jitter += (Math.random()<0.5 ? -1 : 1) * (60 + Math.random()*90);
-  }
-  const target = 780 + jitter;
-  simRR = simRR*0.85 + target*0.15; // smooth toward target rather than teleporting
-  simRR = Math.max(360, Math.min(950, simRR));
-  return Math.round(simRR);
-}
- 
-function simTick(){
-  const rr = nextSimulatedRR();
-  const hr = Math.round(60000 / rr);
-  ingestBeats([rr], hr);
-  simTimer = setTimeout(simTick, rr);
-}
- 
-function startSimulation(){
-  clearTimeout(simTimer);
-  isConnected = true;
-  rrBuffer = [];
-  lastAcceptedRR = null;
-  setSensorPillState(true, 'Simulated data');
-  const startBtn = document.getElementById('cal-start-btn');
-  if(startBtn) startBtn.disabled = false;
-  const calStatus = document.getElementById('cal-status');
-  if(calStatus) calStatus.textContent = 'Sensor connected — ready to calibrate';
-  simTick();
-}
- 
-function stopSimulation(){
-  clearTimeout(simTimer);
-  simTimer = null;
-}
- 
-function setDataSource(mode){
-  if(mode === dataSource) return;
-  dataSource = mode;
-  stopSimulation();
-  if(mode === 'simulated'){
-    startSimulation();
-  }else{
-    isConnected = !!(bleDevice && bleDevice.gatt && bleDevice.gatt.connected);
-    setSensorPillState(isConnected, isConnected ? (bleDevice.name || 'Polar H10') : '');
-    const startBtn = document.getElementById('cal-start-btn');
-    if(startBtn) startBtn.disabled = !isConnected;
-    if(!isConnected) toast('Switched to real device — tap Connect Sensor');
-  }
-  updateDataSourceUI();
-}
- 
-function updateDataSourceUI(){
-  [['ds-real','ds-sim'], ['ds-cal-real','ds-cal-sim']].forEach(([realId,simId])=>{
-    const realBtn = document.getElementById(realId);
-    const simBtn = document.getElementById(simId);
-    if(!realBtn || !simBtn) return;
-    realBtn.classList.toggle('on', dataSource==='real');
-    simBtn.classList.toggle('on', dataSource==='simulated');
-  });
-}
- 
-// ══════════════════════════════════════════════════════════════
 // SPIKE DETECTION — personal-noise based, not a fixed baseline
 //
 // A spike is flagged when the newest RMSSD reading differs from the
@@ -1618,10 +1590,23 @@ function updateDataSourceUI(){
 let prevRMSSD = null;
 let lastDelta = null;
 let flashActive = false;
-let flashDirection = null; // 'down' or 'up'
+let flashDirection = null; // 'down' or 'up' — this is the RAW RMSSD change direction
 let flashTimeout = null;
 const FLASH_DURATION_MS = 3000;
 let pendingEventsForNextPoint = []; // auto-logged events since the last scored point
+ 
+// ══════════════════════════════════════════════════════════════
+// ARROW DIRECTION — the displayed arrow reflects the INTERPRETED
+// activation direction, not the raw RMSSD direction, since a coach
+// reading this live cares about "is stress going up or down" rather
+// than "did the metric go up or down":
+//   RMSSD DROP  (direction 'down') -> sympathetic activation      -> arrow UP   (stress/excitement increasing)
+//   RMSSD RISE  (direction 'up')   -> parasympathetic re-engagement -> arrow DOWN (less active / less focused)
+// This is intentionally inverted from the raw metric direction.
+// ══════════════════════════════════════════════════════════════
+function stressArrowGlyph(direction){
+  return direction === 'down' ? '↑' : '↓';
+}
  
 function evaluateSpike(rmssd){
   const threshold = selectedAthlete ? getDynamicThreshold(currentHR) : null;
@@ -1686,8 +1671,8 @@ function renderHeroState(){
     visualState = 'spike';
     label = 'SPIKE ';
     description = flashDirection === 'down'
-      ? 'Sudden drop detected — logged automatically'
-      : 'Sudden rise detected — logged automatically';
+      ? 'Stress spike detected — logged automatically'
+      : 'Sudden calming detected — logged automatically';
   } else if(currentDisplayState === 'rally'){
     visualState = 'rally';
     label = 'PAUSED ';
@@ -1706,7 +1691,9 @@ function renderHeroState(){
  
   if(flashActive){
     arrow.classList.add('show');
-    arrow.classList.toggle('down', flashDirection==='down');
+    // SVG's default orientation already points up, so we only need the
+    // 'down' (rotated) class when RMSSD ROSE — see stressArrowGlyph note above.
+    arrow.classList.toggle('down', flashDirection==='up');
   }else{
     arrow.classList.remove('show','down');
   }
@@ -1731,10 +1718,55 @@ function addAutoLogEntry(evt){
   if(empty) empty.remove();
   const el = document.createElement('div');
   el.className = 'log-entry';
+  const isStressUp = evt.direction === 'down'; // RMSSD drop = stress/excitement increasing
   el.innerHTML = `
     <div class="le-pt">${evt.jay}-${evt.opp}</div>
-    <div class="le-badge badge-red">${evt.direction==='down' ? '↓ Spike' : '↑ Spike'}</div>
+    <div class="le-badge ${isStressUp ? 'badge-red' : 'badge-blue'}">${stressArrowGlyph(evt.direction)} ${isStressUp ? 'Stress up' : 'Calming'}</div>
     <div class="le-text">Auto-logged · RMSSD ${evt.rmssd}ms (Δ${evt.delta>=0?'+':''}${evt.delta}ms)</div>
+  `;
+  feed.insertBefore(el, feed.firstChild);
+}
+ 
+// ══════════════════════════════════════════════════════════════
+// MANUAL LOG — a coach-initiated log entry, separate from the
+// automatic algorithm-detected spikes. Used when the coach observes
+// something (a stress reaction, a momentum shift) that the algorithm
+// didn't flag — since detection isn't fully polished yet, this gives
+// the coach a way to capture the moment anyway. Tied to the live
+// score exactly like an auto-logged spike, and shown on the timeline
+// with its own distinct marker (amber dot + finger icon) so it's
+// never confused with an algorithm-detected event.
+// ══════════════════════════════════════════════════════════════
+function openManualLogPanel(){
+  const panel = document.getElementById('manual-log-panel');
+  document.getElementById('manual-log-text').value = '';
+  panel.style.display = 'block';
+  document.getElementById('manual-log-text').focus();
+}
+ 
+function closeManualLogPanel(){
+  document.getElementById('manual-log-panel').style.display = 'none';
+}
+ 
+function submitManualLog(){
+  const note = document.getElementById('manual-log-text').value.trim();
+  const evt = { manual:true, note, hr: currentHR, jay: jayScore, opp: oppScore, t: Date.now() };
+  pendingEventsForNextPoint.push(evt);
+  addManualLogEntry(evt);
+  closeManualLogPanel();
+  toast('Manual log added — Potential spike from observation');
+}
+ 
+function addManualLogEntry(evt){
+  const feed = document.getElementById('log-feed');
+  const empty = document.getElementById('log-empty-msg');
+  if(empty) empty.remove();
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `
+    <div class="le-pt">${evt.jay}-${evt.opp}</div>
+    <div class="le-badge badge-yellow">👆 Manual</div>
+    <div class="le-text">Potential spike from observation${evt.note ? ' · "'+evt.note+'"' : ''}</div>
   `;
   feed.insertBefore(el, feed.firstChild);
 }
@@ -1847,10 +1879,15 @@ function pointDotHTML(num,j,o,events,idx){
   wrap.onclick=()=>showPointDetail(idx);
   const dot=document.createElement('div');
   const hasEvent = events && events.length>0;
-  dot.className = 'pt-dot ' + (hasEvent ? 'auto-event' : 'neutral');
-  if(hasEvent){
-    dot.textContent = events[events.length-1].direction==='down' ? '↓' : '↑';
+  const lastEvt = hasEvent ? events[events.length-1] : null;
+  if(hasEvent && lastEvt.manual){
+    dot.className = 'pt-dot manual-event';
+    dot.textContent = '👆';
+  }else if(hasEvent){
+    dot.className = 'pt-dot auto-event';
+    dot.textContent = stressArrowGlyph(lastEvt.direction);
   }else{
+    dot.className = 'pt-dot neutral';
     dot.textContent = num;
   }
   const label=document.createElement('div');
@@ -1879,7 +1916,7 @@ function renderTimeline(){
 function showPointDetail(idx){
   const p=gamePoints[idx];
   const evCount = p.events ? p.events.length : 0;
-  toast(`Point ${idx+1}: ${p.jay}-${p.opp} · HRV ${p.rmssd || '--'}ms${evCount?` · ${evCount} spike event${evCount>1?'s':''}`:''}`);
+  toast(`Point ${idx+1}: ${p.jay}-${p.opp} · HRV ${p.rmssd || '--'}ms${evCount?` · ${evCount} logged event${evCount>1?'s':''}`:''}`);
 }
  
 function pushCurrentGame(){
@@ -2055,9 +2092,11 @@ function renderInterviewTimeline(){
       wrap.onclick = ()=>openInterviewNote(gIdx,pIdx);
       const dot = document.createElement('div');
       const hasEvent = p.events && p.events.length>0;
-      dot.className = 'pt-dot ' + (hasEvent ? 'auto-event' : 'neutral');
+      const lastEvt = hasEvent ? p.events[p.events.length-1] : null;
+      const isManual = hasEvent && lastEvt.manual;
+      dot.className = 'pt-dot ' + (isManual ? 'manual-event' : (hasEvent ? 'auto-event' : 'neutral'));
       if(p.interviewNote) dot.classList.add('has-note');
-      dot.textContent = hasEvent ? (p.events[p.events.length-1].direction==='down'?'↓':'↑') : (pIdx+1);
+      dot.textContent = isManual ? '👆' : (hasEvent ? stressArrowGlyph(lastEvt.direction) : (pIdx+1));
       const label = document.createElement('div');
       label.className = 'pt-point-num';
       label.textContent = `${p.jay}-${p.opp}`;
@@ -2073,7 +2112,9 @@ function renderInterviewTimeline(){
 function openInterviewNote(gameIdx,pointIdx){
   ivNoteTarget = {gameIdx,pointIdx};
   const p = selectedAthlete.matches[ivMatchIdx].games[gameIdx].points[pointIdx];
-  document.getElementById('iv-note-label').textContent = `Note for point ${p.jay}-${p.opp}${p.events&&p.events.length?' · spike '+(p.events[p.events.length-1].direction==='down'?'↓':'↑'):''}`;
+  const lastEvt = p.events && p.events.length ? p.events[p.events.length-1] : null;
+  const evtLabel = lastEvt ? (lastEvt.manual ? ' · manual log 👆' : ' · spike '+stressArrowGlyph(lastEvt.direction)) : '';
+  document.getElementById('iv-note-label').textContent = `Note for point ${p.jay}-${p.opp}${evtLabel}`;
   document.getElementById('iv-note-text').value = p.interviewNote ? p.interviewNote.text : '';
   document.getElementById('iv-note-panel').style.display = 'block';
   document.getElementById('iv-note-panel').scrollIntoView({behavior:'smooth', block:'center'});
@@ -2284,7 +2325,6 @@ function loadDemoAthlete(){
 // ══ INIT ══
 loadData();
 renderHome();
-updateDataSourceUI();
 </script>
 </body>
 </html>

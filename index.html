@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -646,11 +645,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div style="background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 24px;margin-top:20px;box-shadow:var(--sh);text-align:center;">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:16px;" id="cal-phase-label">Phase 1 — Warm-up</div>
  
-    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
       <button class="sensor-pill" id="cal-sensor-pill" onclick="connectBT()">
         <div class="sensor-dot2 blink"></div>
         <span id="cal-sensor-txt">Connect Sensor</span>
       </button>
+    </div>
+ 
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;">
+      <label class="form-label" style="margin-bottom:0;">Duration</label>
+      <input class="form-input" id="cal-flow-duration" value="1:30" style="width:70px;text-align:center;padding:6px 8px;" onchange="onFlowDurationChange()"/>
+      <span style="font-size:11px;color:var(--ink4);">mm:ss — editable right up until you press Start</span>
     </div>
  
     <div style="font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);line-height:1;" id="cal-timer">1:30</div>
@@ -962,6 +967,24 @@ function syncPhaseDurationDisplay(phase){
   el.value = formatCalTime(seconds);
 }
  
+// Fires when the coach edits the duration field on the COUNTDOWN
+// screen itself (cal-flow) — this is the field that's actually visible
+// at the moment they're about to press Start, so it's the real source
+// of truth. Updates the big timer preview immediately and keeps
+// calPhase1Seconds/calPhase2Seconds in sync so startCalibration() (and
+// anything else reading them) always sees the current choice.
+function onFlowDurationChange(){
+  const fallback = calPhase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
+  const el = document.getElementById('cal-flow-duration');
+  const seconds = parseDurationInput(el.value, fallback);
+  el.value = formatCalTime(seconds);
+  if(calPhase===1) calPhase1Seconds = seconds; else calPhase2Seconds = seconds;
+  document.getElementById('cal-timer').textContent = formatCalTime(seconds);
+  document.getElementById('cal-start-btn').textContent = calPhase===1
+    ? `Start ${formatCalTime(seconds)} Calibration`
+    : `Start ${formatCalTime(seconds)} Drill Calibration`;
+}
+ 
 // Reconstructs the same rolling-window RMSSD stream the live app would
 // have produced beat-by-beat during this exact recording, so the noise
 // measurement is apples-to-apples with what live detection will see.
@@ -1078,6 +1101,8 @@ function enterPhaseUI(phase){
     document.getElementById('cal-phase-label').textContent = 'Phase 1 — Warm-up';
     document.getElementById('cal-phase-instructions').innerHTML = `Phase 1 of 2 — have <span>${selectedAthlete.name.split(' ')[0]}</span> do their normal warm-up (realistic match intensity, no rest, no pressure) for ${durLabel}. This measures natural RMSSD jitter at moderate effort.`;
     document.getElementById('cal-timer').textContent = durLabel;
+    document.getElementById('cal-flow-duration').value = durLabel;
+    document.getElementById('cal-flow-duration').disabled = false;
     document.getElementById('cal-start-btn').textContent = `Start ${durLabel} Calibration`;
   }else{
     calPhase2Seconds = parseDurationInput(document.getElementById('cal-p2-duration').value, CAL_PHASE2_DEFAULT_SECONDS);
@@ -1085,6 +1110,8 @@ function enterPhaseUI(phase){
     document.getElementById('cal-phase-label').textContent = 'Phase 2 — High-Intensity Drill';
     document.getElementById('cal-phase-instructions').textContent = `Phase 2 of 2 — ${durLabel} of maximal-effort drilling (multi-shot rally pace, sustained, no rest) to capture natural jitter at match intensity.`;
     document.getElementById('cal-timer').textContent = durLabel;
+    document.getElementById('cal-flow-duration').value = durLabel;
+    document.getElementById('cal-flow-duration').disabled = false;
     document.getElementById('cal-start-btn').textContent = `Start ${durLabel} Drill Calibration`;
   }
   document.getElementById('cal-start-btn').style.display = 'inline-block';
@@ -1094,6 +1121,8 @@ function enterPhaseUI(phase){
  
 function backToCalPicker(){
   renderCalPicker();
+  document.getElementById('cal-p1-duration').value = formatCalTime(calPhase1Seconds);
+  document.getElementById('cal-p2-duration').value = formatCalTime(calPhase2Seconds);
   document.getElementById('cal-picker').style.display = 'block';
   document.getElementById('cal-flow').style.display = 'none';
 }
@@ -1103,8 +1132,14 @@ function startCalibration(){
   calRRBuffer = [];
   calHRBuffer = [];
   isCalibrating = true;
-  const duration = calPhase===1 ? calPhase1Seconds : calPhase2Seconds;
+  // Re-read the duration directly from the visible field on THIS screen
+  // at the exact moment Start is pressed — the real source of truth,
+  // independent of whether an onchange event already fired.
+  const fallback = calPhase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
+  const duration = parseDurationInput(document.getElementById('cal-flow-duration').value, fallback);
+  if(calPhase===1) calPhase1Seconds = duration; else calPhase2Seconds = duration;
   calSecondsLeft = duration;
+  document.getElementById('cal-flow-duration').disabled = true;
   document.getElementById('cal-start-btn').disabled = true;
   document.getElementById('cal-status').textContent = calPhase===1
     ? 'Keep warming up at normal match intensity…'

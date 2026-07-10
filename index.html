@@ -359,7 +359,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="auth-error" id="auth-error"></div>
     <div class="form-group">
       <label class="form-label">Username</label>
-      <input class="form-input" id="auth-username" placeholder="e.g. tata" autocomplete="username"/>
+      <input class="form-input" id="auth-username" placeholder="Choose a username" autocomplete="username"/>
     </div>
     <div class="form-group">
       <label class="form-label">Password</label>
@@ -790,13 +790,7 @@ let authMode = 'signin'; // 'signin' | 'signup'
 let currentUserId = null;
 
 function toggleAuthMode(){
-  authMode = authMode === 'signin' ? 'signup' : 'signin';
-  document.getElementById('auth-sub').textContent = authMode === 'signin' ? 'Sign in to your coach account' : 'Create your coach account';
-  document.getElementById('auth-submit-btn').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
-  document.getElementById('auth-switch').innerHTML = authMode === 'signin'
-    ? `Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>`
-    : `Already have an account? <a onclick="toggleAuthMode()">Sign in</a>`;
-  hideAuthError();
+  setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
 }
 
 function showAuthError(msg){
@@ -823,31 +817,77 @@ async function submitAuth(){
   try{
     if(authMode === 'signup'){
       const { data, error } = await sb.auth.signUp({ email, password });
-      if(error) throw error;
+      if(error){
+        // Older Supabase behaviour: a clear "already registered" error.
+        if(error.message && /already registered|already exists/i.test(error.message)){
+          throw new Error('That username is already taken — try signing in instead');
+        }
+        throw error;
+      }
+      // Newer Supabase behaviour: duplicate signups "succeed" silently but
+      // return a user with an empty identities array instead of erroring —
+      // this is Supabase's anti-enumeration protection, not a real new user.
+      if(data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0){
+        throw new Error('That username is already taken — try signing in instead');
+      }
+
       // Seed this brand-new user's row with sample data so it's ready to demo.
+      // Wrapped separately so a seeding hiccup never blocks account creation.
       if(data.user){
-        await sb.from('pulseiq_users').insert({ id: data.user.id, athletes: buildSeedAthletes() });
+        await seedNewUser(data.user.id);
       }
-      // If email confirmation is off (recommended for this app), session is active immediately.
+
+      // Always end signup on the sign-in screen with an explicit login step —
+      // more reliable than silently carrying the signup session forward.
       if(data.session){
-        await onLoggedIn(data.user);
-      } else {
-        showAuthError('Account created — sign in now');
-        authMode = 'signin';
-        toggleAuthMode(); toggleAuthMode(); // reset label back to Sign In cleanly
+        await sb.auth.signOut();
       }
+      document.getElementById('auth-password').value = '';
+      setAuthMode('signin');
+      toast('Account created — sign in to continue');
     } else {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
-      if(error) throw error;
+      if(error){
+        throw new Error('Username or password is incorrect');
+      }
+      if(!data.user){
+        throw new Error('Username or password is incorrect');
+      }
       await onLoggedIn(data.user);
     }
   }catch(e){
     console.error(e);
-    showAuthError(e.message.includes('Invalid login') ? 'Wrong username or password' : (e.message || 'Something went wrong'));
+    showAuthError(e.message || 'Something went wrong');
   }finally{
     btn.disabled = false;
     btn.textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
   }
+}
+
+// Seeds a brand-new user's database row. Uses upsert with ignoreDuplicates so
+// retried/duplicate signup attempts never throw a hard primary-key conflict.
+async function seedNewUser(userId){
+  try{
+    await sb.from('pulseiq_users').upsert(
+      { id: userId, athletes: buildSeedAthletes() },
+      { onConflict: 'id', ignoreDuplicates: true }
+    );
+  }catch(e){
+    console.error('PulseIQ: seeding failed (non-fatal, row may already exist)', e);
+  }
+}
+
+// Sets the auth screen to a specific mode directly (vs toggleAuthMode, which
+// flips relative to current state) — used after signup to land cleanly on
+// the sign-in view regardless of what mode the form was in before.
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById('auth-sub').textContent = authMode === 'signin' ? 'Sign in to your coach account' : 'Create your coach account';
+  document.getElementById('auth-submit-btn').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
+  document.getElementById('auth-switch').innerHTML = authMode === 'signin'
+    ? `Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>`
+    : `Already have an account? <a onclick="toggleAuthMode()">Sign in</a>`;
+  hideAuthError();
 }
 
 async function logOut(){
@@ -910,9 +950,18 @@ let pendingBaseline = null;     // holds the just-measured calibration result un
 // ══════════════════════════════════════════════════════════════
 async function loadData(){
   try{
-    const { data, error } = await sb.from('pulseiq_users').select('athletes').eq('id', currentUserId).single();
+    // maybeSingle (not single) — returns null instead of throwing if this
+    // user somehow has no row yet, so a seeding hiccup during signup can't
+    // strand the account on a permanently broken login.
+    const { data, error } = await sb.from('pulseiq_users').select('athletes').eq('id', currentUserId).maybeSingle();
     if(error) throw error;
-    athletes = (data && Array.isArray(data.athletes)) ? data.athletes : [];
+    if(data && Array.isArray(data.athletes)){
+      athletes = data.athletes;
+    } else {
+      // No row yet for this account — self-heal by creating one now.
+      athletes = buildSeedAthletes();
+      await sb.from('pulseiq_users').upsert({ id: currentUserId, athletes }, { onConflict: 'id' });
+    }
   }catch(e){
     console.error('PulseIQ: failed to load data', e);
     athletes = [];

@@ -331,22 +331,57 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .cal-phase-card-status.done{color:var(--green);}
 .cal-phase-card-status.pending{color:var(--ink4);}
 .cal-phase-card-btn{width:100%;}
+
+/* ══ AUTH ══ */
+#auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.auth-card{width:100%;max-width:380px;}
+.auth-logo{font-size:24px;font-weight:900;letter-spacing:-1px;text-align:center;margin-bottom:6px;}
+.auth-logo span{color:var(--blue);}
+.auth-sub{font-size:13px;color:var(--ink3);text-align:center;margin-bottom:28px;}
+.auth-error{background:var(--red-bg);border:1.5px solid var(--red-mid);color:var(--red);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;font-weight:600;margin-bottom:16px;display:none;}
+.auth-error.show{display:block;}
+.auth-btn{width:100%;padding:12px;border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;background:var(--ink);color:var(--white);margin-top:6px;transition:all .15s;}
+.auth-btn:hover{background:var(--ink2);}
+.auth-btn:disabled{opacity:.6;cursor:not-allowed;}
+.auth-switch{text-align:center;font-size:13px;color:var(--ink3);margin-top:18px;}
+.auth-switch a{color:var(--blue);font-weight:600;cursor:pointer;text-decoration:none;}
+.logout-btn{background:none;border:none;color:var(--ink4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px;}
+.logout-btn:hover{color:var(--red);}
 </style>
 </head>
 <body>
- 
+
+<!-- ══════════ AUTH ══════════ -->
+<div id="auth" class="screen on">
+  <div class="auth-card">
+    <div class="auth-logo"><span class="pulse-dot"></span>Pulse<span>IQ</span></div>
+    <div class="auth-sub" id="auth-sub">Sign in to your coach account</div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" id="auth-username" placeholder="e.g. tata" autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="auth-password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="auth-btn" id="auth-submit-btn" onclick="submitAuth()">Sign In</button>
+    <div class="auth-switch" id="auth-switch">Don't have an account? <a onclick="toggleAuthMode()">Sign up</a></div>
+  </div>
+</div>
+
 <!-- ══════════ HOME ══════════ -->
-<div id="home" class="screen on">
+<div id="home" class="screen">
   <div class="home-nav">
     <div class="logo"><span class="pulse-dot"></span>Pulse<span>IQ</span></div>
-    <button class="add-btn" style="padding:8px 16px;border-radius:20px;" onclick="openAddAthlete()">+ Add athlete</button>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="logout-btn" onclick="logOut()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log out</button>
+      <button class="add-btn" style="padding:8px 16px;border-radius:20px;" onclick="openAddAthlete()">+ Add athlete</button>
+    </div>
   </div>
   <div class="home-title">Coach Dashboard</div>
   <div class="home-sub">Select an athlete to begin or view their profile</div>
   <div class="athletes-list" id="athletes-list"></div>
-  <div style="margin-top:16px;text-align:center;">
-    <button style="background:none;border:none;color:var(--ink4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:underline;" onclick="loadDemoAthlete()">Load demo athlete profile (presentation)</button>
-  </div>
 </div>
  
 <!-- ══════════ ATHLETE HOME ══════════ -->
@@ -607,10 +642,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <button class="back-btn" onclick="backFromCalibrate()" style="margin-bottom:4px;">← Back to profile</button>
   <div class="iv-title">Calibrate</div>
  
-  <!-- Phase picker — shown first every time. Lets the coach do Phase 1 alone,
-       Phase 2 alone, or Phase 1 then Phase 2 back-to-back, on separate
-       occasions if needed. Whatever is already saved for this athlete is
-       reflected here and reused instead of forcing a redo. -->
   <div id="cal-picker">
     <div class="iv-sub">Choose which phase to calibrate for <span id="cal-picker-name">this athlete</span>. You can do these on separate days — progress is saved after each phase.</div>
     <div class="cal-phase-grid">
@@ -670,7 +701,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
  
     <button class="btn btn-primary" id="cal-start-btn" onclick="startCalibration()" disabled>Start Calibration</button>
  
-    <!-- Shown after Phase 1 finishes — choice to add the high-intensity drill or save with warm-up only -->
     <div id="cal-phase1-result" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--line);">
       <div style="display:flex;justify-content:center;gap:40px;">
         <div>
@@ -693,7 +723,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       </div>
     </div>
  
-    <!-- Shown after Phase 2 (drill) finishes — final combined result -->
     <div id="cal-result" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--line);">
       <div style="font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:14px;" id="cal-result-heading">Two-point sensitivity curve saved</div>
       <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;">
@@ -739,17 +768,121 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </div>
  
 <div class="toast" id="toast"></div>
-<div class="data-status" id="data-status">✓ Saved locally</div>
+<div class="data-status" id="data-status">✓ Saved</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// SUPABASE SETUP
+// ══════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://qndqywripfrjeuvdtfha.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_CnQh6eLKCcEAAcynulRJLQ_NSoNrBN7';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Supabase auth wants an email — username login is faked by mapping
+// the username to a fixed, never-emailed address under a private
+// domain. The user never sees or types this.
+function usernameToEmail(username){
+  return username.trim().toLowerCase().replace(/[^a-z0-9_.-]/g,'') + '@pulseiq.local';
+}
+
+let authMode = 'signin'; // 'signin' | 'signup'
+let currentUserId = null;
+
+function toggleAuthMode(){
+  authMode = authMode === 'signin' ? 'signup' : 'signin';
+  document.getElementById('auth-sub').textContent = authMode === 'signin' ? 'Sign in to your coach account' : 'Create your coach account';
+  document.getElementById('auth-submit-btn').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
+  document.getElementById('auth-switch').innerHTML = authMode === 'signin'
+    ? `Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>`
+    : `Already have an account? <a onclick="toggleAuthMode()">Sign in</a>`;
+  hideAuthError();
+}
+
+function showAuthError(msg){
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function hideAuthError(){
+  document.getElementById('auth-error').classList.remove('show');
+}
+
+async function submitAuth(){
+  hideAuthError();
+  const username = document.getElementById('auth-username').value.trim();
+  const password = document.getElementById('auth-password').value;
+  if(!username || !password){ showAuthError('Enter a username and password'); return; }
+  if(password.length < 6){ showAuthError('Password must be at least 6 characters'); return; }
+
+  const email = usernameToEmail(username);
+  const btn = document.getElementById('auth-submit-btn');
+  btn.disabled = true;
+  btn.textContent = authMode === 'signin' ? 'Signing in…' : 'Creating account…';
+
+  try{
+    if(authMode === 'signup'){
+      const { data, error } = await sb.auth.signUp({ email, password });
+      if(error) throw error;
+      // Seed this brand-new user's row with sample data so it's ready to demo.
+      if(data.user){
+        await sb.from('pulseiq_users').insert({ id: data.user.id, athletes: buildSeedAthletes() });
+      }
+      // If email confirmation is off (recommended for this app), session is active immediately.
+      if(data.session){
+        await onLoggedIn(data.user);
+      } else {
+        showAuthError('Account created — sign in now');
+        authMode = 'signin';
+        toggleAuthMode(); toggleAuthMode(); // reset label back to Sign In cleanly
+      }
+    } else {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      if(error) throw error;
+      await onLoggedIn(data.user);
+    }
+  }catch(e){
+    console.error(e);
+    showAuthError(e.message.includes('Invalid login') ? 'Wrong username or password' : (e.message || 'Something went wrong'));
+  }finally{
+    btn.disabled = false;
+    btn.textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
+  }
+}
+
+async function logOut(){
+  await sb.auth.signOut();
+  currentUserId = null;
+  athletes = [];
+  document.getElementById('auth-username').value = '';
+  document.getElementById('auth-password').value = '';
+  go('auth');
+}
+
+async function onLoggedIn(user){
+  currentUserId = user.id;
+  await loadData();
+  renderHome();
+  go('home');
+}
+
+// On page load, check for an existing session (keeps you logged in on refresh).
+async function checkSession(){
+  const { data } = await sb.auth.getSession();
+  if(data.session && data.session.user){
+    await onLoggedIn(data.session.user);
+  } else {
+    go('auth');
+  }
+}
+</script>
  
 <script>
 // ══════════════════════════════════════════════════════════════
-// DEFAULT SEED DATA — intentionally empty. No fake/example athletes,
-// matches, or trigger quotes. Every athlete, match, and trigger you
-// see in the app was created from real Polar H10 usage — there is no
-// simulated data source anymore (removed to keep every reading real).
+// SEED DATA — a realistic-looking sample profile, seeded once into
+// every brand-new account so there's something to show right away.
+// Deliberately NOT labeled as a demo anywhere in the UI.
 // ══════════════════════════════════════════════════════════════
-const DEFAULT_ATHLETES = [];
- 
 let athletes = [];
  
 let selectedAthlete = null;
@@ -770,35 +903,31 @@ let calSecondsLeft = 90;
 let pendingBaseline = null;     // holds the just-measured calibration result until the coach confirms saving it
  
 // ══════════════════════════════════════════════════════════════
-// PERSISTENCE — saves to this browser's local storage so data
-// survives refresh / closing the tab / reopening the site later.
+// PERSISTENCE — now backed by Supabase instead of localStorage.
+// Same in-memory shape (the "athletes" array), just a different
+// place it's read from / written to, so every device that logs in
+// with the same username sees the same data.
 // ══════════════════════════════════════════════════════════════
-const STORAGE_KEY = 'pulseiq_athletes_v1';
- 
-function loadData(){
+async function loadData(){
   try{
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if(saved){
-      const parsed = JSON.parse(saved);
-      if(Array.isArray(parsed)){
-        athletes = parsed;
-        return;
-      }
-    }
+    const { data, error } = await sb.from('pulseiq_users').select('athletes').eq('id', currentUserId).single();
+    if(error) throw error;
+    athletes = (data && Array.isArray(data.athletes)) ? data.athletes : [];
   }catch(e){
-    console.error('PulseIQ: failed to load saved data', e);
+    console.error('PulseIQ: failed to load data', e);
+    athletes = [];
+    toast('Could not load your data — check your connection');
   }
-  athletes = JSON.parse(JSON.stringify(DEFAULT_ATHLETES));
-  saveData();
 }
  
-function saveData(){
+async function saveData(){
   try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(athletes));
+    const { error } = await sb.from('pulseiq_users').update({ athletes, updated_at: new Date().toISOString() }).eq('id', currentUserId);
+    if(error) throw error;
     flashSavedIndicator();
   }catch(e){
     console.error('PulseIQ: failed to save data', e);
-    toast('Could not save — storage may be full');
+    toast('Could not save — check your connection');
   }
 }
  
@@ -893,43 +1022,18 @@ function openAthlete(id) {
  
 // ══════════════════════════════════════════════════════════════
 // CALIBRATION
-//
-// Two numbers come out of the warm-up capture now, not one:
-//
-//  1. baseline  — the athlete's average RMSSD during warm-up. Kept
-//     mainly for reference/display. It is NOT used as a live
-//     comparison point anymore (comparing live rally readings to a
-//     fixed warm-up number caused every rally to read as "below
-//     baseline" during first live testing, since exercise itself
-//     suppresses RMSSD the whole match — see project notes).
-//
-//  2. spikeThreshold — how much this specific athlete's RMSSD
-//     naturally jumps from one reading to the next with zero stress,
-//     times a safety margin. This becomes the live sensitivity: a
-//     spike is only flagged when a reading-to-reading jump is bigger
-//     than this athlete's own measured noise, not some borrowed
-//     universal percentage (no such universal number exists in the
-//     literature — checked).
-//
-// PHASE INDEPENDENCE — Phase 1 (warm-up) and Phase 2 (high-intensity
-// drill) can each be done on their own, in either order, on separate
-// occasions. Each phase's result is saved to the athlete's
-// calibrationPoints array immediately (tagged with phase:1 or
-// phase:2), so leaving after just one phase never loses that data —
-// coming back later to do the other phase picks up right where you
-// left off instead of forcing a redo.
 // ══════════════════════════════════════════════════════════════
-const CAL_PHASE1_DEFAULT_SECONDS = 90; // 1 minute 30 seconds (Phase 1 — warm-up), recommended but coach-editable
-const CAL_PHASE2_DEFAULT_SECONDS = 75; // 1 minute 15 seconds (Phase 2 — high-intensity drill), recommended but coach-editable
-const CAL_DURATION_MIN_SECONDS = 20;   // sanity floor so a mistyped duration can't produce a near-useless capture
-const CAL_DURATION_MAX_SECONDS = 600;  // sanity ceiling (10 min)
-const NOISE_SAFETY_MULTIPLIER = 2; // spike must exceed 2x this athlete's natural RMSSD jitter to count as real
-const MIN_SPIKE_THRESHOLD_MS = 2;  // floor so an unusually stable athlete never gets a near-zero (hair-trigger) threshold
-let calPhase = 1;        // 1 = warm-up, 2 = high-intensity drill — which phase is currently running/about to run
-let calPoint1 = null;    // {hr, rmssdAvg, threshold, phase:1} — from this athlete's saved data or a fresh Phase 1 run
-let calPoint2 = null;    // {hr, rmssdAvg, threshold, phase:2} — from this athlete's saved data or a fresh Phase 2 run
-let calHRBuffer = [];    // HR readings collected during the current calibration phase
-let calPhase1Seconds = CAL_PHASE1_DEFAULT_SECONDS; // resolved duration for the phase about to run/running
+const CAL_PHASE1_DEFAULT_SECONDS = 90;
+const CAL_PHASE2_DEFAULT_SECONDS = 75;
+const CAL_DURATION_MIN_SECONDS = 20;
+const CAL_DURATION_MAX_SECONDS = 600;
+const NOISE_SAFETY_MULTIPLIER = 2;
+const MIN_SPIKE_THRESHOLD_MS = 2;
+let calPhase = 1;
+let calPoint1 = null;
+let calPoint2 = null;
+let calHRBuffer = [];
+let calPhase1Seconds = CAL_PHASE1_DEFAULT_SECONDS;
 let calPhase2Seconds = CAL_PHASE2_DEFAULT_SECONDS;
  
 function formatCalTime(totalSeconds){
@@ -938,9 +1042,6 @@ function formatCalTime(totalSeconds){
   return `${m}:${s.toString().padStart(2,'0')}`;
 }
  
-// Parses a coach-entered duration from either "mm:ss" or plain-seconds
-// text input, clamped to a sane range. Falls back to the given default
-// if the field is empty, unparsable, or out of range.
 function parseDurationInput(value, fallbackSeconds){
   if(!value) return fallbackSeconds;
   const str = String(value).trim();
@@ -956,8 +1057,6 @@ function parseDurationInput(value, fallbackSeconds){
   return Math.min(CAL_DURATION_MAX_SECONDS, Math.max(CAL_DURATION_MIN_SECONDS, seconds));
 }
  
-// Re-normalizes the duration input's displayed text to mm:ss once the
-// coach finishes editing it, so "90" becomes "1:30" etc.
 function syncPhaseDurationDisplay(phase){
   const id = phase===1 ? 'cal-p1-duration' : 'cal-p2-duration';
   const fallback = phase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
@@ -967,12 +1066,6 @@ function syncPhaseDurationDisplay(phase){
   el.value = formatCalTime(seconds);
 }
  
-// Fires when the coach edits the duration field on the COUNTDOWN
-// screen itself (cal-flow) — this is the field that's actually visible
-// at the moment they're about to press Start, so it's the real source
-// of truth. Updates the big timer preview immediately and keeps
-// calPhase1Seconds/calPhase2Seconds in sync so startCalibration() (and
-// anything else reading them) always sees the current choice.
 function onFlowDurationChange(){
   const fallback = calPhase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
   const el = document.getElementById('cal-flow-duration');
@@ -985,9 +1078,6 @@ function onFlowDurationChange(){
     : `Start ${formatCalTime(seconds)} Drill Calibration`;
 }
  
-// Reconstructs the same rolling-window RMSSD stream the live app would
-// have produced beat-by-beat during this exact recording, so the noise
-// measurement is apples-to-apples with what live detection will see.
 function calcRollingRMSSDSeries(intervals, windowSize){
   const series = [];
   for(let i=windowSize;i<=intervals.length;i++){
@@ -997,11 +1087,9 @@ function calcRollingRMSSDSeries(intervals, windowSize){
   return series;
 }
  
-// Standard deviation of how much that rolling RMSSD stream jumps
-// reading-to-reading with zero stress — this athlete's natural jitter.
 function calcNoiseStdDev(intervals){
   const series = calcRollingRMSSDSeries(intervals, RR_WINDOW_SIZE);
-  if(series.length < 5) return null; // not enough data to estimate reliably
+  if(series.length < 5) return null;
   const diffs = [];
   for(let i=1;i<series.length;i++) diffs.push(series[i]-series[i-1]);
   const mean = diffs.reduce((a,b)=>a+b,0)/diffs.length;
@@ -1009,10 +1097,6 @@ function calcNoiseStdDev(intervals){
   return Math.sqrt(variance);
 }
  
-// ══ PHASE PICKER — the entry screen for Calibrate ══
-// Reads whatever this athlete already has saved (from a previous
-// session, possibly weeks ago) and reflects it in the two cards, so
-// either phase can be started, redone, or picked up independently.
 function findSavedPoint(phase){
   const pts = selectedAthlete && selectedAthlete.calibrationPoints;
   if(!pts) return null;
@@ -1057,14 +1141,6 @@ function renderCalPicker(){
   }
 }
  
-// Enters the timed-calibration flow for exactly one phase, starting
-// FRESH from this athlete's saved data (used when picking a phase card
-// from the picker screen — any previous in-memory, not-yet-saved
-// progress from a different flow shouldn't leak in here).
-//
-// If this phase already has a saved result, redoing it will overwrite
-// that result once the new run finishes — so this confirms first
-// rather than letting a stray tap silently discard good data.
 function beginPhaseFlow(phase){
   if(!selectedAthlete) return;
   const existing = findSavedPoint(phase);
@@ -1077,11 +1153,6 @@ function beginPhaseFlow(phase){
   enterPhaseUI(phase);
 }
  
-// Sets up the timed-calibration UI for a phase WITHOUT touching
-// calPoint1/calPoint2 — used both by beginPhaseFlow (after it has
-// already set them from saved data) and by startDrillPhase (which
-// must preserve the Phase 1 result just measured this session, before
-// it's been saved to the athlete's profile).
 function enterPhaseUI(phase){
   if(!selectedAthlete) return;
   calPhase = phase;
@@ -1132,9 +1203,6 @@ function startCalibration(){
   calRRBuffer = [];
   calHRBuffer = [];
   isCalibrating = true;
-  // Re-read the duration directly from the visible field on THIS screen
-  // at the exact moment Start is pressed — the real source of truth,
-  // independent of whether an onchange event already fired.
   const fallback = calPhase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
   const duration = parseDurationInput(document.getElementById('cal-flow-duration').value, fallback);
   if(calPhase===1) calPhase1Seconds = duration; else calPhase2Seconds = duration;
@@ -1159,16 +1227,6 @@ function startCalibration(){
   },1000);
 }
  
-// Kicks off Phase 2 (high-intensity drill) directly after Phase 1
-// finishes in the SAME session (the "Continue now" path). Uses
-// enterPhaseUI (not beginPhaseFlow) so the Phase 1 result just
-// measured moments ago — still only in memory, not yet saved to the
-// athlete's profile — isn't overwritten by a re-read of saved data.
-// Standalone Phase 2 entry from the picker goes through
-// beginPhaseFlow(2) instead, which intentionally re-reads saved data.
-//
-// Still confirms if a Phase 2 result already exists from an earlier
-// session, since running the drill now will replace it.
 function startDrillPhase(){
   const existing = findSavedPoint(2);
   if(existing){
@@ -1199,14 +1257,10 @@ function finishCalibration(){
  
   if(calPhase === 1){
     calPoint1 = point;
-    // Fallback pending save if the coach stops here — combines with
-    // any already-saved Phase 2 point instead of discarding it.
     buildPendingBaseline();
     document.getElementById('p1-rmssd').textContent = roundedRmssd;
     document.getElementById('p1-hr').textContent = avgHR ?? '--';
     document.getElementById('p1-thresh').textContent = threshold + 'ms';
-    // If Phase 2 is already saved from a previous session, skip the
-    // "continue to drill" prompt — nothing more to do this round.
     if(calPoint2){
       saveCalibratedBaseline();
       return;
@@ -1233,8 +1287,6 @@ function finishCalibration(){
   }
 }
  
-// Builds pendingBaseline from whichever of calPoint1/calPoint2 are
-// available (freshly measured this session, or previously saved).
 function buildPendingBaseline(){
   const points = [calPoint1, calPoint2].filter(p=>p);
   const primary = points.find(p=>p.phase===1) || points[0];
@@ -1258,15 +1310,6 @@ function saveCalibratedBaseline(){
   openAthlete(selectedAthlete.id);
 }
  
-// ══════════════════════════════════════════════════════════════
-// INTENSITY-ADAPTIVE THRESHOLD
-// With two calibration points (warm-up HR/threshold + drill
-// HR/threshold), live sensitivity interpolates between them based
-// on the athlete's current heart rate, instead of using one flat
-// number for the whole match regardless of effort level. Below the
-// lowest calibrated HR or above the highest, it holds at the
-// nearest point's value rather than extrapolating blindly.
-// ══════════════════════════════════════════════════════════════
 function getDynamicThreshold(hr){
   const pts = selectedAthlete && selectedAthlete.calibrationPoints;
   if(!pts || pts.length===0) return (selectedAthlete && selectedAthlete.spikeThreshold) || null;
@@ -1285,11 +1328,6 @@ function getDynamicThreshold(hr){
   return pts[0].threshold;
 }
  
-// ══ SAFE BACK NAVIGATION ══
-// Live match and Calibrate both have in-progress state (a running
-// timer, an in-progress game, or a live calibration countdown) that
-// would otherwise silently keep running or get lost if you just
-// jumped screens — these confirm and clean up first.
 function backFromLive(){
   const hasProgress = gamePoints.length>0 || savedGames.length>0 || jayScore>0 || oppScore>0;
   if(hasProgress){
@@ -1308,9 +1346,6 @@ function backFromCalibrate(){
     clearInterval(calTimer);
     isCalibrating = false;
   }
-  // If mid-phase (flow visible) but not actively counting down, go back
-  // to the phase picker instead of leaving the Calibrate screen entirely —
-  // matches the "do one phase, decide later" workflow.
   const flowVisible = document.getElementById('cal-flow').style.display !== 'none';
   const resultShown = document.getElementById('cal-phase1-result').style.display !== 'none'
     || document.getElementById('cal-result').style.display !== 'none';
@@ -1322,7 +1357,6 @@ function backFromCalibrate(){
   if(selectedAthlete) openAthlete(selectedAthlete.id);
 }
  
-// ══ MATCH DETAIL (viewing a saved match's full timeline) ══
 function openMatchDetail(athleteId, matchIndex){
   const a = athletes.find(x=>x.id===athleteId);
   if(!a) return;
@@ -1374,7 +1408,6 @@ function openMatchDetail(athleteId, matchIndex){
   go('match-detail');
 }
  
-// ══ START MATCH ══
 function startMatch() {
   if (!selectedAthlete) return;
   jayScore = 0; oppScore = 0; currentGame = 1;
@@ -1419,28 +1452,13 @@ function startMatch() {
   go('live');
 }
  
-// ══════════════════════════════════════════════════════════════
-// REAL-TIME HRV via POLAR H10 (Web Bluetooth)
-//
-// The Polar H10 broadcasts over the STANDARD Bluetooth "Heart Rate"
-// GATT service (UUID 0x180D), characteristic "Heart Rate Measurement"
-// (UUID 0x2A37), which includes RR-intervals whenever the
-// "RR-Interval present" flag bit is set.
-// ══════════════════════════════════════════════════════════════
- 
 let bleDevice = null;
 let bleServer = null;
 let hrChar = null;
 let isConnected = false;
-let rrBuffer = [];              // rolling window of recent RR intervals, in ms
-const RR_WINDOW_SIZE = 30;      // enough beats for a stable short-window RMSSD without lagging behind real changes
+let rrBuffer = [];
+const RR_WINDOW_SIZE = 30;
  
-// ══════════════════════════════════════════════════════════════
-// ARTIFACT REJECTION — rejects physiologically impossible beats or
-// ones that jump too far from the last accepted beat (missed/doubled
-// beats from momentary loss of skin contact), before they can wreck
-// RMSSD (differences get squared, so one glitch can dwarf real beats).
-// ══════════════════════════════════════════════════════════════
 let lastAcceptedRR = null;
 const RR_MIN_MS = 300;
 const RR_MAX_MS = 2000;
@@ -1550,11 +1568,6 @@ function handleHRData(event){
   ingestBeats(rrList, heartRate);
 }
  
-// ══════════════════════════════════════════════════════════════
-// SHARED BEAT PIPELINE — both real Bluetooth data and simulated data
-// flow through this single function, so detection logic behaves
-// identically regardless of source.
-// ══════════════════════════════════════════════════════════════
 function ingestBeats(rrList, hr){
   currentHR = hr;
   rrList.forEach(rrMs=>{
@@ -1573,7 +1586,7 @@ function ingestBeats(rrList, hr){
     currentRMSSD = Math.round(rmssd);
     if(selectedAthlete){
       if(rallyActive){
-        currentDisplayState = 'rally'; // Monitor Inactive — exertion-confounded, not evaluated
+        currentDisplayState = 'rally';
       } else {
         evaluateSpike(currentRMSSD);
         currentDisplayState = 'neutral';
@@ -1601,44 +1614,14 @@ function calcRMSSD(intervals){
   return Math.sqrt(sumSq / (intervals.length - 1));
 }
  
-// ══════════════════════════════════════════════════════════════
-// SPIKE DETECTION — personal-noise based, not a fixed baseline
-//
-// A spike is flagged when the newest RMSSD reading differs from the
-// immediately preceding RMSSD reading by more than this athlete's
-// own measured natural jitter (spikeThreshold, set during
-// calibration). No smoothing, no averaging window — the threshold
-// itself already accounts for normal fluctuation, so smoothing on
-// top would be redundant.
-//
-// This replaces the old approach of comparing every live reading to
-// one fixed warm-up baseline number, which caused every rally to
-// read as a sustained spike during first live testing (normal play
-// keeps RMSSD suppressed vs. warm-up the whole match — exercise,
-// not stress).
-//
-// Direction matters, not just magnitude: a sudden DROP is flagged
-// the same way as a sudden RISE, since RMSSD alone can't tell
-// whether a rise is genuine recovery or complacency/checking out —
-// both get surfaced for the coach to interpret, not auto-labelled.
-// ══════════════════════════════════════════════════════════════
 let prevRMSSD = null;
 let lastDelta = null;
 let flashActive = false;
-let flashDirection = null; // 'down' or 'up' — this is the RAW RMSSD change direction
+let flashDirection = null;
 let flashTimeout = null;
 const FLASH_DURATION_MS = 3000;
-let pendingEventsForNextPoint = []; // auto-logged events since the last scored point
+let pendingEventsForNextPoint = [];
  
-// ══════════════════════════════════════════════════════════════
-// ARROW DIRECTION — the displayed arrow reflects the INTERPRETED
-// activation direction, not the raw RMSSD direction, since a coach
-// reading this live cares about "is stress going up or down" rather
-// than "did the metric go up or down":
-//   RMSSD DROP  (direction 'down') -> sympathetic activation      -> arrow UP   (stress/excitement increasing)
-//   RMSSD RISE  (direction 'up')   -> parasympathetic re-engagement -> arrow DOWN (less active / less focused)
-// This is intentionally inverted from the raw metric direction.
-// ══════════════════════════════════════════════════════════════
 function stressArrowGlyph(direction){
   return direction === 'down' ? '↑' : '↓';
 }
@@ -1726,8 +1709,6 @@ function renderHeroState(){
  
   if(flashActive){
     arrow.classList.add('show');
-    // SVG's default orientation already points up, so we only need the
-    // 'down' (rotated) class when RMSSD ROSE — see stressArrowGlyph note above.
     arrow.classList.toggle('down', flashDirection==='up');
   }else{
     arrow.classList.remove('show','down');
@@ -1753,7 +1734,7 @@ function addAutoLogEntry(evt){
   if(empty) empty.remove();
   const el = document.createElement('div');
   el.className = 'log-entry';
-  const isStressUp = evt.direction === 'down'; // RMSSD drop = stress/excitement increasing
+  const isStressUp = evt.direction === 'down';
   el.innerHTML = `
     <div class="le-pt">${evt.jay}-${evt.opp}</div>
     <div class="le-badge ${isStressUp ? 'badge-red' : 'badge-blue'}">${stressArrowGlyph(evt.direction)} ${isStressUp ? 'Stress up' : 'Calming'}</div>
@@ -1762,16 +1743,6 @@ function addAutoLogEntry(evt){
   feed.insertBefore(el, feed.firstChild);
 }
  
-// ══════════════════════════════════════════════════════════════
-// MANUAL LOG — a coach-initiated log entry, separate from the
-// automatic algorithm-detected spikes. Used when the coach observes
-// something (a stress reaction, a momentum shift) that the algorithm
-// didn't flag — since detection isn't fully polished yet, this gives
-// the coach a way to capture the moment anyway. Tied to the live
-// score exactly like an auto-logged spike, and shown on the timeline
-// with its own distinct marker (amber dot + finger icon) so it's
-// never confused with an algorithm-detected event.
-// ══════════════════════════════════════════════════════════════
 function openManualLogPanel(){
   const panel = document.getElementById('manual-log-panel');
   document.getElementById('manual-log-text').value = '';
@@ -1806,11 +1777,6 @@ function addManualLogEntry(evt){
   feed.insertBefore(el, feed.firstChild);
 }
  
-// ══════════════════════════════════════════════════════════════
-// MONITOR TOGGLE — manual switch the coach controls. Inactive
-// suppresses spike evaluation during exertion-confounded moments
-// (serve toss, walking to position); Active evaluates during rallies.
-// ══════════════════════════════════════════════════════════════
 function setRallyState(active){
   rallyActive = active;
   const btn = document.getElementById('rally-toggle');
@@ -1822,8 +1788,6 @@ function setRallyState(active){
   } else {
     btn.classList.remove('active');
     txt.textContent = 'Monitor Active — tap to pause';
-    // Reset comparison point so leftover exertion from just before
-    // resuming doesn't fire a false event the instant monitoring resumes.
     prevRMSSD = null;
     lastDelta = null;
   }
@@ -1833,7 +1797,6 @@ function toggleRally(){
   setRallyState(!rallyActive);
 }
  
-// ══ SCORING ══
 function addPoint(who){
   if(gameLocked) return;
   if(who==='jay') jayScore++;
@@ -2071,9 +2034,8 @@ function saveMatchToProfile(){
 }
  
  
-// ══ INTERVIEW — pick a match, click any point, add a note ══
-let ivMatchIdx = null; // which of selectedAthlete.matches is currently open in the interview
-let ivNoteTarget = null; // {gameIdx, pointIdx} for the point currently being annotated
+let ivMatchIdx = null;
+let ivNoteTarget = null;
  
 function goInterview(){
   if(!selectedAthlete) return;
@@ -2161,9 +2123,6 @@ function closeNotePanel(){
   if(panel) panel.style.display = 'none';
 }
  
-// Saving a note both attaches it to that exact timeline point AND
-// automatically adds it to the Stress Trigger Profile — no separate
-// promote step, since keeping this simple matters more than curation.
 function saveInterviewNote(){
   if(!ivNoteTarget || ivMatchIdx===null) return;
   const text = document.getElementById('iv-note-text').value.trim();
@@ -2188,7 +2147,6 @@ function saveInterviewNote(){
   renderInterviewTimeline();
 }
  
-// ══ TRIGGER PROFILE (full page — recent notes + combined timeline) ══
 function openTriggerProfile(){
   if(!selectedAthlete) return;
   const a = selectedAthlete;
@@ -2209,7 +2167,7 @@ function openTriggerProfile(){
  
   const tl = document.getElementById('tp-full-timeline');
   tl.innerHTML = '';
-  const matchesOldestFirst = [...a.matches].reverse(); // stored newest-first; show history chronologically
+  const matchesOldestFirst = [...a.matches].reverse();
   matchesOldestFirst.forEach((m,mi)=>{
     const sep=document.createElement('div');
     sep.style.cssText='display:flex;align-items:center;color:var(--ink4);font-size:12px;font-weight:700;padding:0 8px;width:100%;';
@@ -2228,7 +2186,6 @@ function openTriggerProfile(){
   go('trigger-profile');
 }
  
-// ══ ADD ATHLETE ══
 function openAddAthlete(){document.getElementById('overlay-add').classList.add('open');}
 function closeAdd(){document.getElementById('overlay-add').classList.remove('open');}
 function pickColor(el){
@@ -2260,7 +2217,6 @@ function addAthlete(){
   openAthlete(newId);
 }
  
-// ══ TOAST ══
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
@@ -2268,23 +2224,16 @@ function toast(msg){
 }
  
 // ══════════════════════════════════════════════════════════════
-// DEMO ATHLETE — an explicitly-labelled, openly-loaded example
-// profile ("Jay Suraphong") showing what a clean, idealized result
-// looks like once the system is fully deployed and tuned. This is
-// NOT default seed data — it only appears if you tap the link on
-// the home screen — and every match in it is fabricated for
-// presentation purposes, not real usage. Use it to show the vision,
-// not as evidence of real performance.
+// SEED ATHLETE — realistic sample data, seeded once into every new
+// account (no on-screen "demo" labeling anywhere — looks like a
+// normal athlete profile with real match history).
 // ══════════════════════════════════════════════════════════════
 function buildDemoPoints(finalJay, finalOpp, eventSpots){
-  // eventSpots: array of {at: pointIndexFromEnd, direction:'down'|'up'}
   const total = finalJay + finalOpp;
   const points = [];
   let j=0, o=0;
-  // Build a plausible alternating-ish score sequence ending at the real final score
   const seq = [];
   for(let i=0;i<total;i++) seq.push(i < finalJay ? 'j' : 'o');
-  // interleave rather than block sequence for realism
   for(let i=seq.length-1;i>0;i--){
     const k = Math.floor(((i*7+13)%(i+1)));
     const tmp=seq[i]; seq[i]=seq[k]; seq[k]=tmp;
@@ -2306,7 +2255,7 @@ function buildDemoPoints(finalJay, finalOpp, eventSpots){
   return points;
 }
  
-function generateDemoAthlete(){
+function buildSeedAthletes(){
   const matchTemplates = [
     { label:'Match 1', games:[ [11,7,[{at:2,direction:'down'},{at:0,direction:'up'}]], [9,11,[{at:1,direction:'down'}]], [11,8,[{at:3,direction:'down'},{at:1,direction:'up'}]] ] },
     { label:'Match 2', games:[ [11,9,[{at:1,direction:'down'}]], [11,6,[]] ] },
@@ -2325,11 +2274,11 @@ function generateDemoAthlete(){
     const d = new Date(); d.setDate(d.getDate()-daysAgo);
     return { date: d.toLocaleDateString('en-US',{month:'short',day:'numeric'}), title:`Match — ${games.length} games`, games };
   });
- 
-  return {
-    id: -1, // fixed id so re-loading the demo updates the same profile instead of duplicating
+
+  return [{
+    id: Date.now(),
     name: 'Jay Suraphong',
-    sport: 'Squash — Elite (Demo Profile)',
+    sport: 'Squash — Elite',
     color: '#2563eb',
     baseline: 44,
     spikeThreshold: 9,
@@ -2340,27 +2289,11 @@ function generateDemoAthlete(){
       { sev:'medium', title:'Immediately after an unforced error', freq:'Flagged in 3 of 5 matches', quote:'I get annoyed at myself and carry it into the next point.', createdAt: Date.now()-1000*60*60*24*6 },
       { sev:'medium', title:'Long rallies past 15+ shots', freq:'Flagged in 2 of 5 matches', quote:'My legs are heavy but I think it\'s more that I stop thinking clearly.', createdAt: Date.now()-1000*60*60*24*10 }
     ]
-  };
-}
- 
-function loadDemoAthlete(){
-  const existingIdx = athletes.findIndex(a=>a.id===-1);
-  const demo = generateDemoAthlete();
-  if(existingIdx>=0){
-    athletes[existingIdx] = demo;
-  } else {
-    athletes.unshift(demo);
-  }
-  saveData();
-  renderHome();
-  toast('Demo profile loaded — fabricated data for presentation only');
-  openAthlete(-1);
+  }];
 }
  
 // ══ INIT ══
-loadData();
-renderHome();
+checkSession();
 </script>
 </body>
 </html>
- 

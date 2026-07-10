@@ -831,11 +831,9 @@ async function submitAuth(){
         throw new Error('That username is already taken — try signing in instead');
       }
 
-      // Seed this brand-new user's row with sample data so it's ready to demo.
-      // Wrapped separately so a seeding hiccup never blocks account creation.
-      if(data.user){
-        await seedNewUser(data.user.id);
-      }
+      // The database trigger creates this user's row automatically on
+      // signup, so there's no client-side insert here anymore — removes
+      // the race condition that could cause a 409 conflict.
 
       // Always end signup on the sign-in screen with an explicit login step —
       // more reliable than silently carrying the signup session forward.
@@ -846,14 +844,19 @@ async function submitAuth(){
       setAuthMode('signin');
       toast('Account created — sign in to continue');
     } else {
+      console.log('PulseIQ: attempting sign in for', email);
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
       if(error){
+        console.error('PulseIQ: sign in error', error);
         throw new Error('Username or password is incorrect');
       }
       if(!data.user){
+        console.error('PulseIQ: sign in returned no user', data);
         throw new Error('Username or password is incorrect');
       }
+      console.log('PulseIQ: sign in succeeded, loading dashboard for', data.user.id);
       await onLoggedIn(data.user);
+      console.log('PulseIQ: onLoggedIn finished');
     }
   }catch(e){
     console.error(e);
@@ -861,19 +864,6 @@ async function submitAuth(){
   }finally{
     btn.disabled = false;
     btn.textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
-  }
-}
-
-// Seeds a brand-new user's database row. Uses upsert with ignoreDuplicates so
-// retried/duplicate signup attempts never throw a hard primary-key conflict.
-async function seedNewUser(userId){
-  try{
-    await sb.from('pulseiq_users').upsert(
-      { id: userId, athletes: buildSeedAthletes() },
-      { onConflict: 'id', ignoreDuplicates: true }
-    );
-  }catch(e){
-    console.error('PulseIQ: seeding failed (non-fatal, row may already exist)', e);
   }
 }
 
@@ -900,10 +890,13 @@ async function logOut(){
 }
 
 async function onLoggedIn(user){
+  console.log('PulseIQ: onLoggedIn called, loading data…');
   currentUserId = user.id;
   await loadData();
+  console.log('PulseIQ: data loaded,', athletes.length, 'athletes. Rendering home…');
   renderHome();
   go('home');
+  console.log('PulseIQ: navigated to home screen');
 }
 
 // On page load, check for an existing session (keeps you logged in on refresh).
@@ -950,17 +943,22 @@ let pendingBaseline = null;     // holds the just-measured calibration result un
 // ══════════════════════════════════════════════════════════════
 async function loadData(){
   try{
-    // maybeSingle (not single) — returns null instead of throwing if this
-    // user somehow has no row yet, so a seeding hiccup during signup can't
-    // strand the account on a permanently broken login.
-    const { data, error } = await sb.from('pulseiq_users').select('athletes').eq('id', currentUserId).maybeSingle();
+    const { data, error } = await sb.from('pulseiq_users').select('athletes, seeded').eq('id', currentUserId).maybeSingle();
     if(error) throw error;
-    if(data && Array.isArray(data.athletes)){
-      athletes = data.athletes;
+    if(data){
+      if(!data.seeded){
+        // First-ever login for this account — seed the sample athlete once.
+        // Uses UPDATE (the row already exists, created by the DB trigger on
+        // signup), so this can never hit a primary-key conflict.
+        athletes = buildSeedAthletes();
+        await sb.from('pulseiq_users').update({ athletes, seeded: true }).eq('id', currentUserId);
+      } else {
+        athletes = Array.isArray(data.athletes) ? data.athletes : [];
+      }
     } else {
-      // No row yet for this account — self-heal by creating one now.
+      // Edge case: row doesn't exist yet (trigger hasn't landed). Self-heal.
       athletes = buildSeedAthletes();
-      await sb.from('pulseiq_users').upsert({ id: currentUserId, athletes }, { onConflict: 'id' });
+      await sb.from('pulseiq_users').upsert({ id: currentUserId, athletes, seeded: true }, { onConflict: 'id' });
     }
   }catch(e){
     console.error('PulseIQ: failed to load data', e);

@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulseIQ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+ 
+:root {
+  --green:#16a34a; --green-bg:#f0fdf4; --green-mid:#bbf7d0;
+  --yellow:#d97706; --yellow-bg:#fffbeb; --yellow-mid:#fde68a;
+  --red:#dc2626; --red-bg:#fef2f2; --red-mid:#fecaca;
+  --blue:#2563eb; --blue-bg:#eff6ff;
+  --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+  --line:#e2e8f0; --line2:#f1f5f9; --bg:#f8fafc; --white:#ffffff;
+  --r:14px; --r-sm:8px; --r-xs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05);
+  --sh2:0 8px 32px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+ 
+/* ── SCREENS ── */
+.screen{display:none;} .screen.on{display:block;}
+ 
+/* ══ HOME ══ */
+#home{min-height:100vh;padding:32px 24px;}
+.home-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;}
+.logo{font-size:20px;font-weight:900;letter-spacing:-1px;color:var(--ink);}
+.logo span{color:var(--blue);}
+.pulse-dot{display:inline-block;width:8px;height:8px;background:var(--red);border-radius:50%;margin-right:6px;animation:pdot 1.8s ease infinite;}
+@keyframes pdot{0%{box-shadow:0 0 0 0 rgba(220,38,38,.5);}70%{box-shadow:0 0 0 7px rgba(220,38,38,0);}100%{box-shadow:0 0 0 0 rgba(220,38,38,0);}}
+.home-title{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;}
+.home-sub{font-size:14px;color:var(--ink3);margin-bottom:32px;}
+.athletes-list{display:flex;flex-direction:column;gap:12px;}
+.ath-row{
+  background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);
+  padding:18px 20px;cursor:pointer;transition:all .15s;box-shadow:var(--sh);
+  display:flex;align-items:center;gap:16px;
+}
+.ath-row:hover{border-color:var(--blue);transform:translateX(4px);}
+.ath-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--white);flex-shrink:0;}
+.ath-info{flex:1;}
+.ath-name{font-size:16px;font-weight:700;margin-bottom:2px;}
+.ath-sport{font-size:12px;color:var(--ink3);}
+.ath-stats{display:flex;gap:16px;margin-top:6px;}
+.ath-stat{font-size:11px;color:var(--ink4);}
+.ath-stat strong{color:var(--ink2);font-weight:600;}
+.ath-arrow{font-size:20px;color:var(--ink4);}
+.add-btn{
+  background:var(--white);border:1.5px dashed var(--line);border-radius:var(--r);
+  padding:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  gap:8px;color:var(--ink4);font-size:14px;font-weight:500;transition:all .15s;
+  font-family:'Inter',sans-serif;
+}
+.add-btn:hover{border-color:var(--blue);color:var(--blue);}
+ 
+/* ══ ATHLETE HOME ══ */
+#ath-home{min-height:100vh;}
+.ath-hero{padding:20px 20px 0;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;margin-bottom:16px;border:none;background:none;font-family:'Inter',sans-serif;}
+.back-btn:hover{color:var(--ink);}
+.ath-hero-card{
+  border-radius:var(--r);padding:24px;color:var(--white);
+  display:flex;align-items:center;gap:16px;margin-bottom:20px;
+}
+.ath-hero-av{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;}
+.ath-hero-name{font-size:22px;font-weight:800;letter-spacing:-.5px;}
+.ath-hero-sub{font-size:13px;opacity:.8;margin-top:2px;}
+.ath-hero-stats{display:flex;gap:20px;margin-top:10px;}
+.ath-hstat{text-align:center;}
+.ath-hstat-val{font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.ath-hstat-lab{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.5px;}
+ 
+.ath-actions{padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.action-card{
+  background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);
+  padding:18px 16px;cursor:pointer;transition:all .15s;box-shadow:var(--sh);
+  text-align:center;
+}
+.action-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--sh2);}
+.action-icon{font-size:28px;margin-bottom:8px;color:var(--ink2);}
+.action-icon svg{width:26px;height:26px;}
+.action-label{font-size:14px;font-weight:700;margin-bottom:2px;}
+.action-sub{font-size:11px;color:var(--ink3);}
+ 
+.section-pad{padding:0 20px;}
+.sec-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);margin-bottom:12px;}
+ 
+/* triggers */
+.trigger-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.trigger-item{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;box-shadow:var(--sh);}
+.trigger-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.trigger-name{font-size:14px;font-weight:700;}
+.trigger-freq{font-size:11px;color:var(--ink3);}
+.trigger-quote{font-size:12px;color:var(--ink3);font-style:italic;border-left:3px solid var(--line);padding-left:10px;line-height:1.5;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.badge-red{background:var(--red-bg);color:var(--red);}
+.badge-yellow{background:var(--yellow-bg);color:var(--yellow);}
+.badge-green{background:var(--green-bg);color:var(--green);}
+.badge-blue{background:var(--blue-bg);color:var(--blue);}
+ 
+/* match history */
+.match-list{display:flex;flex-direction:column;gap:8px;padding-bottom:32px;}
+.match-item{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;cursor:pointer;transition:all .15s;box-shadow:var(--sh);}
+.match-item:hover{border-color:var(--ink3);}
+.match-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.match-title{font-size:14px;font-weight:700;}
+.match-date{font-size:11px;color:var(--ink4);font-family:'JetBrains Mono',monospace;}
+.match-meta{font-size:12px;color:var(--ink3);}
+ 
+/* ══ LIVE MATCH ══ */
+#live{min-height:100vh;background:var(--bg);}
+.live-top{background:var(--white);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:8px;}
+.live-top-left{display:flex;align-items:center;gap:10px;}
+.live-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--white);}
+.live-name{font-size:15px;font-weight:700;}
+.live-game-badge{font-size:11px;color:var(--ink3);}
+.live-timer{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--ink2);background:var(--line2);padding:5px 12px;border-radius:var(--r-xs);}
+.sensor-pill{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;background:var(--yellow-bg);color:var(--yellow);cursor:pointer;border:none;font-family:'Inter',sans-serif;}
+.sensor-pill.connected{background:var(--green-bg);color:var(--green);}
+.sensor-dot2{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.sensor-dot2.blink{animation:pdot 1.5s ease infinite;}
+ 
+/* Data source segmented toggle — professional, minimal, no decoration */
+.seg-toggle{display:flex;border:1.5px solid var(--line);border-radius:20px;overflow:hidden;flex-shrink:0;}
+.seg-btn{padding:5px 11px;cursor:pointer;background:var(--white);color:var(--ink3);font-weight:600;font-size:11px;border:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.seg-btn:first-child{border-right:1px solid var(--line);}
+.seg-btn.on{background:var(--ink);color:var(--white);}
+ 
+/* STRESS HERO */
+.stress-hero{
+  margin:16px;border-radius:var(--r);padding:20px;
+  transition:background .3s;
+  display:flex;align-items:center;gap:16px;
+}
+.stress-hero.neutral{background:var(--line2);}
+.stress-hero.spike{background:var(--red-bg);}
+.stress-hero.rally{background:var(--line2);}
+.rally-toggle{
+  width:100%;padding:11px;border-radius:var(--r-sm);border:1.5px solid var(--line);
+  background:var(--white);font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;
+  gap:8px;color:var(--ink2);transition:all .15s;
+}
+.rally-toggle.active{background:var(--line2);border-color:var(--ink4);}
+.rally-toggle-dot{width:9px;height:9px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+.rally-toggle.active .rally-toggle-dot{background:var(--ink4);}
+.stress-indicator{width:22px;height:22px;border-radius:50%;background:var(--ink4);transition:all .3s;flex-shrink:0;}
+.stress-indicator.spike{background:var(--red);animation:rpulse 1.2s ease infinite;}
+.stress-indicator.rally{background:var(--ink4);opacity:.5;}
+@keyframes rpulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4);}50%{box-shadow:0 0 0 8px rgba(220,38,38,0);}}
+.stress-main{flex:1;}
+.stress-word{font-size:32px;font-weight:900;letter-spacing:-1px;transition:color .3s;display:inline-flex;align-items:center;}
+.stress-word.neutral{color:var(--ink2);}
+.stress-word.spike{color:var(--red);}
+.stress-word.rally{color:var(--ink4);}
+.spike-arrow{width:22px;height:22px;margin-left:8px;display:none;transition:transform .2s;}
+.spike-arrow.show{display:inline-block;}
+.spike-arrow.down{transform:rotate(180deg);}
+.stress-desc{font-size:13px;color:var(--ink3);margin-top:2px;}
+.stress-nums{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
+.snum{text-align:center;}
+.snum-val{font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--ink);}
+.snum-lab{font-size:10px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;}
+.snum-delta{font-size:10px;font-weight:600;margin-top:1px;}
+.delta-down{color:var(--red);} .delta-up{color:var(--green);} .delta-n{color:var(--ink4);}
+ 
+/* SCORE BOARD */
+.scoreboard{margin:0 16px 16px;background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--sh);}
+.sb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sb-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);}
+.sb-game{font-size:11px;font-weight:600;color:var(--ink3);}
+.sb-row{display:flex;align-items:center;gap:8px;}
+.sb-player{flex:1;text-align:center;}
+.sb-pname{font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-score{font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:-2px;line-height:1;color:var(--ink);}
+.sb-score.tracked{color:var(--blue);}
+.sb-btns{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.sb-btn{
+  padding:8px 0;border-radius:var(--r-xs);font-size:13px;font-weight:700;
+  cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;width:100%;
+}
+.sb-btn-pt{background:var(--ink);color:var(--white);}
+.sb-btn-pt:hover{background:var(--ink2);}
+.sb-btn-pt:active{transform:scale(.96);}
+.sb-btn-pt:disabled{background:var(--line);color:var(--ink4);cursor:not-allowed;opacity:.7;}
+.sb-btn-pt:disabled:hover{background:var(--line);}
+.deuce-banner{margin:0 16px 16px;background:var(--yellow-bg);border:1.5px solid var(--yellow);border-radius:var(--r-xs);padding:8px 14px;font-size:12px;font-weight:700;color:var(--yellow);text-align:center;display:none;}
+.deuce-banner.show{display:block;}
+.sb-btn-undo{background:var(--line2);color:var(--ink3);font-weight:500;}
+.sb-btn-undo:hover{background:var(--line);}
+.sb-vs{font-size:13px;font-weight:600;color:var(--ink4);text-align:center;padding:0 4px;}
+.sb-divider{width:1px;background:var(--line);height:80px;align-self:center;}
+.game-end-banner{
+  margin-top:12px;background:var(--blue-bg);border:1.5px solid var(--blue);
+  border-radius:var(--r-xs);padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  display:none;
+}
+.game-end-banner.show{display:flex;}
+.geb-text{font-size:13px;font-weight:600;color:var(--blue);}
+.geb-btns{display:flex;gap:8px;}
+.geb-btn{padding:6px 14px;border-radius:var(--r-xs);font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
+.geb-save{background:var(--blue);color:var(--white);}
+.geb-keep{background:var(--white);color:var(--ink3);border:1px solid var(--line);}
+ 
+/* POINT TIMELINE */
+.pt-section{margin:0 16px 16px;}
+.pt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.pt-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);}
+.pt-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;}
+.pt-scroll::-webkit-scrollbar{height:3px;}
+.pt-scroll::-webkit-scrollbar-track{background:var(--line2);}
+.pt-scroll::-webkit-scrollbar-thumb{background:var(--ink4);border-radius:2px;}
+.pt-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;cursor:pointer;}
+.pt-dot{
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;
+  border:2px solid transparent;transition:all .2s;
+}
+.pt-dot.neutral{background:var(--white);border-color:var(--line);color:var(--ink3);}
+.pt-dot.auto-event{background:var(--red);border-color:var(--red);color:var(--white);font-size:13px;}
+.pt-dot.manual-event{background:var(--yellow);border-color:var(--yellow);color:var(--white);font-size:12px;}
+.pt-dot.has-note{box-shadow:0 0 0 2px var(--blue);}
+.timeline-wrap{display:flex;flex-wrap:wrap;gap:8px 6px;padding-bottom:24px;}
+.pt-dot:hover{transform:scale(1.15);}
+.pt-point-num{font-size:9px;color:var(--ink4);font-family:'JetBrains Mono',monospace;}
+.pt-empty{font-size:13px;color:var(--ink4);padding:12px 0;text-align:center;}
+ 
+/* LOG SECTION */
+.log-section{margin:0 16px 16px;}
+.log-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.ltag{
+  padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;
+  cursor:pointer;border:1.5px solid var(--line);background:var(--white);
+  color:var(--ink2);transition:all .15s;font-family:'Inter',sans-serif;
+}
+.ltag:hover,.ltag.on{border-color:var(--ink);background:var(--ink);color:var(--white);}
+.log-btns{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.lbtn{padding:8px 14px;border-radius:var(--r-xs);font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.lbtn:active{transform:scale(.96);}
+.lbtn-yellow{background:var(--yellow-bg);color:var(--yellow);}
+.lbtn-yellow:hover{background:var(--yellow-mid);}
+.lbtn-err{background:var(--line2);color:var(--ink2);}
+.lbtn-err:hover{background:var(--line);}
+.lbtn-manual{background:var(--yellow-bg);color:var(--yellow);display:inline-flex;align-items:center;gap:6px;}
+.lbtn-manual:hover{background:var(--yellow-mid);}
+.log-feed{display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;}
+.log-entry{
+  display:flex;align-items:flex-start;gap:8px;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r-xs);
+  padding:8px 12px;font-size:12px;
+}
+.le-pt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink4);white-space:nowrap;margin-top:1px;min-width:36px;}
+.le-badge{padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;white-space:nowrap;}
+.le-text{color:var(--ink2);flex:1;line-height:1.4;}
+.log-empty-msg{text-align:center;padding:16px;color:var(--ink4);font-size:13px;}
+ 
+/* END SESSION BTN */
+.end-session-wrap{padding:0 16px 32px;}
+.end-session-btn{width:100%;padding:14px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:1.5px solid var(--line);background:var(--white);color:var(--ink2);font-family:'Inter',sans-serif;transition:all .15s;}
+.end-session-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+ 
+/* ══ GAME SUMMARY ══ */
+#game-summary{min-height:100vh;padding:24px 20px;}
+.gs-title{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
+.gs-sub{font-size:13px;color:var(--ink3);margin-bottom:24px;}
+.gs-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.gs-stat{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;text-align:center;box-shadow:var(--sh);}
+.gs-val{font-size:24px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.gs-lab{font-size:10px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.gs-timeline{margin-bottom:24px;}
+.gs-tl-title{font-size:13px;font-weight:700;margin-bottom:10px;}
+.gs-tl-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;}
+.gs-actions{display:flex;gap:10px;}
+.btn{padding:12px 20px;border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.btn-primary{background:var(--ink);color:var(--white);}
+.btn-primary:hover{background:var(--ink2);}
+.btn-outline{background:var(--white);color:var(--ink2);border:1.5px solid var(--line);}
+.btn-outline:hover{background:var(--line2);}
+ 
+/* ══ INTERVIEW ══ */
+#interview{min-height:100vh;padding:24px 20px;}
+.iv-title{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;}
+.iv-sub{font-size:13px;color:var(--ink3);margin-bottom:24px;}
+.iv-moment{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;margin-bottom:14px;box-shadow:var(--sh);}
+.iv-moment-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.iv-q{font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:6px;}
+.iv-ta{width:100%;border:1.5px solid var(--line);border-radius:var(--r-xs);padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;resize:vertical;min-height:72px;color:var(--ink);outline:none;transition:border-color .15s;}
+.iv-ta:focus{border-color:var(--blue);}
+.iv-actions{display:flex;gap:10px;margin-top:24px;}
+ 
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--white);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;box-shadow:var(--sh2);}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+ 
+/* ══ ADD MODAL ══ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;align-items:flex-end;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:var(--r) var(--r) 0 0;padding:28px 24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--ink3);margin-bottom:20px;}
+.form-group{margin-bottom:16px;}
+.form-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink3);margin-bottom:6px;display:block;}
+.form-input{width:100%;border:1.5px solid var(--line);border-radius:var(--r-xs);padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--ink);outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--blue);}
+.color-row{display:flex;gap:8px;}
+.copt{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s;}
+.copt.on{border-color:var(--ink);transform:scale(1.1);}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+.mbtn{padding:9px 18px;border-radius:var(--r-xs);font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
+.mbtn-primary{background:var(--ink);color:var(--white);}
+.mbtn-outline{background:var(--white);color:var(--ink2);border:1.5px solid var(--line);}
+ 
+/* ══ DATA STATUS BADGE ══ */
+.data-status{position:fixed;top:8px;right:8px;font-size:10px;padding:3px 8px;border-radius:10px;background:var(--green-bg);color:var(--green);font-weight:600;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;}
+.data-status.show{opacity:1;}
+ 
+/* ══ CALIBRATION PHASE PICKER ══ */
+.cal-phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px;}
+.cal-phase-card{
+  background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);
+  padding:20px 16px;text-align:left;box-shadow:var(--sh);
+}
+.cal-phase-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink3);margin-bottom:6px;}
+.cal-phase-card-name{font-size:16px;font-weight:800;margin-bottom:8px;}
+.cal-phase-card-desc{font-size:12px;color:var(--ink3);line-height:1.5;margin-bottom:14px;min-height:36px;}
+.cal-phase-card-status{font-size:12px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.cal-phase-card-status.done{color:var(--green);}
+.cal-phase-card-status.pending{color:var(--ink4);}
+.cal-phase-card-btn{width:100%;}
+
+/* ══ AUTH ══ */
+#auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.auth-card{width:100%;max-width:380px;}
+.auth-logo{font-size:24px;font-weight:900;letter-spacing:-1px;text-align:center;margin-bottom:6px;}
+.auth-logo span{color:var(--blue);}
+.auth-sub{font-size:13px;color:var(--ink3);text-align:center;margin-bottom:28px;}
+.auth-error{background:var(--red-bg);border:1.5px solid var(--red-mid);color:var(--red);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;font-weight:600;margin-bottom:16px;display:none;}
+.auth-error.show{display:block;}
+.auth-btn{width:100%;padding:12px;border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;background:var(--ink);color:var(--white);margin-top:6px;transition:all .15s;}
+.auth-btn:hover{background:var(--ink2);}
+.auth-btn:disabled{opacity:.6;cursor:not-allowed;}
+.auth-switch{text-align:center;font-size:13px;color:var(--ink3);margin-top:18px;}
+.auth-switch a{color:var(--blue);font-weight:600;cursor:pointer;text-decoration:none;}
+.logout-btn{background:none;border:none;color:var(--ink4);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px;}
+.logout-btn:hover{color:var(--red);}
+</style>
+</head>
+<body>
+
+<!-- ══════════ AUTH ══════════ -->
+<div id="auth" class="screen on">
+  <div class="auth-card">
+    <div class="auth-logo"><span class="pulse-dot"></span>Pulse<span>IQ</span></div>
+    <div class="auth-sub" id="auth-sub">Sign in to your coach account</div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" id="auth-username" placeholder="Choose a username" autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="auth-password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="auth-btn" id="auth-submit-btn" onclick="submitAuth()">Sign In</button>
+    <div class="auth-switch" id="auth-switch">Don't have an account? <a onclick="toggleAuthMode()">Sign up</a></div>
+  </div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div id="home" class="screen">
+  <div class="home-nav">
+    <div class="logo"><span class="pulse-dot"></span>Pulse<span>IQ</span></div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="logout-btn" onclick="logOut()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log out</button>
+      <button class="add-btn" style="padding:8px 16px;border-radius:20px;" onclick="openAddAthlete()">+ Add athlete</button>
+    </div>
+  </div>
+  <div class="home-title">Coach Dashboard</div>
+  <div class="home-sub">Select an athlete to begin or view their profile</div>
+  <div class="athletes-list" id="athletes-list"></div>
+</div>
+ 
+<!-- ══════════ ATHLETE HOME ══════════ -->
+<div id="ath-home" class="screen">
+  <div class="ath-hero">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <button class="back-btn" onclick="go('home')" style="margin-bottom:0;">← All athletes</button>
+      <button class="back-btn" style="margin-bottom:0;color:var(--red);gap:5px;" onclick="deleteAthlete()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Delete athlete</button>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="ath-hero-card" id="ath-hero-card">
+      <div class="ath-hero-av" id="ath-hero-av"></div>
+      <div>
+        <div class="ath-hero-name" id="ath-hero-name"></div>
+        <div class="ath-hero-sub" id="ath-hero-sub"></div>
+        <div class="ath-hero-stats">
+          <div class="ath-hstat"><div class="ath-hstat-val" id="ath-h-matches">0</div><div class="ath-hstat-lab">Matches</div></div>
+          <div class="ath-hstat"><div class="ath-hstat-val" id="ath-h-baseline">--</div><div class="ath-hstat-lab">Warm-up Avg</div></div>
+          <div class="ath-hstat"><div class="ath-hstat-val" id="ath-h-triggers">0</div><div class="ath-hstat-lab">Triggers</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-pad" id="cal-needed-banner" style="display:none;margin-bottom:16px;">
+    <div style="background:var(--blue-bg);border:1.5px solid var(--blue);border-radius:var(--r-sm);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div style="font-size:13px;font-weight:600;color:var(--blue);">No calibration yet — spike detection needs a warm-up first.</div>
+      <button class="mbtn mbtn-primary" style="white-space:nowrap;" onclick="openCalibrate()">Calibrate now</button>
+    </div>
+  </div>
+  <div class="ath-actions" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="action-card" onclick="openCalibrate()">
+      <div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <div class="action-label">Calibrate</div>
+      <div class="action-sub">Measure sensitivity</div>
+    </div>
+    <div class="action-card" onclick="startMatch()">
+      <div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg></div>
+      <div class="action-label">Start Match</div>
+      <div class="action-sub">Live HRV tracking</div>
+    </div>
+    <div class="action-card" onclick="goInterview()">
+      <div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.4 8.4 8.3 8.3 0 0 1-3.9-.95L3 21l1.95-5.7a8.3 8.3 0 0 1-.95-3.9A8.4 8.4 0 0 1 12.5 3h.1a8.4 8.4 0 0 1 8.4 8.4z"/></svg></div>
+      <div class="action-label">Interview</div>
+      <div class="action-sub">Post-session review</div>
+    </div>
+  </div>
+  <div class="section-pad">
+    <div class="sec-title">Stress Trigger Profile</div>
+    <div class="match-item" id="trigger-menu-item" onclick="openTriggerProfile()" style="margin-bottom:24px;">
+      <div class="match-header">
+        <div class="match-title">View full profile</div>
+        <div class="ath-arrow">›</div>
+      </div>
+      <div class="match-meta" id="trigger-menu-meta">No triggers recorded yet</div>
+    </div>
+    <div class="sec-title">Match History</div>
+    <div class="match-list" id="match-list"></div>
+  </div>
+</div>
+ 
+<!-- ══════════ TRIGGER PROFILE (full page) ══════════ -->
+<div id="trigger-profile" class="screen">
+  <button class="back-btn" onclick="go('ath-home')" style="margin-bottom:4px;">← Back to profile</button>
+  <div class="iv-title" id="tp-title">Stress Trigger Profile</div>
+  <div class="iv-sub">Most recent interview notes, and the full stress timeline across every match</div>
+ 
+  <div class="sec-title" style="margin-top:8px;">Most Recent Notes</div>
+  <div class="trigger-list" id="tp-recent"></div>
+ 
+  <div class="sec-title" style="margin-top:16px;">Full Stress Timeline — All Matches</div>
+  <div class="timeline-wrap" id="tp-full-timeline"></div>
+</div>
+ 
+<!-- ══════════ LIVE MATCH ══════════ -->
+<div id="live" class="screen">
+  <!-- Top bar -->
+  <div class="live-top">
+    <div class="live-top-left">
+      <button class="back-btn" onclick="backFromLive()" style="margin-bottom:0;padding:4px;" title="Back to profile"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="live-av" id="live-av"></div>
+      <div>
+        <div class="live-name" id="live-name"></div>
+        <div class="live-game-badge" id="live-game-badge">Game 1</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <button class="sensor-pill" id="sensor-pill" onclick="connectBT()">
+        <div class="sensor-dot2 blink"></div>
+        <span id="sensor-txt">Connect Sensor</span>
+      </button>
+      <div class="live-timer" id="live-timer">00:00</div>
+    </div>
+  </div>
+ 
+  <!-- Monitor toggle — tells the app whether readings right now are exercise-confounded -->
+  <div style="padding:12px 16px 0;">
+    <button class="rally-toggle" id="rally-toggle" onclick="toggleRally()">
+      <span class="rally-toggle-dot" id="rally-toggle-dot"></span>
+      <span id="rally-toggle-text">Monitor Active — tap to pause</span>
+    </button>
+  </div>
+ 
+  <!-- Stress hero -->
+  <div class="stress-hero neutral" id="stress-hero">
+    <div class="stress-indicator neutral" id="stress-indicator"></div>
+    <div class="stress-main">
+      <div class="stress-word neutral" id="stress-word">--
+        <svg id="spike-arrow" class="spike-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </div>
+      <div class="stress-desc" id="stress-desc">Connect the Polar H10 to begin</div>
+      <div class="stress-nums">
+        <div class="snum"><div class="snum-val" id="sn-rmssd">--</div><div class="snum-lab">RMSSD ms</div><div class="snum-delta delta-n" id="sn-delta">Δ prev</div></div>
+        <div class="snum"><div class="snum-val" id="sn-hr">--</div><div class="snum-lab">BPM</div></div>
+        <div class="snum"><div class="snum-val" id="sn-base">--</div><div class="snum-lab">Warm-up Avg</div></div>
+        <div class="snum"><div class="snum-val" id="sn-sens">--</div><div class="snum-lab">Sensitivity</div></div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Scoreboard -->
+  <div class="scoreboard">
+    <div class="sb-top">
+      <div class="sb-label">Score</div>
+      <div class="sb-game" id="sb-game-label">Game 1 · Best of 5</div>
+    </div>
+    <div class="sb-row">
+      <!-- Jay -->
+      <div class="sb-player">
+        <div class="sb-pname" id="sb-jay-name">Jay</div>
+        <div class="sb-score tracked" id="sb-jay">0</div>
+        <div class="sb-btns">
+          <button class="sb-btn sb-btn-pt" onclick="addPoint('jay')">+1 Point</button>
+          <button class="sb-btn sb-btn-undo" onclick="undoPoint('jay')">Undo</button>
+        </div>
+      </div>
+      <div class="sb-divider"></div>
+      <!-- Opponent -->
+      <div class="sb-player">
+        <div class="sb-pname">Opponent</div>
+        <div class="sb-score" id="sb-opp">0</div>
+        <div class="sb-btns">
+          <button class="sb-btn sb-btn-pt" onclick="addPoint('opp')">+1 Point</button>
+          <button class="sb-btn sb-btn-undo" onclick="undoPoint('opp')">Undo</button>
+        </div>
+      </div>
+    </div>
+    <!-- Game end banner -->
+    <div class="game-end-banner" id="game-end-banner">
+      <div class="geb-text" id="geb-text" style="display:flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a2 2 0 0 0 0 4h1"/><path d="M17 5h3a2 2 0 0 1 0 4h-1"/></svg>Game won</div>
+      <div class="geb-btns">
+        <button class="geb-btn geb-save" onclick="endGame(true)">Next Game →</button>
+        <button class="geb-btn geb-keep" onclick="finishMatchFromLock()">End Match →</button>
+      </div>
+    </div>
+  </div>
+  <div class="deuce-banner" id="deuce-banner">DEUCE — must win by 2 clear points</div>
+ 
+  <!-- Point timeline -->
+  <div class="pt-section">
+    <div class="pt-header">
+      <div class="pt-title">Point-by-Point Stress Timeline</div>
+      <div style="font-size:11px;color:var(--ink4);" id="pt-count">0 points</div>
+    </div>
+    <div class="pt-scroll" id="pt-scroll">
+      <div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>
+    </div>
+  </div>
+ 
+  <!-- Log section -->
+  <div class="log-section">
+    <div class="sec-title" style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+      <span>Stress Spike Log</span>
+      <button class="lbtn lbtn-manual" onclick="openManualLogPanel()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V6a2 2 0 0 1 4 0v5"/><path d="M13 11V5a2 2 0 0 1 4 0v9"/><path d="M17 11V9a2 2 0 0 1 4 0v6a7 7 0 0 1-7 7h-2a7 7 0 0 1-6-3.4L3.3 14a2 2 0 0 1 3-2.6L9 14"/></svg>
+        Manual Log
+      </button>
+    </div>
+    <div id="manual-log-panel" style="display:none;background:var(--white);border:1.5px solid var(--yellow);border-radius:var(--r-sm);padding:12px;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:8px;">Log a moment you observed — "Potential spike from observation"</div>
+      <textarea class="iv-ta" id="manual-log-text" placeholder="What did you notice? (optional)" style="min-height:56px;"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-primary" onclick="submitManualLog()">Log Moment</button>
+        <button class="btn btn-outline" onclick="closeManualLogPanel()">Cancel</button>
+      </div>
+    </div>
+    <div class="log-feed" id="log-feed">
+      <div class="log-empty-msg" id="log-empty-msg">Spikes are auto-logged here — no button needed</div>
+    </div>
+  </div>
+ 
+  <!-- End session -->
+  <div class="end-session-wrap">
+    <button class="end-session-btn" onclick="endMatch()">End Match →</button>
+  </div>
+</div>
+ 
+<!-- ══════════ GAME SUMMARY ══════════ -->
+<div id="game-summary" class="screen">
+  <button class="back-btn" onclick="go('live')" style="margin-bottom:16px;">← Back to match</button>
+  <div class="gs-title" id="gs-title">Game 1 Complete</div>
+  <div class="gs-sub" id="gs-sub"></div>
+  <div class="gs-stats">
+    <div class="gs-stat"><div class="gs-val" id="gs-score">--</div><div class="gs-lab">Final Score</div></div>
+    <div class="gs-stat"><div class="gs-val" id="gs-spikes" style="color:var(--red)">0</div><div class="gs-lab">Stress Spikes</div></div>
+  </div>
+  <div class="gs-timeline">
+    <div class="gs-tl-title">Stress Timeline — <span id="gs-tl-name"></span></div>
+    <div class="gs-tl-scroll" id="gs-tl-scroll"></div>
+  </div>
+  <div class="gs-actions">
+    <button class="btn btn-primary" id="gs-next-btn" onclick="nextGame()">Start Game <span id="gs-next-num">2</span> →</button>
+    <button class="btn btn-outline" id="gs-back-btn" onclick="go('live')">Back to Match</button>
+    <button class="btn btn-primary" id="gs-finish-btn" style="display:none;" onclick="saveMatchToProfile()">Save to Profile & Finish →</button>
+  </div>
+</div>
+ 
+<!-- ══════════ MATCH DETAIL (past match, read-only) ══════════ -->
+<div id="match-detail" class="screen">
+  <button class="back-btn" onclick="go('ath-home')" style="margin-bottom:16px;">← Back to profile</button>
+  <div class="gs-title" id="md-title">Match</div>
+  <div class="gs-sub" id="md-sub"></div>
+  <div class="gs-stats">
+    <div class="gs-stat"><div class="gs-val" id="md-score">--</div><div class="gs-lab">Games Won</div></div>
+    <div class="gs-stat"><div class="gs-val" id="md-spikes" style="color:var(--red)">0</div><div class="gs-lab">Stress Spikes</div></div>
+  </div>
+  <div id="md-games"></div>
+  <div id="md-interview" style="margin-top:8px;"></div>
+</div>
+ 
+<!-- ══════════ INTERVIEW ══════════ -->
+<div id="interview" class="screen">
+  <button class="back-btn" id="iv-back-btn" onclick="go('ath-home')" style="margin-bottom:4px;">← Back to profile</button>
+  <div class="iv-title">Post-Session Interview</div>
+ 
+  <!-- Step 1: pick which match to review -->
+  <div id="iv-picker">
+    <div class="iv-sub">Choose a match to review with the athlete</div>
+    <div class="match-list" id="iv-match-list"></div>
+  </div>
+ 
+  <!-- Step 2: clickable timeline for the chosen match -->
+  <div id="iv-session" style="display:none;">
+    <div class="iv-sub" id="iv-session-sub">Tap any point on the timeline to add a note</div>
+    <div id="iv-session-games"></div>
+    <div id="iv-note-panel" style="display:none;background:var(--white);border:1.5px solid var(--blue);border-radius:var(--r-sm);padding:16px;margin-top:16px;">
+      <div class="iv-q" id="iv-note-label">Note for this point</div>
+      <textarea class="iv-ta" id="iv-note-text" placeholder="What happened here? What did the athlete say?"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-primary" onclick="saveInterviewNote()">Save Note</button>
+        <button class="btn btn-outline" onclick="closeNotePanel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ══════════ CALIBRATE ══════════ -->
+<div id="calibrate" class="screen">
+  <button class="back-btn" onclick="backFromCalibrate()" style="margin-bottom:4px;">← Back to profile</button>
+  <div class="iv-title">Calibrate</div>
+ 
+  <div id="cal-picker">
+    <div class="iv-sub">Choose which phase to calibrate for <span id="cal-picker-name">this athlete</span>. You can do these on separate days — progress is saved after each phase.</div>
+    <div class="cal-phase-grid">
+      <div class="cal-phase-card">
+        <div class="cal-phase-card-title">Phase 1</div>
+        <div class="cal-phase-card-name">Warm-up</div>
+        <div class="cal-phase-card-desc">Normal warm-up at moderate effort. Measures natural RMSSD jitter at rest-ish intensity. Recommended 1:30 — editable below.</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <label class="form-label" style="margin-bottom:0;">Duration</label>
+          <input class="form-input" id="cal-p1-duration" value="1:30" style="width:70px;text-align:center;padding:6px 8px;" onchange="syncPhaseDurationDisplay(1)"/>
+        </div>
+        <div class="cal-phase-card-status pending" id="cal-p1-status">Not done yet</div>
+        <button class="btn btn-primary cal-phase-card-btn" id="cal-p1-btn" onclick="beginPhaseFlow(1)">Start Phase 1</button>
+      </div>
+      <div class="cal-phase-card">
+        <div class="cal-phase-card-title">Phase 2</div>
+        <div class="cal-phase-card-name">High-Intensity Drill</div>
+        <div class="cal-phase-card-desc">Maximal-effort drilling. Measures jitter at match intensity — combines with Phase 1 for adaptive sensitivity. Recommended 1:15 — editable below.</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <label class="form-label" style="margin-bottom:0;">Duration</label>
+          <input class="form-input" id="cal-p2-duration" value="1:15" style="width:70px;text-align:center;padding:6px 8px;" onchange="syncPhaseDurationDisplay(2)"/>
+        </div>
+        <div class="cal-phase-card-status pending" id="cal-p2-status">Not done yet</div>
+        <button class="btn btn-primary cal-phase-card-btn" id="cal-p2-btn" onclick="beginPhaseFlow(2)">Start Phase 2</button>
+      </div>
+    </div>
+  </div>
+ 
+  <div id="cal-flow" style="display:none;">
+  <div class="iv-sub" id="cal-phase-instructions">Phase 1 of 2 — have <span id="cal-athlete-name">this athlete</span> do their normal warm-up (realistic match intensity, no rest, no pressure) for 2 minutes 30 seconds. This measures natural RMSSD jitter at moderate effort.</div>
+ 
+  <div style="background:var(--white);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 24px;margin-top:20px;box-shadow:var(--sh);text-align:center;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:16px;" id="cal-phase-label">Phase 1 — Warm-up</div>
+ 
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <button class="sensor-pill" id="cal-sensor-pill" onclick="connectBT()">
+        <div class="sensor-dot2 blink"></div>
+        <span id="cal-sensor-txt">Connect Sensor</span>
+      </button>
+    </div>
+ 
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;">
+      <label class="form-label" style="margin-bottom:0;">Duration</label>
+      <input class="form-input" id="cal-flow-duration" value="1:30" style="width:70px;text-align:center;padding:6px 8px;" onchange="onFlowDurationChange()"/>
+      <span style="font-size:11px;color:var(--ink4);">mm:ss — editable right up until you press Start</span>
+    </div>
+ 
+    <div style="font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);line-height:1;" id="cal-timer">1:30</div>
+    <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 20px;">Time remaining</div>
+ 
+    <div style="display:flex;justify-content:center;gap:40px;margin-bottom:24px;">
+      <div><div style="font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="cal-bpm">--</div><div style="font-size:10px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;">BPM</div></div>
+      <div><div style="font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="cal-beats">0</div><div style="font-size:10px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;">Beats captured</div></div>
+    </div>
+ 
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:18px;" id="cal-status">Connect the Polar H10 to begin</div>
+ 
+    <button class="btn btn-primary" id="cal-start-btn" onclick="startCalibration()" disabled>Start Calibration</button>
+ 
+    <div id="cal-phase1-result" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--line);">
+      <div style="display:flex;justify-content:center;gap:40px;">
+        <div>
+          <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Warm-up RMSSD avg</div>
+          <div style="font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);" id="p1-rmssd">--</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Avg HR</div>
+          <div style="font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);" id="p1-hr">--</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Threshold @ this HR</div>
+          <div style="font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);" id="p1-thresh">--</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--ink4);margin-top:12px;">For sharper accuracy, add a high-intensity drill so sensitivity can adapt to effort level during play — or save now and do it later.</div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startDrillPhase()">Continue to High-Intensity Drill Now →</button>
+        <button class="btn btn-outline" onclick="saveCalibratedBaseline()">Save Phase 1 & Finish Later</button>
+      </div>
+    </div>
+ 
+    <div id="cal-result" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--line);">
+      <div style="font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:14px;" id="cal-result-heading">Two-point sensitivity curve saved</div>
+      <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;">
+        <div id="cr-block1">
+          <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Warm-up (HR <span id="cr-hr1">--</span>)</div>
+          <div style="font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);" id="cr-thresh1">--</div>
+        </div>
+        <div id="cr-block2">
+          <div style="font-size:11px;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">High-intensity (HR <span id="cr-hr2">--</span>)</div>
+          <div style="font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--ink);" id="cr-thresh2">--</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--ink4);margin-top:12px;" id="cal-result-note">Live sensitivity now interpolates between these two points based on the athlete's current heart rate</div>
+      <button class="btn btn-primary" style="margin-top:20px;" onclick="saveCalibratedBaseline()">Save Calibration →</button>
+    </div>
+  </div>
+  </div>
+</div>
+ 
+<!-- ══════════ ADD ATHLETE MODAL ══════════ -->
+<div class="overlay" id="overlay-add">
+  <div class="modal">
+    <div class="modal-title">Add athlete</div>
+    <div class="modal-sub">Create a profile to start tracking their performance</div>
+    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="e.g. Jay Surapong"/></div>
+    <div class="form-group"><label class="form-label">Sport & Level</label><input class="form-input" id="f-sport" placeholder="e.g. Squash — Elite"/></div>
+    <div class="form-group">
+      <label class="form-label">Profile Colour</label>
+      <div class="color-row" id="color-row">
+        <div class="copt on" style="background:#2563eb" data-c="#2563eb" onclick="pickColor(this)"></div>
+        <div class="copt" style="background:#16a34a" data-c="#16a34a" onclick="pickColor(this)"></div>
+        <div class="copt" style="background:#dc2626" data-c="#dc2626" onclick="pickColor(this)"></div>
+        <div class="copt" style="background:#7c3aed" data-c="#7c3aed" onclick="pickColor(this)"></div>
+        <div class="copt" style="background:#d97706" data-c="#d97706" onclick="pickColor(this)"></div>
+        <div class="copt" style="background:#0891b2" data-c="#0891b2" onclick="pickColor(this)"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="mbtn mbtn-outline" onclick="closeAdd()">Cancel</button>
+      <button class="mbtn mbtn-primary" onclick="addAthlete()">Add Athlete</button>
+    </div>
+  </div>
+</div>
+ 
+<div class="toast" id="toast"></div>
+<div class="data-status" id="data-status">✓ Saved</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// SUPABASE SETUP
+// ══════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://qndqywripfrjeuvdtfha.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_CnQh6eLKCcEAAcynulRJLQ_NSoNrBN7';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Supabase auth wants an email — username login is faked by mapping
+// the username to a fixed, never-emailed address under a private
+// domain. The user never sees or types this.
+function usernameToEmail(username){
+  return username.trim().toLowerCase().replace(/[^a-z0-9_.-]/g,'') + '@pulseiq.local';
+}
+
+let authMode = 'signin'; // 'signin' | 'signup'
+let currentUserId = null;
+
+function toggleAuthMode(){
+  setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
+}
+
+function showAuthError(msg){
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function hideAuthError(){
+  document.getElementById('auth-error').classList.remove('show');
+}
+
+async function submitAuth(){
+  hideAuthError();
+  const username = document.getElementById('auth-username').value.trim();
+  const password = document.getElementById('auth-password').value;
+  if(!username || !password){ showAuthError('Enter a username and password'); return; }
+  if(password.length < 6){ showAuthError('Password must be at least 6 characters'); return; }
+
+  const email = usernameToEmail(username);
+  const btn = document.getElementById('auth-submit-btn');
+  btn.disabled = true;
+  btn.textContent = authMode === 'signin' ? 'Signing in…' : 'Creating account…';
+
+  try{
+    if(authMode === 'signup'){
+      const { data, error } = await sb.auth.signUp({ email, password });
+      if(error){
+        // Older Supabase behaviour: a clear "already registered" error.
+        if(error.message && /already registered|already exists/i.test(error.message)){
+          throw new Error('That username is already taken — try signing in instead');
+        }
+        throw error;
+      }
+      // Newer Supabase behaviour: duplicate signups "succeed" silently but
+      // return a user with an empty identities array instead of erroring —
+      // this is Supabase's anti-enumeration protection, not a real new user.
+      if(data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0){
+        throw new Error('That username is already taken — try signing in instead');
+      }
+
+      // The database trigger creates this user's row automatically on
+      // signup, so there's no client-side insert here anymore — removes
+      // the race condition that could cause a 409 conflict.
+
+      // Always end signup on the sign-in screen with an explicit login step —
+      // more reliable than silently carrying the signup session forward.
+      if(data.session){
+        await sb.auth.signOut();
+      }
+      document.getElementById('auth-password').value = '';
+      setAuthMode('signin');
+      toast('Account created — sign in to continue');
+    } else {
+      console.log('PulseIQ: attempting sign in for', email);
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      if(error){
+        console.error('PulseIQ: sign in error', error);
+        throw new Error('Username or password is incorrect');
+      }
+      if(!data.user){
+        console.error('PulseIQ: sign in returned no user', data);
+        throw new Error('Username or password is incorrect');
+      }
+      console.log('PulseIQ: sign in succeeded, loading dashboard for', data.user.id);
+      await onLoggedIn(data.user);
+      console.log('PulseIQ: onLoggedIn finished');
+    }
+  }catch(e){
+    console.error(e);
+    showAuthError(e.message || 'Something went wrong');
+  }finally{
+    btn.disabled = false;
+    btn.textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
+  }
+}
+
+// Sets the auth screen to a specific mode directly (vs toggleAuthMode, which
+// flips relative to current state) — used after signup to land cleanly on
+// the sign-in view regardless of what mode the form was in before.
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById('auth-sub').textContent = authMode === 'signin' ? 'Sign in to your coach account' : 'Create your coach account';
+  document.getElementById('auth-submit-btn').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
+  document.getElementById('auth-switch').innerHTML = authMode === 'signin'
+    ? `Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>`
+    : `Already have an account? <a onclick="toggleAuthMode()">Sign in</a>`;
+  hideAuthError();
+}
+
+async function logOut(){
+  await sb.auth.signOut();
+  currentUserId = null;
+  athletes = [];
+  document.getElementById('auth-username').value = '';
+  document.getElementById('auth-password').value = '';
+  go('auth');
+}
+
+async function onLoggedIn(user){
+  console.log('PulseIQ: onLoggedIn called, loading data…');
+  currentUserId = user.id;
+  await loadData();
+  console.log('PulseIQ: data loaded,', athletes.length, 'athletes. Rendering home…');
+  renderHome();
+  go('home');
+  console.log('PulseIQ: navigated to home screen');
+}
+
+// On page load, check for an existing session (keeps you logged in on refresh).
+async function checkSession(){
+  const { data } = await sb.auth.getSession();
+  if(data.session && data.session.user){
+    await onLoggedIn(data.session.user);
+  } else {
+    go('auth');
+  }
+}
+</script>
+ 
+<script>
+// ══════════════════════════════════════════════════════════════
+// SEED DATA — a realistic-looking sample profile, seeded once into
+// every brand-new account so there's something to show right away.
+// Deliberately NOT labeled as a demo anywhere in the UI.
+// ══════════════════════════════════════════════════════════════
+let athletes = [];
+ 
+let selectedAthlete = null;
+let currentGame = 1;
+let jayScore = 0, oppScore = 0;
+let gamePoints = [];
+let sessionSeconds = 0, sessionTimer = null;
+let currentRMSSD = 0, currentHR = 0;
+let pickedColor = '#2563eb';
+let savedGames = [];
+let gameLocked = false;         // true once a game is won — blocks +1 Point buttons
+let rallyActive = false;        // manual toggle — true while Monitor is set to Inactive (paused)
+let currentGamePushed = false;  // guards against double-saving the same game
+let isCalibrating = false;      // true while a baseline calibration session is running
+let calRRBuffer = [];           // all RR intervals collected during the current calibration
+let calTimer = null;
+let calSecondsLeft = 90;
+let pendingBaseline = null;     // holds the just-measured calibration result until the coach confirms saving it
+ 
+// ══════════════════════════════════════════════════════════════
+// PERSISTENCE — now backed by Supabase instead of localStorage.
+// Same in-memory shape (the "athletes" array), just a different
+// place it's read from / written to, so every device that logs in
+// with the same username sees the same data.
+// ══════════════════════════════════════════════════════════════
+async function loadData(){
+  try{
+    const { data, error } = await sb.from('pulseiq_users').select('athletes, seeded').eq('id', currentUserId).maybeSingle();
+    if(error) throw error;
+    if(data){
+      if(!data.seeded){
+        // First-ever login for this account — seed the sample athlete once.
+        // Uses UPDATE (the row already exists, created by the DB trigger on
+        // signup), so this can never hit a primary-key conflict.
+        athletes = buildSeedAthletes();
+        await sb.from('pulseiq_users').update({ athletes, seeded: true }).eq('id', currentUserId);
+      } else {
+        athletes = Array.isArray(data.athletes) ? data.athletes : [];
+      }
+    } else {
+      // Edge case: row doesn't exist yet (trigger hasn't landed). Self-heal.
+      athletes = buildSeedAthletes();
+      await sb.from('pulseiq_users').upsert({ id: currentUserId, athletes, seeded: true }, { onConflict: 'id' });
+    }
+  }catch(e){
+    console.error('PulseIQ: failed to load data', e);
+    athletes = [];
+    toast('Could not load your data — check your connection');
+  }
+}
+ 
+async function saveData(){
+  try{
+    const { error } = await sb.from('pulseiq_users').update({ athletes, updated_at: new Date().toISOString() }).eq('id', currentUserId);
+    if(error) throw error;
+    flashSavedIndicator();
+  }catch(e){
+    console.error('PulseIQ: failed to save data', e);
+    toast('Could not save — check your connection');
+  }
+}
+ 
+function flashSavedIndicator(){
+  const el = document.getElementById('data-status');
+  el.classList.add('show');
+  clearTimeout(flashSavedIndicator._t);
+  flashSavedIndicator._t = setTimeout(()=>el.classList.remove('show'), 1200);
+}
+ 
+// ══ DELETE ATHLETE ══
+function deleteAthlete(id){
+  const targetId = id !== undefined ? id : (selectedAthlete ? selectedAthlete.id : null);
+  if(targetId === null) return;
+  const a = athletes.find(x=>x.id===targetId);
+  if(!a) return;
+  const ok = confirm(`Delete ${a.name}? This permanently removes their profile, match history, and stress triggers. This cannot be undone.`);
+  if(!ok) return;
+  athletes = athletes.filter(x=>x.id!==targetId);
+  saveData();
+  if(selectedAthlete && selectedAthlete.id===targetId){
+    selectedAthlete = null;
+  }
+  toast(`${a.name} deleted`);
+  go('home');
+  renderHome();
+}
+ 
+// ══ NAVIGATION ══
+function go(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById(screen).classList.add('on');
+  window.scrollTo(0,0);
+}
+ 
+// ══ HOME ══
+function renderHome() {
+  const list = document.getElementById('athletes-list');
+  list.innerHTML = athletes.map(a => `
+    <div class="ath-row">
+      <div style="display:flex;align-items:center;gap:16px;flex:1;cursor:pointer;" onclick="openAthlete(${a.id})">
+        <div class="ath-av" style="background:${a.color}">${a.name.charAt(0)}</div>
+        <div class="ath-info">
+          <div class="ath-name">${a.name}</div>
+          <div class="ath-sport">${a.sport}</div>
+          <div class="ath-stats">
+            <span class="ath-stat"><strong>${a.matches.length}</strong> matches</span>
+            <span class="ath-stat">Warm-up avg <strong>${a.baseline ? a.baseline+'ms' : '—'}</strong></span>
+            <span class="ath-stat"><strong>${a.triggers.length}</strong> triggers</span>
+          </div>
+        </div>
+        <div class="ath-arrow">›</div>
+      </div>
+      <button title="Delete athlete" style="background:none;border:none;color:var(--ink4);cursor:pointer;padding:6px;margin-left:4px;display:flex;align-items:center;" onclick="event.stopPropagation();deleteAthlete(${a.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+    </div>
+  `).join('') + `<button class="add-btn" onclick="openAddAthlete()"><span style="font-size:20px">+</span> Add athlete</button>`;
+}
+ 
+// ══ ATHLETE HOME ══
+function openAthlete(id) {
+  selectedAthlete = athletes.find(a => a.id === id);
+  const a = selectedAthlete;
+ 
+  document.getElementById('ath-hero-card').style.background = `linear-gradient(135deg, ${a.color}, ${a.color}cc)`;
+  document.getElementById('ath-hero-av').textContent = a.name.charAt(0);
+  document.getElementById('ath-hero-name').textContent = a.name;
+  document.getElementById('ath-hero-sub').textContent = a.sport;
+  document.getElementById('ath-h-matches').textContent = a.matches.length;
+  document.getElementById('ath-h-baseline').textContent = a.baseline ? a.baseline + 'ms' : '—';
+  document.getElementById('ath-h-triggers').textContent = a.triggers.length;
+  document.getElementById('cal-needed-banner').style.display = a.spikeThreshold ? 'none' : 'block';
+ 
+  const menuMeta = document.getElementById('trigger-menu-meta');
+  menuMeta.textContent = a.triggers.length
+    ? `${a.triggers.length} trigger note${a.triggers.length!==1?'s':''} recorded`
+    : 'No triggers recorded yet';
+ 
+  const ml = document.getElementById('match-list');
+  ml.innerHTML = a.matches.length ? a.matches.map((m,i) => {
+    const totalSpikes = m.games.reduce((s,g)=>s+g.spikes,0);
+    return `<div class="match-item" onclick="openMatchDetail(${a.id},${i})">
+      <div class="match-header">
+        <div class="match-title">${m.title}</div>
+        <div class="match-date">${m.date}</div>
+      </div>
+      <div class="match-meta">${m.games.length} game${m.games.length>1?'s':''} · ${totalSpikes} stress spikes · tap to view timeline</div>
+    </div>`;
+  }).join('') : '<div style="font-size:13px;color:var(--ink4);padding:8px 0;">No matches recorded yet.</div>';
+ 
+  go('ath-home');
+}
+ 
+// ══════════════════════════════════════════════════════════════
+// CALIBRATION
+// ══════════════════════════════════════════════════════════════
+const CAL_PHASE1_DEFAULT_SECONDS = 90;
+const CAL_PHASE2_DEFAULT_SECONDS = 75;
+const CAL_DURATION_MIN_SECONDS = 20;
+const CAL_DURATION_MAX_SECONDS = 600;
+const NOISE_SAFETY_MULTIPLIER = 2;
+const MIN_SPIKE_THRESHOLD_MS = 2;
+let calPhase = 1;
+let calPoint1 = null;
+let calPoint2 = null;
+let calHRBuffer = [];
+let calPhase1Seconds = CAL_PHASE1_DEFAULT_SECONDS;
+let calPhase2Seconds = CAL_PHASE2_DEFAULT_SECONDS;
+ 
+function formatCalTime(totalSeconds){
+  const m = Math.floor(totalSeconds/60);
+  const s = totalSeconds%60;
+  return `${m}:${s.toString().padStart(2,'0')}`;
+}
+ 
+function parseDurationInput(value, fallbackSeconds){
+  if(!value) return fallbackSeconds;
+  const str = String(value).trim();
+  let seconds;
+  if(str.includes(':')){
+    const [m,s] = str.split(':').map(n=>parseInt(n,10));
+    if(isNaN(m) || isNaN(s)) return fallbackSeconds;
+    seconds = m*60 + s;
+  }else{
+    seconds = parseInt(str,10);
+  }
+  if(isNaN(seconds)) return fallbackSeconds;
+  return Math.min(CAL_DURATION_MAX_SECONDS, Math.max(CAL_DURATION_MIN_SECONDS, seconds));
+}
+ 
+function syncPhaseDurationDisplay(phase){
+  const id = phase===1 ? 'cal-p1-duration' : 'cal-p2-duration';
+  const fallback = phase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
+  const el = document.getElementById(id);
+  if(!el) return;
+  const seconds = parseDurationInput(el.value, fallback);
+  el.value = formatCalTime(seconds);
+}
+ 
+function onFlowDurationChange(){
+  const fallback = calPhase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
+  const el = document.getElementById('cal-flow-duration');
+  const seconds = parseDurationInput(el.value, fallback);
+  el.value = formatCalTime(seconds);
+  if(calPhase===1) calPhase1Seconds = seconds; else calPhase2Seconds = seconds;
+  document.getElementById('cal-timer').textContent = formatCalTime(seconds);
+  document.getElementById('cal-start-btn').textContent = calPhase===1
+    ? `Start ${formatCalTime(seconds)} Calibration`
+    : `Start ${formatCalTime(seconds)} Drill Calibration`;
+}
+ 
+function calcRollingRMSSDSeries(intervals, windowSize){
+  const series = [];
+  for(let i=windowSize;i<=intervals.length;i++){
+    const r = calcRMSSD(intervals.slice(i-windowSize,i));
+    if(r!==null) series.push(r);
+  }
+  return series;
+}
+ 
+function calcNoiseStdDev(intervals){
+  const series = calcRollingRMSSDSeries(intervals, RR_WINDOW_SIZE);
+  if(series.length < 5) return null;
+  const diffs = [];
+  for(let i=1;i<series.length;i++) diffs.push(series[i]-series[i-1]);
+  const mean = diffs.reduce((a,b)=>a+b,0)/diffs.length;
+  const variance = diffs.reduce((a,b)=>a+(b-mean)*(b-mean),0)/diffs.length;
+  return Math.sqrt(variance);
+}
+ 
+function findSavedPoint(phase){
+  const pts = selectedAthlete && selectedAthlete.calibrationPoints;
+  if(!pts) return null;
+  return pts.find(p=>p.phase===phase) || null;
+}
+ 
+function openCalibrate(){
+  if(!selectedAthlete) return;
+  document.getElementById('cal-picker-name').textContent = selectedAthlete.name.split(' ')[0];
+  renderCalPicker();
+  document.getElementById('cal-picker').style.display = 'block';
+  document.getElementById('cal-flow').style.display = 'none';
+  go('calibrate');
+}
+ 
+function renderCalPicker(){
+  const saved1 = findSavedPoint(1);
+  const saved2 = findSavedPoint(2);
+ 
+  const p1status = document.getElementById('cal-p1-status');
+  const p1btn = document.getElementById('cal-p1-btn');
+  if(saved1){
+    p1status.className = 'cal-phase-card-status done';
+    p1status.innerHTML = `✓ Done — ${saved1.rmssdAvg}ms avg @ ${saved1.hr ?? '--'}bpm`;
+    p1btn.textContent = 'Redo Phase 1';
+  }else{
+    p1status.className = 'cal-phase-card-status pending';
+    p1status.textContent = 'Not done yet';
+    p1btn.textContent = 'Start Phase 1';
+  }
+ 
+  const p2status = document.getElementById('cal-p2-status');
+  const p2btn = document.getElementById('cal-p2-btn');
+  if(saved2){
+    p2status.className = 'cal-phase-card-status done';
+    p2status.innerHTML = `✓ Done — ${saved2.rmssdAvg}ms avg @ ${saved2.hr ?? '--'}bpm`;
+    p2btn.textContent = 'Redo Phase 2';
+  }else{
+    p2status.className = 'cal-phase-card-status pending';
+    p2status.textContent = saved1 ? 'Not done yet' : 'Not done yet (Phase 1 optional first)';
+    p2btn.textContent = 'Start Phase 2';
+  }
+}
+ 
+function beginPhaseFlow(phase){
+  if(!selectedAthlete) return;
+  const existing = findSavedPoint(phase);
+  if(existing){
+    const ok = confirm(`Phase ${phase} was already calibrated (${existing.rmssdAvg}ms avg @ ${existing.hr ?? '--'}bpm). Recalibrating will replace that result once you finish. Continue?`);
+    if(!ok) return;
+  }
+  calPoint1 = findSavedPoint(1);
+  calPoint2 = findSavedPoint(2);
+  enterPhaseUI(phase);
+}
+ 
+function enterPhaseUI(phase){
+  if(!selectedAthlete) return;
+  calPhase = phase;
+ 
+  document.getElementById('cal-picker').style.display = 'none';
+  document.getElementById('cal-flow').style.display = 'block';
+  document.getElementById('cal-athlete-name').textContent = selectedAthlete.name.split(' ')[0];
+  document.getElementById('cal-result').style.display = 'none';
+  document.getElementById('cal-phase1-result').style.display = 'none';
+  document.getElementById('cal-bpm').textContent = '--';
+  document.getElementById('cal-beats').textContent = '0';
+  setSensorPillState(isConnected, isConnected ? (bleDevice ? (bleDevice.name || 'Polar H10') : '') : '');
+ 
+  if(phase === 1){
+    calPhase1Seconds = parseDurationInput(document.getElementById('cal-p1-duration').value, CAL_PHASE1_DEFAULT_SECONDS);
+    const durLabel = formatCalTime(calPhase1Seconds);
+    document.getElementById('cal-phase-label').textContent = 'Phase 1 — Warm-up';
+    document.getElementById('cal-phase-instructions').innerHTML = `Phase 1 of 2 — have <span>${selectedAthlete.name.split(' ')[0]}</span> do their normal warm-up (realistic match intensity, no rest, no pressure) for ${durLabel}. This measures natural RMSSD jitter at moderate effort.`;
+    document.getElementById('cal-timer').textContent = durLabel;
+    document.getElementById('cal-flow-duration').value = durLabel;
+    document.getElementById('cal-flow-duration').disabled = false;
+    document.getElementById('cal-start-btn').textContent = `Start ${durLabel} Calibration`;
+  }else{
+    calPhase2Seconds = parseDurationInput(document.getElementById('cal-p2-duration').value, CAL_PHASE2_DEFAULT_SECONDS);
+    const durLabel = formatCalTime(calPhase2Seconds);
+    document.getElementById('cal-phase-label').textContent = 'Phase 2 — High-Intensity Drill';
+    document.getElementById('cal-phase-instructions').textContent = `Phase 2 of 2 — ${durLabel} of maximal-effort drilling (multi-shot rally pace, sustained, no rest) to capture natural jitter at match intensity.`;
+    document.getElementById('cal-timer').textContent = durLabel;
+    document.getElementById('cal-flow-duration').value = durLabel;
+    document.getElementById('cal-flow-duration').disabled = false;
+    document.getElementById('cal-start-btn').textContent = `Start ${durLabel} Drill Calibration`;
+  }
+  document.getElementById('cal-start-btn').style.display = 'inline-block';
+  document.getElementById('cal-start-btn').disabled = !isConnected;
+  document.getElementById('cal-status').textContent = isConnected ? 'Sensor connected — ready to calibrate' : 'Connect the Polar H10 to begin';
+}
+ 
+function backToCalPicker(){
+  renderCalPicker();
+  document.getElementById('cal-p1-duration').value = formatCalTime(calPhase1Seconds);
+  document.getElementById('cal-p2-duration').value = formatCalTime(calPhase2Seconds);
+  document.getElementById('cal-picker').style.display = 'block';
+  document.getElementById('cal-flow').style.display = 'none';
+}
+ 
+function startCalibration(){
+  if(!isConnected){ toast('Connect the sensor first'); return; }
+  calRRBuffer = [];
+  calHRBuffer = [];
+  isCalibrating = true;
+  const fallback = calPhase===1 ? CAL_PHASE1_DEFAULT_SECONDS : CAL_PHASE2_DEFAULT_SECONDS;
+  const duration = parseDurationInput(document.getElementById('cal-flow-duration').value, fallback);
+  if(calPhase===1) calPhase1Seconds = duration; else calPhase2Seconds = duration;
+  calSecondsLeft = duration;
+  document.getElementById('cal-flow-duration').disabled = true;
+  document.getElementById('cal-start-btn').disabled = true;
+  document.getElementById('cal-status').textContent = calPhase===1
+    ? 'Keep warming up at normal match intensity…'
+    : 'Go all-out — same intensity as a real rally, sustained…';
+  document.getElementById('cal-timer').textContent = formatCalTime(calSecondsLeft);
+  document.getElementById('cal-result').style.display = 'none';
+  document.getElementById('cal-phase1-result').style.display = 'none';
+ 
+  clearInterval(calTimer);
+  calTimer = setInterval(()=>{
+    calSecondsLeft--;
+    document.getElementById('cal-timer').textContent = formatCalTime(Math.max(0,calSecondsLeft));
+    if(calSecondsLeft<=0){
+      clearInterval(calTimer);
+      finishCalibration();
+    }
+  },1000);
+}
+ 
+function startDrillPhase(){
+  const existing = findSavedPoint(2);
+  if(existing){
+    const ok = confirm(`Phase 2 was already calibrated (${existing.rmssdAvg}ms avg @ ${existing.hr ?? '--'}bpm). Recalibrating will replace that result once you finish. Continue?`);
+    if(!ok) return;
+  }
+  enterPhaseUI(2);
+}
+ 
+function finishCalibration(){
+  isCalibrating = false;
+  const rmssd = calcRMSSD(calRRBuffer);
+  const noiseStdDev = calcNoiseStdDev(calRRBuffer);
+  document.getElementById('cal-start-btn').disabled = false;
+ 
+  if(rmssd===null || calRRBuffer.length<15 || noiseStdDev===null){
+    document.getElementById('cal-status').textContent = 'Not enough clean data — check strap contact and try again';
+    return;
+  }
+ 
+  const avgHR = calHRBuffer.length ? Math.round(calHRBuffer.reduce((a,b)=>a+b,0)/calHRBuffer.length) : null;
+  const roundedRmssd = Math.round(rmssd);
+  const threshold = Math.max(MIN_SPIKE_THRESHOLD_MS, Math.round(noiseStdDev * NOISE_SAFETY_MULTIPLIER));
+  const point = { phase: calPhase, hr: avgHR, rmssdAvg: roundedRmssd, threshold };
+ 
+  document.getElementById('cal-status').textContent = 'Calibration complete';
+  document.getElementById('cal-start-btn').style.display = 'none';
+ 
+  if(calPhase === 1){
+    calPoint1 = point;
+    buildPendingBaseline();
+    document.getElementById('p1-rmssd').textContent = roundedRmssd;
+    document.getElementById('p1-hr').textContent = avgHR ?? '--';
+    document.getElementById('p1-thresh').textContent = threshold + 'ms';
+    if(calPoint2){
+      saveCalibratedBaseline();
+      return;
+    }
+    document.getElementById('cal-phase1-result').style.display = 'block';
+  } else {
+    calPoint2 = point;
+    buildPendingBaseline();
+    const points = pendingBaseline.calibrationPoints;
+    const p1 = points.find(p=>p.phase===1), p2 = points.find(p=>p.phase===2);
+    document.getElementById('cal-result-heading').textContent = p1 ? 'Two-point sensitivity curve saved' : 'Phase 2 sensitivity saved';
+    document.getElementById('cr-block1').style.display = p1 ? 'block' : 'none';
+    document.getElementById('cr-block2').style.display = 'block';
+    if(p1){
+      document.getElementById('cr-hr1').textContent = p1.hr ?? '--';
+      document.getElementById('cr-thresh1').textContent = p1.threshold + 'ms';
+    }
+    document.getElementById('cr-hr2').textContent = p2.hr ?? '--';
+    document.getElementById('cr-thresh2').textContent = p2.threshold + 'ms';
+    document.getElementById('cal-result-note').textContent = p1
+      ? "Live sensitivity now interpolates between these two points based on the athlete's current heart rate"
+      : 'Add a Phase 1 warm-up later for adaptive interpolation across effort levels';
+    document.getElementById('cal-result').style.display = 'block';
+  }
+}
+ 
+function buildPendingBaseline(){
+  const points = [calPoint1, calPoint2].filter(p=>p);
+  const primary = points.find(p=>p.phase===1) || points[0];
+  pendingBaseline = {
+    baseline: primary.rmssdAvg,
+    spikeThreshold: primary.threshold,
+    calibrationPoints: points.slice().sort((a,b)=>(a.hr??0)-(b.hr??0))
+  };
+}
+ 
+function saveCalibratedBaseline(){
+  if(!selectedAthlete || pendingBaseline===null) return;
+  selectedAthlete.baseline = pendingBaseline.baseline;
+  selectedAthlete.spikeThreshold = pendingBaseline.spikeThreshold;
+  selectedAthlete.calibrationPoints = pendingBaseline.calibrationPoints;
+  saveData();
+  const n = pendingBaseline.calibrationPoints.length;
+  toast(n>1 ? `Saved — two-point sensitivity curve` : `Saved — Phase ${pendingBaseline.calibrationPoints[0].phase} sensitivity ${pendingBaseline.spikeThreshold}ms`);
+  pendingBaseline = null;
+  go('ath-home');
+  openAthlete(selectedAthlete.id);
+}
+ 
+function getDynamicThreshold(hr){
+  const pts = selectedAthlete && selectedAthlete.calibrationPoints;
+  if(!pts || pts.length===0) return (selectedAthlete && selectedAthlete.spikeThreshold) || null;
+  if(pts.length===1 || !hr) return pts[0].threshold;
+ 
+  if(hr <= pts[0].hr) return pts[0].threshold;
+  if(hr >= pts[pts.length-1].hr) return pts[pts.length-1].threshold;
+ 
+  for(let i=0;i<pts.length-1;i++){
+    const lo=pts[i], hi=pts[i+1];
+    if(hr>=lo.hr && hr<=hi.hr){
+      const t = (hr-lo.hr)/(hi.hr-lo.hr);
+      return lo.threshold + t*(hi.threshold-lo.threshold);
+    }
+  }
+  return pts[0].threshold;
+}
+ 
+function backFromLive(){
+  const hasProgress = gamePoints.length>0 || savedGames.length>0 || jayScore>0 || oppScore>0;
+  if(hasProgress){
+    const ok = confirm('Leave this match? Anything not saved to the profile yet will be lost.');
+    if(!ok) return;
+  }
+  clearInterval(sessionTimer);
+  go('ath-home');
+  if(selectedAthlete) openAthlete(selectedAthlete.id);
+}
+ 
+function backFromCalibrate(){
+  if(isCalibrating){
+    const ok = confirm('Calibration is still running. Stop and go back?');
+    if(!ok) return;
+    clearInterval(calTimer);
+    isCalibrating = false;
+  }
+  const flowVisible = document.getElementById('cal-flow').style.display !== 'none';
+  const resultShown = document.getElementById('cal-phase1-result').style.display !== 'none'
+    || document.getElementById('cal-result').style.display !== 'none';
+  if(flowVisible && !resultShown){
+    backToCalPicker();
+    return;
+  }
+  go('ath-home');
+  if(selectedAthlete) openAthlete(selectedAthlete.id);
+}
+ 
+function openMatchDetail(athleteId, matchIndex){
+  const a = athletes.find(x=>x.id===athleteId);
+  if(!a) return;
+  const m = a.matches[matchIndex];
+  if(!m) return;
+ 
+  const totalSpikes = m.games.reduce((s,g)=>s+g.spikes,0);
+  const gamesWon = m.games.filter(g=>g.jay>g.opp).length;
+ 
+  document.getElementById('md-title').textContent = m.title;
+  document.getElementById('md-sub').textContent = `${a.name.split(' ')[0]} · ${m.date}`;
+  document.getElementById('md-score').textContent = `${gamesWon}-${m.games.length-gamesWon}`;
+  document.getElementById('md-spikes').textContent = totalSpikes;
+ 
+  const gamesEl = document.getElementById('md-games');
+  gamesEl.innerHTML = '';
+  m.games.forEach(g=>{
+    const block = document.createElement('div');
+    block.className = 'gs-timeline';
+    const title = document.createElement('div');
+    title.className = 'gs-tl-title';
+    title.textContent = `Game ${g.num} — ${g.jay}-${g.opp}`;
+    const scroll = document.createElement('div');
+    scroll.className = 'gs-tl-scroll';
+    g.points.forEach((p,i)=>{
+      scroll.appendChild(pointDotHTML(i+1,p.jay,p.opp,p.events,i));
+    });
+    block.appendChild(title);
+    block.appendChild(scroll);
+    gamesEl.appendChild(block);
+  });
+ 
+  const allNotes = [];
+  m.games.forEach(g=>g.points.forEach(p=>{ if(p.interviewNote) allNotes.push(p.interviewNote); }));
+ 
+  const ivEl = document.getElementById('md-interview');
+  if(allNotes.length){
+    ivEl.innerHTML = '<div class="sec-title" style="margin-top:8px;">Interview Notes</div>' +
+      allNotes.map(n=>`
+        <div class="trigger-item" style="margin-bottom:8px;">
+          <div class="trigger-header"><div class="trigger-name">Score ${n.jay}-${n.opp}</div></div>
+          <div class="trigger-quote">"${n.text}"</div>
+        </div>
+      `).join('');
+  } else {
+    ivEl.innerHTML = '';
+  }
+ 
+  go('match-detail');
+}
+ 
+function startMatch() {
+  if (!selectedAthlete) return;
+  jayScore = 0; oppScore = 0; currentGame = 1;
+  gamePoints = []; savedGames = [];
+  sessionSeconds = 0;
+  currentRMSSD = 0; currentHR = 0;
+  rrBuffer = [];
+  resetClassificationState();
+ 
+  document.getElementById('live-av').textContent = selectedAthlete.name.charAt(0);
+  document.getElementById('live-av').style.background = selectedAthlete.color;
+  document.getElementById('live-name').textContent = selectedAthlete.name.split(' ')[0];
+  document.getElementById('live-game-badge').textContent = 'Game 1';
+  document.getElementById('sb-jay-name').textContent = selectedAthlete.name.split(' ')[0];
+  document.getElementById('sn-base').textContent = selectedAthlete.baseline || '--';
+  document.getElementById('sn-sens').textContent = selectedAthlete.spikeThreshold ? selectedAthlete.spikeThreshold+'ms' : '--';
+  document.getElementById('sb-game-label').textContent = 'Game 1 · Best of 5';
+  document.getElementById('game-end-banner').classList.remove('show');
+  document.getElementById('deuce-banner').classList.remove('show');
+  gameLocked = false;
+  currentGamePushed = false;
+  lockScoreButtons(false);
+  document.getElementById('log-feed').innerHTML = '<div class="log-empty-msg" id="log-empty-msg">Spikes are auto-logged here — no button needed</div>';
+  document.getElementById('pt-scroll').innerHTML = '<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
+  document.getElementById('pt-count').textContent = '0 points';
+ 
+  document.getElementById('sn-rmssd').textContent = '--';
+  document.getElementById('sn-hr').textContent = '--';
+  document.getElementById('stress-word').childNodes[0].textContent = isConnected ? 'READING ' : '-- ';
+  document.getElementById('stress-desc').textContent = isConnected ? 'Waiting for stable HRV reading…' : 'Connect the Polar H10 to begin';
+ 
+  updateScoreDisplay();
+ 
+  clearInterval(sessionTimer);
+  sessionTimer = setInterval(()=>{
+    sessionSeconds++;
+    const m=Math.floor(sessionSeconds/60).toString().padStart(2,'0');
+    const s=(sessionSeconds%60).toString().padStart(2,'0');
+    document.getElementById('live-timer').textContent=`${m}:${s}`;
+  },1000);
+ 
+  go('live');
+}
+ 
+let bleDevice = null;
+let bleServer = null;
+let hrChar = null;
+let isConnected = false;
+let rrBuffer = [];
+const RR_WINDOW_SIZE = 30;
+ 
+let lastAcceptedRR = null;
+const RR_MIN_MS = 300;
+const RR_MAX_MS = 2000;
+const RR_MAX_JUMP = 0.35;
+ 
+function isPlausibleRR(rr){
+  if(rr < RR_MIN_MS || rr > RR_MAX_MS) return false;
+  if(lastAcceptedRR !== null){
+    const change = Math.abs(rr - lastAcceptedRR) / lastAcceptedRR;
+    if(change > RR_MAX_JUMP) return false;
+  }
+  return true;
+}
+ 
+async function connectBT(){
+  if(!navigator.bluetooth){
+    toast('Web Bluetooth needs Chrome or Edge (not Safari)');
+    return;
+  }
+  try{
+    toast('Scanning for Polar H10…');
+    bleDevice = await navigator.bluetooth.requestDevice({
+      filters: [{ services: ['heart_rate'] }],
+      optionalServices: ['battery_service']
+    });
+ 
+    bleDevice.addEventListener('gattserverdisconnected', onBTDisconnected);
+ 
+    bleServer = await bleDevice.gatt.connect();
+    const service = await bleServer.getPrimaryService('heart_rate');
+    hrChar = await service.getCharacteristic('heart_rate_measurement');
+    await hrChar.startNotifications();
+    hrChar.addEventListener('characteristicvaluechanged', handleHRData);
+ 
+    isConnected = true;
+    rrBuffer = [];
+    lastAcceptedRR = null;
+ 
+    setSensorPillState(true, bleDevice.name || 'Polar H10');
+    const startBtn = document.getElementById('cal-start-btn');
+    if(startBtn) startBtn.disabled = false;
+    const calStatus = document.getElementById('cal-status');
+    if(calStatus) calStatus.textContent = 'Sensor connected — ready to calibrate';
+    const stressWordEl = document.getElementById('stress-word');
+    if(stressWordEl) stressWordEl.childNodes[0].textContent = 'READING ';
+    const stressDescEl = document.getElementById('stress-desc');
+    if(stressDescEl) stressDescEl.textContent = 'Waiting for stable HRV reading…';
+ 
+    toast(`Connected to ${bleDevice.name || 'sensor'} ✓`);
+  }catch(e){
+    console.error(e);
+    if(e.name === 'NotFoundError'){
+      toast('No device selected');
+    }else{
+      toast('Bluetooth connection failed — is the strap worn & damp?');
+    }
+  }
+}
+ 
+function setSensorPillState(connected, label){
+  ['sensor', 'cal-sensor'].forEach(prefix=>{
+    const pill = document.getElementById(prefix+'-pill');
+    const txt = document.getElementById(prefix+'-txt');
+    if(!pill || !txt) return;
+    pill.className = connected ? 'sensor-pill connected' : 'sensor-pill';
+    txt.textContent = connected ? label : 'Reconnect Sensor';
+  });
+}
+ 
+function onBTDisconnected(){
+  isConnected = false;
+  setSensorPillState(false, '');
+  const startBtn = document.getElementById('cal-start-btn');
+  if(startBtn) startBtn.disabled = true;
+  toast('Sensor disconnected');
+}
+ 
+function handleHRData(event){
+  const value = event.target.value;
+  const flags = value.getUint8(0);
+  let index = 1;
+ 
+  let heartRate;
+  if(flags & 0x1){
+    heartRate = value.getUint16(index, true);
+    index += 2;
+  }else{
+    heartRate = value.getUint8(index);
+    index += 1;
+  }
+ 
+  if(flags & 0x08){
+    index += 2;
+  }
+ 
+  const rrPresent = flags & 0x10;
+  const rrList = [];
+  if(rrPresent){
+    while(index + 1 < value.byteLength){
+      const rrRaw = value.getUint16(index, true);
+      const rrMs = Math.round((rrRaw / 1024) * 1000);
+      rrList.push(rrMs);
+      index += 2;
+    }
+  }
+ 
+  ingestBeats(rrList, heartRate);
+}
+ 
+function ingestBeats(rrList, hr){
+  currentHR = hr;
+  rrList.forEach(rrMs=>{
+    if(isPlausibleRR(rrMs)){
+      rrBuffer.push(rrMs);
+      if(isCalibrating) calRRBuffer.push(rrMs);
+      lastAcceptedRR = rrMs;
+    }
+  });
+  if(rrBuffer.length > RR_WINDOW_SIZE){
+    rrBuffer = rrBuffer.slice(-RR_WINDOW_SIZE);
+  }
+ 
+  const rmssd = calcRMSSD(rrBuffer);
+  if(rmssd !== null){
+    currentRMSSD = Math.round(rmssd);
+    if(selectedAthlete){
+      if(rallyActive){
+        currentDisplayState = 'rally';
+      } else {
+        evaluateSpike(currentRMSSD);
+        currentDisplayState = 'neutral';
+      }
+      renderHeroState();
+    }
+  }else{
+    document.getElementById('sn-hr').textContent = currentHR;
+  }
+ 
+  if(isCalibrating){
+    document.getElementById('cal-bpm').textContent = currentHR;
+    document.getElementById('cal-beats').textContent = calRRBuffer.length;
+    calHRBuffer.push(hr);
+  }
+}
+ 
+function calcRMSSD(intervals){
+  if(intervals.length < 2) return null;
+  let sumSq = 0;
+  for(let i = 1; i < intervals.length; i++){
+    const diff = intervals[i] - intervals[i-1];
+    sumSq += diff * diff;
+  }
+  return Math.sqrt(sumSq / (intervals.length - 1));
+}
+ 
+let prevRMSSD = null;
+let lastDelta = null;
+let flashActive = false;
+let flashDirection = null;
+let flashTimeout = null;
+const FLASH_DURATION_MS = 3000;
+let pendingEventsForNextPoint = [];
+ 
+function stressArrowGlyph(direction){
+  return direction === 'down' ? '↑' : '↓';
+}
+ 
+function evaluateSpike(rmssd){
+  const threshold = selectedAthlete ? getDynamicThreshold(currentHR) : null;
+  if(!threshold){
+    prevRMSSD = rmssd;
+    lastDelta = null;
+    return;
+  }
+  if(prevRMSSD === null){
+    prevRMSSD = rmssd;
+    lastDelta = 0;
+    return;
+  }
+  const delta = rmssd - prevRMSSD;
+  lastDelta = delta;
+  prevRMSSD = rmssd;
+ 
+  if(Math.abs(delta) >= threshold){
+    triggerSpikeEvent(rmssd, delta, delta < 0 ? 'down' : 'up');
+  }
+}
+ 
+function triggerSpikeEvent(rmssd, delta, direction){
+  flashActive = true;
+  flashDirection = direction;
+  clearTimeout(flashTimeout);
+  flashTimeout = setTimeout(()=>{
+    flashActive = false;
+    flashDirection = null;
+    renderHeroState();
+  }, FLASH_DURATION_MS);
+ 
+  const evt = { rmssd, delta, direction, hr: currentHR, jay: jayScore, opp: oppScore, t: Date.now() };
+  pendingEventsForNextPoint.push(evt);
+  addAutoLogEntry(evt);
+  renderHeroState();
+}
+ 
+function resetClassificationState(){
+  prevRMSSD = null;
+  lastDelta = null;
+  flashActive = false;
+  flashDirection = null;
+  clearTimeout(flashTimeout);
+  pendingEventsForNextPoint = [];
+  currentDisplayState = 'neutral';
+  renderHeroState();
+}
+ 
+let currentDisplayState = 'neutral';
+ 
+function renderHeroState(){
+  const hero = document.getElementById('stress-hero');
+  const sw = document.getElementById('stress-word');
+  const arrow = document.getElementById('spike-arrow');
+  const indicator = document.getElementById('stress-indicator');
+  const desc = document.getElementById('stress-desc');
+  if(!hero) return;
+ 
+  let visualState, label, description;
+  if(flashActive){
+    visualState = 'spike';
+    label = 'SPIKE ';
+    description = flashDirection === 'down'
+      ? 'Stress spike detected — logged automatically'
+      : 'Sudden calming detected — logged automatically';
+  } else if(currentDisplayState === 'rally'){
+    visualState = 'rally';
+    label = 'PAUSED ';
+    description = 'Monitoring paused — not being evaluated right now';
+  } else {
+    visualState = 'neutral';
+    label = 'STEADY ';
+    description = 'No notable change';
+  }
+ 
+  hero.className = 'stress-hero ' + visualState;
+  sw.className = 'stress-word ' + visualState;
+  sw.childNodes[0].textContent = label;
+  desc.textContent = description;
+  indicator.className = 'stress-indicator ' + visualState;
+ 
+  if(flashActive){
+    arrow.classList.add('show');
+    arrow.classList.toggle('down', flashDirection==='up');
+  }else{
+    arrow.classList.remove('show','down');
+  }
+ 
+  document.getElementById('sn-rmssd').textContent = currentRMSSD || '--';
+  document.getElementById('sn-hr').textContent = currentHR || '--';
+  const sensEl = document.getElementById('sn-sens');
+  if(sensEl && selectedAthlete){
+    const t = getDynamicThreshold(currentHR);
+    sensEl.textContent = t ? Math.round(t)+'ms' : '--';
+  }
+  const del = document.getElementById('sn-delta');
+  if(lastDelta !== null){
+    del.textContent = (lastDelta>=0?'+':'') + lastDelta + 'ms';
+    del.className = 'snum-delta ' + (lastDelta>0?'delta-up':(lastDelta<0?'delta-down':'delta-n'));
+  }
+}
+ 
+function addAutoLogEntry(evt){
+  const feed = document.getElementById('log-feed');
+  const empty = document.getElementById('log-empty-msg');
+  if(empty) empty.remove();
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  const isStressUp = evt.direction === 'down';
+  el.innerHTML = `
+    <div class="le-pt">${evt.jay}-${evt.opp}</div>
+    <div class="le-badge ${isStressUp ? 'badge-red' : 'badge-blue'}">${stressArrowGlyph(evt.direction)} ${isStressUp ? 'Stress up' : 'Calming'}</div>
+    <div class="le-text">Auto-logged · RMSSD ${evt.rmssd}ms (Δ${evt.delta>=0?'+':''}${evt.delta}ms)</div>
+  `;
+  feed.insertBefore(el, feed.firstChild);
+}
+ 
+function openManualLogPanel(){
+  const panel = document.getElementById('manual-log-panel');
+  document.getElementById('manual-log-text').value = '';
+  panel.style.display = 'block';
+  document.getElementById('manual-log-text').focus();
+}
+ 
+function closeManualLogPanel(){
+  document.getElementById('manual-log-panel').style.display = 'none';
+}
+ 
+function submitManualLog(){
+  const note = document.getElementById('manual-log-text').value.trim();
+  const evt = { manual:true, note, hr: currentHR, jay: jayScore, opp: oppScore, t: Date.now() };
+  pendingEventsForNextPoint.push(evt);
+  addManualLogEntry(evt);
+  closeManualLogPanel();
+  toast('Manual log added — Potential spike from observation');
+}
+ 
+function addManualLogEntry(evt){
+  const feed = document.getElementById('log-feed');
+  const empty = document.getElementById('log-empty-msg');
+  if(empty) empty.remove();
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `
+    <div class="le-pt">${evt.jay}-${evt.opp}</div>
+    <div class="le-badge badge-yellow">👆 Manual</div>
+    <div class="le-text">Potential spike from observation${evt.note ? ' · "'+evt.note+'"' : ''}</div>
+  `;
+  feed.insertBefore(el, feed.firstChild);
+}
+ 
+function setRallyState(active){
+  rallyActive = active;
+  const btn = document.getElementById('rally-toggle');
+  const txt = document.getElementById('rally-toggle-text');
+  if(!btn) return;
+  if(rallyActive){
+    btn.classList.add('active');
+    txt.textContent = 'Monitor Inactive — tap to resume';
+  } else {
+    btn.classList.remove('active');
+    txt.textContent = 'Monitor Active — tap to pause';
+    prevRMSSD = null;
+    lastDelta = null;
+  }
+}
+ 
+function toggleRally(){
+  setRallyState(!rallyActive);
+}
+ 
+function addPoint(who){
+  if(gameLocked) return;
+  if(who==='jay') jayScore++;
+  else oppScore++;
+  updateScoreDisplay();
+ 
+  const lvl = currentDisplayState || 'neutral';
+  const events = pendingEventsForNextPoint.slice();
+  pendingEventsForNextPoint = [];
+  gamePoints.push({jay:jayScore,opp:oppScore,stress:lvl,rmssd:currentRMSSD,hr:currentHR,events});
+  addPointDot(gamePoints.length,jayScore,oppScore,events,gamePoints.length-1);
+ 
+  if(rallyActive){
+    setRallyState(false);
+  }
+ 
+  const deuceBanner = document.getElementById('deuce-banner');
+  if(checkGameWon()){
+    gameLocked = true;
+    lockScoreButtons(true);
+    deuceBanner.classList.remove('show');
+    const winner = jayScore>oppScore ? selectedAthlete.name.split(' ')[0] : 'Opponent';
+    const trophySvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px;"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a2 2 0 0 0 0 4h1"/><path d="M17 5h3a2 2 0 0 1 0 4h-1"/></svg>';
+    document.getElementById('geb-text').innerHTML = `${trophySvg}${winner} wins Game ${currentGame} (${jayScore}-${oppScore})`;
+    document.getElementById('game-end-banner').classList.add('show');
+  } else {
+    const lead = Math.max(jayScore,oppScore);
+    const diff = Math.abs(jayScore-oppScore);
+    if(lead>=10 && diff<2){
+      deuceBanner.classList.add('show');
+    } else {
+      deuceBanner.classList.remove('show');
+    }
+  }
+}
+ 
+function checkGameWon(){
+  const lead = Math.max(jayScore,oppScore);
+  const diff = Math.abs(jayScore-oppScore);
+  return lead>=11 && diff>=2;
+}
+ 
+function lockScoreButtons(lock){
+  document.querySelectorAll('.sb-btn-pt').forEach(b=>b.disabled = lock);
+}
+ 
+function undoPoint(who){
+  if(who==='jay'&&jayScore>0) jayScore--;
+  else if(who==='opp'&&oppScore>0) oppScore--;
+  updateScoreDisplay();
+  if(gamePoints.length>0){
+    gamePoints.pop();
+    renderTimeline();
+  }
+  const deuceBanner = document.getElementById('deuce-banner');
+  if(!checkGameWon()){
+    gameLocked = false;
+    lockScoreButtons(false);
+    document.getElementById('game-end-banner').classList.remove('show');
+    const lead = Math.max(jayScore,oppScore);
+    const diff = Math.abs(jayScore-oppScore);
+    if(lead>=10 && diff<2){
+      deuceBanner.classList.add('show');
+    } else {
+      deuceBanner.classList.remove('show');
+    }
+  }
+}
+ 
+function updateScoreDisplay(){
+  document.getElementById('sb-jay').textContent=jayScore;
+  document.getElementById('sb-opp').textContent=oppScore;
+}
+ 
+function pointDotHTML(num,j,o,events,idx){
+  const wrap=document.createElement('div');
+  wrap.className='pt-dot-wrap';
+  wrap.onclick=()=>showPointDetail(idx);
+  const dot=document.createElement('div');
+  const hasEvent = events && events.length>0;
+  const lastEvt = hasEvent ? events[events.length-1] : null;
+  if(hasEvent && lastEvt.manual){
+    dot.className = 'pt-dot manual-event';
+    dot.textContent = '👆';
+  }else if(hasEvent){
+    dot.className = 'pt-dot auto-event';
+    dot.textContent = stressArrowGlyph(lastEvt.direction);
+  }else{
+    dot.className = 'pt-dot neutral';
+    dot.textContent = num;
+  }
+  const label=document.createElement('div');
+  label.className='pt-point-num';
+  label.textContent=`${j}-${o}`;
+  wrap.appendChild(dot);wrap.appendChild(label);
+  return wrap;
+}
+ 
+function addPointDot(num,j,o,events,idx){
+  const scroll=document.getElementById('pt-scroll');
+  const empty=document.getElementById('pt-empty');
+  if(empty)empty.remove();
+  document.getElementById('pt-count').textContent=gamePoints.length+' point'+(gamePoints.length!==1?'s':'');
+  scroll.appendChild(pointDotHTML(num,j,o,events,idx));
+  scroll.scrollLeft=scroll.scrollWidth;
+}
+ 
+function renderTimeline(){
+  const scroll=document.getElementById('pt-scroll');
+  scroll.innerHTML=gamePoints.length?'':'<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
+  gamePoints.forEach((p,i)=>scroll.appendChild(pointDotHTML(i+1,p.jay,p.opp,p.events,i)));
+  document.getElementById('pt-count').textContent=gamePoints.length+' point'+(gamePoints.length!==1?'s':'');
+}
+ 
+function showPointDetail(idx){
+  const p=gamePoints[idx];
+  const evCount = p.events ? p.events.length : 0;
+  toast(`Point ${idx+1}: ${p.jay}-${p.opp} · HRV ${p.rmssd || '--'}ms${evCount?` · ${evCount} logged event${evCount>1?'s':''}`:''}`);
+}
+ 
+function pushCurrentGame(){
+  if(currentGamePushed) return;
+  const spikes = gamePoints.reduce((s,p)=> s + (p.events ? p.events.length : 0), 0);
+  savedGames.push({num:currentGame,jay:jayScore,opp:oppScore,spikes,points:[...gamePoints]});
+  currentGamePushed=true;
+}
+ 
+function endGame(goSummary){
+  pushCurrentGame();
+  document.getElementById('game-end-banner').classList.remove('show');
+  document.getElementById('deuce-banner').classList.remove('show');
+ 
+  if(goSummary){
+    const g = savedGames[savedGames.length-1];
+    document.getElementById('gs-title').textContent=`Game ${currentGame} Complete`;
+    document.getElementById('gs-sub').textContent=`${selectedAthlete.name.split(' ')[0]} ${g.jay} — Opponent ${g.opp}`;
+    document.getElementById('gs-score').textContent=`${g.jay}-${g.opp}`;
+    document.getElementById('gs-spikes').textContent=g.spikes;
+    document.getElementById('gs-next-num').textContent=currentGame+1;
+    document.getElementById('gs-tl-name').textContent=`Game ${currentGame}`;
+ 
+    const tl=document.getElementById('gs-tl-scroll');
+    tl.innerHTML='';
+    g.points.forEach((p,i)=>{
+      tl.appendChild(pointDotHTML(i+1,p.jay,p.opp,p.events,i));
+    });
+ 
+    document.getElementById('gs-next-btn').style.display='inline-block';
+    document.getElementById('gs-back-btn').style.display='inline-block';
+    document.getElementById('gs-finish-btn').style.display='none';
+ 
+    go('game-summary');
+  }
+}
+ 
+function nextGame(){
+  currentGame++;
+  jayScore=0;oppScore=0;
+  gamePoints=[];
+  gameLocked=false; currentGamePushed=false;
+  resetClassificationState();
+  lockScoreButtons(false);
+  document.getElementById('live-game-badge').textContent=`Game ${currentGame}`;
+  document.getElementById('sb-game-label').textContent=`Game ${currentGame} · Best of 5`;
+  document.getElementById('game-end-banner').classList.remove('show');
+  document.getElementById('deuce-banner').classList.remove('show');
+  document.getElementById('log-feed').innerHTML='<div class="log-empty-msg">Spikes are auto-logged here — no button needed</div>';
+  document.getElementById('pt-scroll').innerHTML='<div class="pt-empty" id="pt-empty">Points will appear here as the game progresses</div>';
+  document.getElementById('pt-count').textContent='0 points';
+  updateScoreDisplay();
+  go('live');
+  toast(`Game ${currentGame} started`);
+}
+ 
+function finishMatchFromLock(){
+  pushCurrentGame();
+  document.getElementById('game-end-banner').classList.remove('show');
+  document.getElementById('deuce-banner').classList.remove('show');
+  clearInterval(sessionTimer);
+  renderMatchSummary();
+  go('game-summary');
+}
+ 
+function endMatch(){
+  pushCurrentGame();
+  clearInterval(sessionTimer);
+  renderMatchSummary();
+  go('game-summary');
+}
+ 
+function renderMatchSummary(){
+  const totalSpikes = savedGames.reduce((s,g)=>s+g.spikes,0);
+  const scoreLine = savedGames.map(g=>`${g.jay}-${g.opp}`).join(', ');
+  const gamesWonByJay = savedGames.filter(g=>g.jay>g.opp).length;
+  const gamesWonByOpp = savedGames.filter(g=>g.opp>g.jay).length;
+  const athleteFirst = selectedAthlete.name.split(' ')[0];
+ 
+  document.getElementById('gs-title').textContent = 'Match Complete';
+  document.getElementById('gs-sub').textContent = `${athleteFirst} won ${gamesWonByJay} · Opponent won ${gamesWonByOpp}  —  Games: ${scoreLine || '—'}`;
+  document.getElementById('gs-score').textContent = `${gamesWonByJay}-${gamesWonByOpp}`;
+  document.getElementById('gs-spikes').textContent = totalSpikes;
+  document.getElementById('gs-tl-name').textContent = 'All games';
+ 
+  const tl=document.getElementById('gs-tl-scroll');
+  tl.innerHTML='';
+  let runningNum=0;
+  savedGames.forEach((g,gi)=>{
+    if(gi>0){
+      const sep=document.createElement('div');
+      sep.style.cssText='display:flex;align-items:center;color:var(--ink4);font-size:11px;font-weight:700;padding:0 6px;';
+      sep.textContent='···';
+      tl.appendChild(sep);
+    }
+    g.points.forEach(p=>{
+      runningNum++;
+      tl.appendChild(pointDotHTML(runningNum,p.jay,p.opp,p.events,runningNum-1));
+    });
+  });
+ 
+  document.getElementById('gs-next-btn').style.display='none';
+  document.getElementById('gs-back-btn').style.display='none';
+  document.getElementById('gs-finish-btn').style.display='inline-block';
+}
+ 
+function saveMatchToProfile(){
+  selectedAthlete.matches.unshift({
+    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+    title:`Match — ${savedGames.length} game${savedGames.length!==1?'s':''}`,
+    games: savedGames
+  });
+  saveData();
+  toast('Match saved to profile ✓');
+  go('ath-home');
+  openAthlete(selectedAthlete.id);
+}
+ 
+ 
+let ivMatchIdx = null;
+let ivNoteTarget = null;
+ 
+function goInterview(){
+  if(!selectedAthlete) return;
+  ivMatchIdx = null;
+  document.getElementById('iv-picker').style.display = 'block';
+  document.getElementById('iv-session').style.display = 'none';
+  document.getElementById('iv-back-btn').onclick = ()=>go('ath-home');
+ 
+  const list = document.getElementById('iv-match-list');
+  const a = selectedAthlete;
+  list.innerHTML = a.matches.length ? a.matches.map((m,i)=>{
+    const totalSpikes = m.games.reduce((s,g)=>s+g.spikes,0);
+    return `<div class="match-item" onclick="openInterviewMatch(${i})">
+      <div class="match-header">
+        <div class="match-title">${m.title}</div>
+        <div class="match-date">${m.date}</div>
+      </div>
+      <div class="match-meta">${m.games.length} game${m.games.length>1?'s':''} · ${totalSpikes} stress spikes · tap to review</div>
+    </div>`;
+  }).join('') : '<div style="font-size:13px;color:var(--ink4);padding:8px 0;">No saved matches yet — play and save a match first.</div>';
+ 
+  go('interview');
+}
+ 
+function openInterviewMatch(matchIdx){
+  ivMatchIdx = matchIdx;
+  const m = selectedAthlete.matches[matchIdx];
+  document.getElementById('iv-picker').style.display = 'none';
+  document.getElementById('iv-session').style.display = 'block';
+  document.getElementById('iv-session-sub').textContent = `${m.title} · ${m.date} — tap any point to add a note`;
+  document.getElementById('iv-back-btn').onclick = ()=>goInterview();
+  closeNotePanel();
+  renderInterviewTimeline();
+}
+ 
+function renderInterviewTimeline(){
+  const m = selectedAthlete.matches[ivMatchIdx];
+  const container = document.getElementById('iv-session-games');
+  container.innerHTML = '';
+  m.games.forEach((g,gIdx)=>{
+    const block = document.createElement('div');
+    block.className = 'gs-timeline';
+    const title = document.createElement('div');
+    title.className = 'gs-tl-title';
+    title.textContent = `Game ${g.num} — ${g.jay}-${g.opp}`;
+    const scroll = document.createElement('div');
+    scroll.className = 'gs-tl-scroll';
+    g.points.forEach((p,pIdx)=>{
+      const wrap = document.createElement('div');
+      wrap.className = 'pt-dot-wrap';
+      wrap.onclick = ()=>openInterviewNote(gIdx,pIdx);
+      const dot = document.createElement('div');
+      const hasEvent = p.events && p.events.length>0;
+      const lastEvt = hasEvent ? p.events[p.events.length-1] : null;
+      const isManual = hasEvent && lastEvt.manual;
+      dot.className = 'pt-dot ' + (isManual ? 'manual-event' : (hasEvent ? 'auto-event' : 'neutral'));
+      if(p.interviewNote) dot.classList.add('has-note');
+      dot.textContent = isManual ? '👆' : (hasEvent ? stressArrowGlyph(lastEvt.direction) : (pIdx+1));
+      const label = document.createElement('div');
+      label.className = 'pt-point-num';
+      label.textContent = `${p.jay}-${p.opp}`;
+      wrap.appendChild(dot); wrap.appendChild(label);
+      scroll.appendChild(wrap);
+    });
+    block.appendChild(title);
+    block.appendChild(scroll);
+    container.appendChild(block);
+  });
+}
+ 
+function openInterviewNote(gameIdx,pointIdx){
+  ivNoteTarget = {gameIdx,pointIdx};
+  const p = selectedAthlete.matches[ivMatchIdx].games[gameIdx].points[pointIdx];
+  const lastEvt = p.events && p.events.length ? p.events[p.events.length-1] : null;
+  const evtLabel = lastEvt ? (lastEvt.manual ? ' · manual log 👆' : ' · spike '+stressArrowGlyph(lastEvt.direction)) : '';
+  document.getElementById('iv-note-label').textContent = `Note for point ${p.jay}-${p.opp}${evtLabel}`;
+  document.getElementById('iv-note-text').value = p.interviewNote ? p.interviewNote.text : '';
+  document.getElementById('iv-note-panel').style.display = 'block';
+  document.getElementById('iv-note-panel').scrollIntoView({behavior:'smooth', block:'center'});
+}
+ 
+function closeNotePanel(){
+  ivNoteTarget = null;
+  const panel = document.getElementById('iv-note-panel');
+  if(panel) panel.style.display = 'none';
+}
+ 
+function saveInterviewNote(){
+  if(!ivNoteTarget || ivMatchIdx===null) return;
+  const text = document.getElementById('iv-note-text').value.trim();
+  if(!text){ toast('Write a note first'); return; }
+ 
+  const m = selectedAthlete.matches[ivMatchIdx];
+  const p = m.games[ivNoteTarget.gameIdx].points[ivNoteTarget.pointIdx];
+  const noteObj = { text, jay:p.jay, opp:p.opp, createdAt: Date.now() };
+  p.interviewNote = noteObj;
+ 
+  selectedAthlete.triggers.unshift({
+    sev: (p.events && p.events.length) ? 'high' : 'medium',
+    title: `Score ${p.jay}-${p.opp} — ${m.title}`,
+    freq: new Date(noteObj.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+    quote: text,
+    createdAt: noteObj.createdAt
+  });
+ 
+  saveData();
+  toast('Note saved to timeline and trigger profile ✓');
+  closeNotePanel();
+  renderInterviewTimeline();
+}
+ 
+function openTriggerProfile(){
+  if(!selectedAthlete) return;
+  const a = selectedAthlete;
+  document.getElementById('tp-title').textContent = `${a.name.split(' ')[0]}'s Stress Trigger Profile`;
+ 
+  const recent = document.getElementById('tp-recent');
+  const sorted = [...a.triggers].sort((x,y)=>(y.createdAt||0)-(x.createdAt||0)).slice(0,3);
+  recent.innerHTML = sorted.length ? sorted.map(t=>`
+    <div class="trigger-item">
+      <div class="trigger-header">
+        <span class="badge ${t.sev==='high'?'badge-red':'badge-yellow'}">${t.sev==='high'?'High':'Medium'}</span>
+        <div class="trigger-name">${t.title}</div>
+      </div>
+      <div class="trigger-freq" style="margin-bottom:6px;">${t.freq}</div>
+      <div class="trigger-quote">"${t.quote}"</div>
+    </div>
+  `).join('') : '<div style="font-size:13px;color:var(--ink4);padding:8px 0;">No interview notes yet — add one from the Interview screen.</div>';
+ 
+  const tl = document.getElementById('tp-full-timeline');
+  tl.innerHTML = '';
+  const matchesOldestFirst = [...a.matches].reverse();
+  matchesOldestFirst.forEach((m,mi)=>{
+    const sep=document.createElement('div');
+    sep.style.cssText='display:flex;align-items:center;color:var(--ink4);font-size:12px;font-weight:700;padding:0 8px;width:100%;';
+    sep.textContent = `— ${m.title} (${m.date}) —`;
+    tl.appendChild(sep);
+    m.games.forEach(g=>{
+      g.points.forEach((p,i)=>{
+        tl.appendChild(pointDotHTML(i+1,p.jay,p.opp,p.events,i));
+      });
+    });
+  });
+  if(!a.matches.length){
+    tl.innerHTML = '<div class="pt-empty">No matches recorded yet.</div>';
+  }
+ 
+  go('trigger-profile');
+}
+ 
+function openAddAthlete(){document.getElementById('overlay-add').classList.add('open');}
+function closeAdd(){document.getElementById('overlay-add').classList.remove('open');}
+function pickColor(el){
+  document.querySelectorAll('.copt').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');pickedColor=el.dataset.c;
+}
+function addAthlete(){
+  const name=document.getElementById('f-name').value.trim();
+  const sport=document.getElementById('f-sport').value.trim();
+  if(!name){toast('Please enter a name');return;}
+  const newId = Date.now();
+  athletes.unshift({
+    id:newId,
+    name,
+    sport:sport||'Sport not specified',
+    color:pickedColor,
+    baseline: null,
+    spikeThreshold: null,
+    calibrationPoints: null,
+    matches:[],
+    triggers:[]
+  });
+  saveData();
+  closeAdd();
+  renderHome();
+  toast(`${name} added ✓`);
+  document.getElementById('f-name').value='';
+  document.getElementById('f-sport').value='';
+  openAthlete(newId);
+}
+ 
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+ 
+// ══════════════════════════════════════════════════════════════
+// SEED ATHLETE — realistic sample data, seeded once into every new
+// account (no on-screen "demo" labeling anywhere — looks like a
+// normal athlete profile with real match history).
+// ══════════════════════════════════════════════════════════════
+function buildDemoPoints(finalJay, finalOpp, eventSpots){
+  const total = finalJay + finalOpp;
+  const points = [];
+  let j=0, o=0;
+  const seq = [];
+  for(let i=0;i<total;i++) seq.push(i < finalJay ? 'j' : 'o');
+  for(let i=seq.length-1;i>0;i--){
+    const k = Math.floor(((i*7+13)%(i+1)));
+    const tmp=seq[i]; seq[i]=seq[k]; seq[k]=tmp;
+  }
+  let baseRmssd = 44;
+  seq.forEach((side,i)=>{
+    if(side==='j') j++; else o++;
+    const fromEnd = seq.length-1-i;
+    const evt = eventSpots.find(e=>e.at===fromEnd);
+    let rmssd, events=[];
+    if(evt){
+      rmssd = evt.direction==='down' ? Math.round(baseRmssd*0.4) : Math.round(baseRmssd*1.3);
+      events = [{rmssd, delta: evt.direction==='down' ? -(baseRmssd*0.5) : (baseRmssd*0.4), direction:evt.direction, hr: evt.direction==='down'?168:132, jay:j, opp:o, t:Date.now()}];
+    } else {
+      rmssd = Math.round(baseRmssd*(0.75+Math.random()*0.1));
+    }
+    points.push({jay:j,opp:o,stress:'neutral',rmssd,hr:evt?events[0].hr:150,tag:null,events});
+  });
+  return points;
+}
+ 
+function buildSeedAthletes(){
+  const matchTemplates = [
+    { label:'Match 1', games:[ [11,7,[{at:2,direction:'down'},{at:0,direction:'up'}]], [9,11,[{at:1,direction:'down'}]], [11,8,[{at:3,direction:'down'},{at:1,direction:'up'}]] ] },
+    { label:'Match 2', games:[ [11,9,[{at:1,direction:'down'}]], [11,6,[]] ] },
+    { label:'Match 3', games:[ [8,11,[{at:2,direction:'down'}]], [11,13,[{at:1,direction:'down'},{at:0,direction:'up'}]], [11,7,[]] ] },
+    { label:'Match 4', games:[ [11,4,[]], [11,9,[{at:2,direction:'down'},{at:0,direction:'up'}]] ] },
+    { label:'Match 5', games:[ [12,10,[{at:3,direction:'down'},{at:1,direction:'up'}]], [9,11,[{at:1,direction:'down'}]], [11,6,[]] ] },
+  ];
+ 
+  const matches = matchTemplates.map((mt,mi)=>{
+    const games = mt.games.map((g,gi)=>{
+      const points = buildDemoPoints(g[0], g[1], g[2]);
+      const spikes = points.reduce((s,p)=>s+(p.events?p.events.length:0),0);
+      return { num:gi+1, jay:g[0], opp:g[1], spikes, points };
+    });
+    const daysAgo = (matchTemplates.length-mi)*4;
+    const d = new Date(); d.setDate(d.getDate()-daysAgo);
+    return { date: d.toLocaleDateString('en-US',{month:'short',day:'numeric'}), title:`Match — ${games.length} games`, games };
+  });
+
+  return [{
+    id: Date.now(),
+    name: 'Jay Suraphong',
+    sport: 'Squash — Elite',
+    color: '#2563eb',
+    baseline: 44,
+    spikeThreshold: 9,
+    calibrationPoints: [ {phase:1, hr:128, rmssdAvg:44, threshold:11}, {phase:2, hr:168, rmssdAvg:44, threshold:6} ],
+    matches,
+    triggers: [
+      { sev:'high', title:'Trailing by 3+ points late in a game', freq:'Flagged in 4 of 5 matches', quote:'I start rushing my shots when I see the gap — I know I\'m doing it but I can\'t slow down.', createdAt: Date.now()-1000*60*60*24*2 },
+      { sev:'medium', title:'Immediately after an unforced error', freq:'Flagged in 3 of 5 matches', quote:'I get annoyed at myself and carry it into the next point.', createdAt: Date.now()-1000*60*60*24*6 },
+      { sev:'medium', title:'Long rallies past 15+ shots', freq:'Flagged in 2 of 5 matches', quote:'My legs are heavy but I think it\'s more that I stop thinking clearly.', createdAt: Date.now()-1000*60*60*24*10 }
+    ]
+  }];
+}
+ 
+// ══ INIT ══
+checkSession();
+</script>
+</body>
+</html>
